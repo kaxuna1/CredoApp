@@ -13,7 +13,7 @@
             android:value="sugar_example.db" />
         <meta-data
             android:name="VERSION"
-            android:value="5" />
+            android:value="6" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />
@@ -32,7 +32,8 @@
         </activity>
         <activity
             android:name=".DataFillActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".data_list_activity"></activity>
     </application>
 
 </manifest>

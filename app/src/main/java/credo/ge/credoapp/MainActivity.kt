@@ -20,18 +20,26 @@ class MainActivity : AppCompatActivity() {
 
     internal var layout: LinearLayout?=null
     internal var button: Button?=null
+    internal var buttonLoans: Button?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         layout = findViewById(R.id.mainlinear) as LinearLayout
         button = findViewById(R.id.button) as Button
-        button!!.text="სესხი"
+        buttonLoans = findViewById(R.id.loans) as Button
+        button!!.text="ახალი სესხი"
         StaticData.data.put(Currency::class.java.name,SugarRecord.listAll(Currency::class.java))
         StaticData.data.put(Person::class.java.name,SugarRecord.listAll(Person::class.java))
         button!!.setOnClickListener {
             val intent = Intent(this, DataFillActivity::class.java)
             intent.putExtra("class",Loan::class.java)
+            startActivity(intent)
+        }
+        buttonLoans!!.setOnClickListener {
+            val intent = Intent(this, data_list_activity::class.java)
+            intent.putExtra("class",Loan::class.java)
+            intent.putExtra("nameFieldMethodName","getName")
             startActivity(intent)
         }
 

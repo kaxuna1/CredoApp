@@ -2,6 +2,7 @@ package credo.ge.credoapp.models;
 
 import com.orm.SugarRecord;
 
+import java.util.List;
 import java.util.UUID;
 
 import credo.ge.credoapp.anotations.ObjectFieldTypeViewAnotation;
@@ -12,6 +13,10 @@ import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
  */
 
 public class Loan extends SugarRecord<Loan> {
+    public String getName() {
+        return name;
+    }
+
     @TextFieldTypeViewAnotation(name = "სახელი", deffaultValue = "", type = "text")
     public String name = UUID.randomUUID().toString().substring(0,5);
 
@@ -21,4 +26,15 @@ public class Loan extends SugarRecord<Loan> {
 
     @ObjectFieldTypeViewAnotation(name = "ვალუტა", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
     public Currency currency;
+
+    @ObjectFieldTypeViewAnotation(name = "სესხის ტიპი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
+    public LoanType loanType;
+
+    public static List<Loan> getData(){
+        return Loan.listAll(Loan.class);
+    }
+    public static Loan getById(long id){
+        return Loan.findById(Loan.class,id);
+    }
+
 }
