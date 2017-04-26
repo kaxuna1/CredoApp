@@ -95,16 +95,45 @@ class ViewAnnotationParser {
                     var view = inflater.inflate(R.layout.combobox_with_button, null)
                     //
 
-
                     val spinner = view.findViewById(R.id.spinner) as Spinner
                     val updaterUUID = UUID.randomUUID().toString()
                     var adapter: ComboboxAdapter? = null
                     val func = fun() {
                         val method = field.type.getMethod("getData")
                         val dataToLoad = method.invoke(null) as List<Any>
+                        val fieldValue = field.get(bindObject)
+
+
+
+
+
 
                         adapter = ComboboxAdapter(dataToLoad, viewGorup.context, displayField, isMethod, field.type)
                         spinner.setAdapter(adapter)
+
+                        if(fieldValue!=null){
+                            var objectInList = dataToLoad.find {
+                                f->(
+                                    field.type
+                                            .getMethod("getId")
+
+                                            .invoke(f) as Long) ==
+                                    (field.type.getMethod("getId").invoke(fieldValue) as Long)
+                            }
+                            var indexOfObject=dataToLoad.indexOf(objectInList)
+                            if (indexOfObject>=0){
+                                spinner.setSelection(indexOfObject)
+                            }
+                        }
+                        spinner.onItemSelectedListener = object :AdapterView.OnItemSelectedListener{
+                            override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
+                                field.set(bindObject, adapter!!.dataList.get(pos))
+                            }
+
+                            override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
+
+                            }
+                        }
                     }
                     func()
                     StaticData.comboBoxUpdateFunctions.put(updaterUUID, func)
