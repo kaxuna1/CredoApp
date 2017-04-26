@@ -13,4 +13,5 @@ import credo.ge.credoapp.models.Person
 object StaticData {
     internal var classHashMap = HashMap<String, Class<SugarRecord<*>>>()
     internal var data = HashMap<String,List<Any>>()
+    internal var comboBoxUpdateFunctions = HashMap<String,()->Unit>()
 }

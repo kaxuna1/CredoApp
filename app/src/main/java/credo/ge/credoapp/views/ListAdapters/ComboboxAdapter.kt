@@ -13,7 +13,6 @@ import credo.ge.credoapp.R
  */
 
 class ComboboxAdapter(val data:List<Any>,val context:Context,val nameField_:String,val isMethod_:Boolean,clazz: Class<*>) : BaseAdapter() {
-
     private val mInflator: LayoutInflater
     var dataList:List<Any>
     var clazz: Class<*>
@@ -40,7 +39,7 @@ class ComboboxAdapter(val data:List<Any>,val context:Context,val nameField_:Stri
     }
 
     override fun getItemId(position: Int): Long {
-        return position.toLong()
+        return clazz.getMethod("getId").invoke(dataList.get(position)) as Long
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {

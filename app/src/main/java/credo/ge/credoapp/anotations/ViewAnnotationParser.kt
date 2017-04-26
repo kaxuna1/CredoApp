@@ -26,6 +26,7 @@ import android.widget.PopupWindow
 import android.content.Intent
 import credo.ge.credoapp.DataFillActivity
 import credo.ge.credoapp.StaticData
+import java.util.*
 
 
 /**
@@ -33,7 +34,7 @@ import credo.ge.credoapp.StaticData
  */
 
 class ViewAnnotationParser {
-    fun parse(clazz: Class<*>, viewGorup: ViewGroup, bindObject: Any,onSave:View.OnClickListener?) {
+    fun parse(clazz: Class<*>, viewGorup: ViewGroup, bindObject: Any, onSave: View.OnClickListener?) {
         var inflater = LayoutInflater.from(viewGorup.context)
         val fields = clazz.fields
         for (field in fields) {
@@ -42,12 +43,24 @@ class ViewAnnotationParser {
                 val name = annotation.name
                 val type = annotation.type
                 val deffaultValue = annotation.deffaultValue
-                val editText = EditText(viewGorup.context)
-                editText.setText(deffaultValue)
+
+                val view = inflater.inflate(R.layout.text_field, null)
+
+                val editText = view.findViewById(R.id.editor) as EditText
+                val label = view.findViewById(R.id.label) as TextView
+                label.text=name
+
+                val fieldValue = field.get(bindObject)
+                var valueToSet = deffaultValue;
+                if (fieldValue != null)
+                    valueToSet = fieldValue as String
+
+
+                editText.setText(valueToSet)
 
                 var obj = clazz.cast(bindObject)
 
-                viewGorup.addView(editText)
+                viewGorup.addView(view)
                 editText.addTextChangedListener(object : TextWatcher {
 
                     override fun afterTextChanged(s: Editable) {}
@@ -58,9 +71,9 @@ class ViewAnnotationParser {
 
                     override fun onTextChanged(s: CharSequence, start: Int,
                                                before: Int, count: Int) {
-                        if (s.length != 0) {
-                            field.set(bindObject, s.toString())
-                        }
+
+                        field.set(bindObject, s.toString())
+
                     }
                 })
             }
@@ -79,45 +92,69 @@ class ViewAnnotationParser {
                 val sqlData = annotation.sqlData
                 val canAddToDb = annotation.canAddToDb
                 if (type == "comboBox") {
-                    var view = inflater.inflate(R.layout.combobox_with_button,viewGorup)
-                    //viewGorup.addView(view)
-
-
+                    var view = inflater.inflate(R.layout.combobox_with_button, null)
+                    //
 
 
                     val spinner = view.findViewById(R.id.spinner) as Spinner
+                    val updaterUUID = UUID.randomUUID().toString()
+                    var adapter: ComboboxAdapter? = null
+                    val func = fun() {
+                        val method = field.type.getMethod("getData")
+                        val dataToLoad = method.invoke(null) as List<Any>
+
+                        adapter = ComboboxAdapter(dataToLoad, viewGorup.context, displayField, isMethod, field.type)
+                        spinner.setAdapter(adapter)
+                    }
+                    func()
+                    StaticData.comboBoxUpdateFunctions.put(updaterUUID, func)
 
                     val anchor = view.findViewById(R.id.buttonActions) as Button
-                   val droppyBuilder = DroppyMenuPopup.Builder(viewGorup.context, anchor)
+                    val label = view.findViewById(R.id.label) as TextView
+                    label.text = "${name}:"
+                    val droppyBuilder = DroppyMenuPopup.Builder(viewGorup.context, anchor)
 
                     droppyBuilder.addMenuItem(DroppyMenuItem("add"))
                             .addMenuItem(DroppyMenuItem("edit"))
+                            .addMenuItem(DroppyMenuItem("delete"))
                             .addSeparator()
 
+
                     droppyBuilder.setOnClick { v, id ->
-                        if (id.toInt()==0){
+                        if (id == 0) {
                             val intent = Intent(viewGorup.context, DataFillActivity::class.java)
-                            intent.putExtra("class",field.type)
+                            intent.putExtra("class", field.type)
+                            intent.putExtra("updaterUUID", updaterUUID)
                             viewGorup.context.startActivity(intent)
                         }
-                    }
+                        if (id == 1) {
+                            val intent = Intent(viewGorup.context, DataFillActivity::class.java)
+                            intent.putExtra("class", field.type)
+                            intent.putExtra("updaterUUID", updaterUUID)
 
+                            var currentId = field.type.getMethod("getId").invoke(adapter!!.dataList.get(spinner.selectedItemPosition)) as Long
+                            intent.putExtra("id", currentId)
+                            viewGorup.context.startActivity(intent)
+                        }
+                        if (id == 2) {
+                            field.type.getMethod("delete").invoke(adapter!!.dataList.get(spinner.selectedItemPosition))
+                            func()
+                        }
+                    }
                     val droppyMenu = droppyBuilder.build()
 
-                    val dataToLoad = StaticData.data.get(field.type.name)!!
-                    spinner.setAdapter(ComboboxAdapter(dataToLoad, viewGorup.context, displayField, isMethod, field.type))
-
+                    viewGorup.addView(view)
                 }
 
 
             }
         }
-        if(onSave!=null){
-            val saveBtn=Button(viewGorup.context)
-            saveBtn.text="save"
+        if (onSave != null) {
+            val saveBtn = Button(viewGorup.context)
+            saveBtn.text = "save"
             saveBtn.setOnClickListener(onSave)
             viewGorup.addView(saveBtn)
-        }else{
+        } else {
 
         }
     }

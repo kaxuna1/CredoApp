@@ -21,14 +21,18 @@
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="credo.ge" />
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DataFillActivity"></activity>
+        <activity
+            android:name=".DataFillActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
