@@ -108,7 +108,7 @@ class ViewAnnotationParser {
 
 
 
-                        adapter = ComboboxAdapter(dataToLoad, viewGorup.context, displayField, isMethod, field.type)
+                        adapter = ComboboxAdapter(dataToLoad, viewGorup.context, displayField, isMethod, field.type,20f)
                         spinner.setAdapter(adapter)
 
                         if(fieldValue!=null){

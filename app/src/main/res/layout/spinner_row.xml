@@ -6,7 +6,6 @@
     <TextView
         android:id="@+id/textView"
         android:textSize="10pt"
-        android:textAlignment="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView" />

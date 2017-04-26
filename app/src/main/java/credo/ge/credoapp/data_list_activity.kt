@@ -23,7 +23,7 @@ class data_list_activity : AppCompatActivity() {
         val method = classname.getMethod("getData")
         val dataToLoad = method.invoke(null) as List<Any>
 
-        var adapter = ComboboxAdapter(dataToLoad, context, nameFieldMethodName, true, classname)
+        var adapter = ComboboxAdapter(dataToLoad, context, nameFieldMethodName, true, classname,34f)
 
 
         listView.adapter=adapter
