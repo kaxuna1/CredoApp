@@ -19,9 +19,15 @@ public class Loan extends SugarRecord<Loan> {
 
     @TextFieldTypeViewAnotation(name = "სახელი", deffaultValue = "", type = "text")
     public String name = UUID.randomUUID().toString().substring(0,5);
+    @TextFieldTypeViewAnotation(name = "თანხა", deffaultValue = "", type = "text")
+    public String sum = "0";
+
 
     @ObjectFieldTypeViewAnotation(name = "პიროვნება", displayField = "fullName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
     public Person person;
+    
+    @ObjectFieldTypeViewAnotation(name = "თავდები", displayField = "fullName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
+    public Person tavdebi;
 
 
     @ObjectFieldTypeViewAnotation(name = "ვალუტა", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)

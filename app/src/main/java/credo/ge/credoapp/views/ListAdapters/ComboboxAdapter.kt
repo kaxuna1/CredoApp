@@ -63,7 +63,7 @@ class ComboboxAdapter(val data:List<Any>,val context:Context,val nameField_:Stri
             displayValue = clazz.getDeclaredField(nameField).get(dataList[position]).toString()
         }
         vh.label.text = displayValue
-        vh.label.setTextSize(TypedValue.COMPLEX_UNIT_SP ,this.textSiz)
+        //vh.label.setTextSize(TypedValue.COMPLEX_UNIT_SP ,this.textSiz)
         return view
     }
     private class ListRowHolder(row: View?) {
