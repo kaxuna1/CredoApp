@@ -27,6 +27,7 @@ import android.content.Intent
 import credo.ge.credoapp.DataFillActivity
 import credo.ge.credoapp.StaticData
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -107,7 +108,6 @@ class ViewAnnotationParser {
 
 
 
-
                         adapter = ComboboxAdapter(dataToLoad, viewGorup.context, displayField, isMethod, field.type,20f)
                         spinner.setAdapter(adapter)
 
@@ -177,6 +177,81 @@ class ViewAnnotationParser {
 
 
             }
+            if (field.isAnnotationPresent(ObjectsListFieldTypeViewAnottion::class.java)) {
+                val annotation = field.getAnnotation<ObjectsListFieldTypeViewAnottion>(ObjectsListFieldTypeViewAnottion::class.java)
+                val name = annotation.name
+                val displayField = annotation.displayField
+                val isMethod = annotation.isMethod
+                val type = annotation.type
+                val sqlData = annotation.sqlData
+                val canAddToDb = annotation.canAddToDb
+                if (type == "comboBox") {
+
+                    ArrayList<Person>().getData()
+
+                    var view = inflater.inflate(R.layout.multi_value_field_layout, null)
+                    //
+
+                    val spinner = view.findViewById(R.id.spinner) as Spinner
+                    val updaterUUID = UUID.randomUUID().toString()
+                    var adapter: ComboboxAdapter? = null
+                    val func = fun() {
+                        val method = field.genericType.javaClass.getMethod("getData")
+                        val dataToLoad = method.invoke(null) as List<Any>
+
+
+
+
+
+
+                        adapter = ComboboxAdapter(dataToLoad, viewGorup.context, displayField, isMethod, field.type,20f)
+                        spinner.setAdapter(adapter)
+
+                    }
+                    func()
+                    StaticData.comboBoxUpdateFunctions.put(updaterUUID, func)
+
+                    val anchor = view.findViewById(R.id.buttonActions) as Button
+                    val label = view.findViewById(R.id.label) as TextView
+                    label.text = "${name}:"
+                    val droppyBuilder = DroppyMenuPopup.Builder(viewGorup.context, anchor)
+
+                    droppyBuilder
+                            .addMenuItem(DroppyMenuItem("add to list"))
+                            .addMenuItem(DroppyMenuItem("add"))
+                            .addMenuItem(DroppyMenuItem("edit"))
+                            .addMenuItem(DroppyMenuItem("delete"))
+                            .addSeparator()
+
+
+                    droppyBuilder.setOnClick { v, id ->
+                        if (id == 1) {
+                            val intent = Intent(viewGorup.context, DataFillActivity::class.java)
+                            intent.putExtra("class", field.type)
+                            intent.putExtra("updaterUUID", updaterUUID)
+                            viewGorup.context.startActivity(intent)
+                        }
+                        if (id == 2) {
+                            val intent = Intent(viewGorup.context, DataFillActivity::class.java)
+                            intent.putExtra("class", field.type)
+                            intent.putExtra("updaterUUID", updaterUUID)
+
+                            var currentId = field.type.getMethod("getId").invoke(adapter!!.dataList.get(spinner.selectedItemPosition)) as Long
+                            intent.putExtra("id", currentId)
+                            viewGorup.context.startActivity(intent)
+                        }
+                        if (id == 3) {
+                            field.type.getMethod("delete").invoke(adapter!!.dataList.get(spinner.selectedItemPosition))
+                            func()
+                        }
+                    }
+                    val droppyMenu = droppyBuilder.build()
+
+                    viewGorup.addView(view)
+                }
+
+
+            }
         }
         if (onSave != null) {
             val saveBtn = Button(viewGorup.context)
@@ -187,6 +262,13 @@ class ViewAnnotationParser {
 
         }
     }
+}
+
+private fun <E> MutableList<E>.getData() :List<E>  {
+    var k = Class<E>.componentType
+    var f=k.genericSuperclass
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
 }
 
 private fun Field.getTypeForThis(): Any {

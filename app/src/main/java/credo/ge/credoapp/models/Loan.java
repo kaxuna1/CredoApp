@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import credo.ge.credoapp.anotations.ObjectFieldTypeViewAnotation;
+import credo.ge.credoapp.anotations.ObjectsListFieldTypeViewAnottion;
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
 
 /**
@@ -35,6 +36,9 @@ public class Loan extends SugarRecord<Loan> {
 
     @ObjectFieldTypeViewAnotation(name = "სესხის ტიპი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
     public LoanType loanType;
+
+    @ObjectsListFieldTypeViewAnottion(name = "ოჯახის წევრები", displayField = "fullName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
+    public List<Person> family;
 
     public static List<Loan> getData(){
         return Loan.listAll(Loan.class);
