@@ -2,6 +2,7 @@ package credo.ge.credoapp.models;
 
 import com.orm.SugarRecord;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,14 +31,18 @@ public class Loan extends SugarRecord<Loan> {
     @ObjectFieldTypeViewAnotation(name = "თავდები", displayField = "fullName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
     public Person tavdebi;
 
-
     @ObjectFieldTypeViewAnotation(name = "ვალუტა", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
     public Currency currency;
 
     @ObjectFieldTypeViewAnotation(name = "სესხის ტიპი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
     public LoanType loanType;
 
-    @ObjectsListFieldTypeViewAnottion(name = "ოჯახის წევრები", displayField = "fullName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
+    @ObjectsListFieldTypeViewAnottion(name = "ოჯახის წევრები",
+            displayField = "fullName",
+            isMethod = true,
+            type = "comboBox",
+            sqlData = true,
+            canAddToDb = true)
     public List<Person> family;
 
     public static List<Loan> getData(){
@@ -45,6 +50,9 @@ public class Loan extends SugarRecord<Loan> {
     }
     public static Loan getById(long id){
         return Loan.findById(Loan.class,id);
+    }
+    public Loan(){
+        family=new ArrayList<>();
     }
 
 }

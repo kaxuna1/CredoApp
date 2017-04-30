@@ -49,7 +49,7 @@ class ViewAnnotationParser {
 
                 val editText = view.findViewById(R.id.editor) as EditText
                 val label = view.findViewById(R.id.label) as TextView
-                label.text=name
+                label.text = name
 
                 val fieldValue = field.get(bindObject)
                 var valueToSet = deffaultValue;
@@ -108,24 +108,25 @@ class ViewAnnotationParser {
 
 
 
-                        adapter = ComboboxAdapter(dataToLoad, viewGorup.context, displayField, isMethod, field.type,20f)
+                        adapter = ComboboxAdapter(dataToLoad, viewGorup.context, displayField, isMethod, field.type, 20f)
                         spinner.setAdapter(adapter)
 
-                        if(fieldValue!=null){
+                        if (fieldValue != null) {
                             var objectInList = dataToLoad.find {
-                                f->(
-                                    field.type
-                                            .getMethod("getId")
+                                f ->
+                                (
+                                        field.type
+                                                .getMethod("getId")
 
-                                            .invoke(f) as Long) ==
-                                    (field.type.getMethod("getId").invoke(fieldValue) as Long)
+                                                .invoke(f) as Long) ==
+                                        (field.type.getMethod("getId").invoke(fieldValue) as Long)
                             }
-                            var indexOfObject=dataToLoad.indexOf(objectInList)
-                            if (indexOfObject>=0){
+                            var indexOfObject = dataToLoad.indexOf(objectInList)
+                            if (indexOfObject >= 0) {
                                 spinner.setSelection(indexOfObject)
                             }
                         }
-                        spinner.onItemSelectedListener = object :AdapterView.OnItemSelectedListener{
+                        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                             override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
                                 field.set(bindObject, adapter!!.dataList.get(pos))
                             }
@@ -187,25 +188,33 @@ class ViewAnnotationParser {
                 val canAddToDb = annotation.canAddToDb
                 if (type == "comboBox") {
 
-                    ArrayList<Person>().getData()
+                    //ArrayList<Person>().getData()
 
                     var view = inflater.inflate(R.layout.multi_value_field_layout, null)
                     //
 
                     val spinner = view.findViewById(R.id.spinner) as Spinner
+                    val listView = view.findViewById(R.id.listView) as ListView
                     val updaterUUID = UUID.randomUUID().toString()
                     var adapter: ComboboxAdapter? = null
+                    var listAdapter: ComboboxAdapter? = null
                     val func = fun() {
-                        val method = field.genericType.javaClass.getMethod("getData")
+                        val listType = field.genericType as ParameterizedType
+                        val listClass = listType.actualTypeArguments[0] as Class<*>
+                        val method = listClass.getMethod("getData")
                         val dataToLoad = method.invoke(null) as List<Any>
+                        val dataOfField = field.get(bindObject) as List<Any>
 
 
 
 
+                        listAdapter = ComboboxAdapter(dataOfField, viewGorup.context, displayField, isMethod, listClass, 20f)
+
+                        adapter = ComboboxAdapter(dataToLoad, viewGorup.context, displayField, isMethod, listClass, 20f)
 
 
-                        adapter = ComboboxAdapter(dataToLoad, viewGorup.context, displayField, isMethod, field.type,20f)
-                        spinner.setAdapter(adapter)
+                        spinner.adapter = adapter
+                        listView.adapter = listAdapter
 
                     }
                     func()
@@ -225,6 +234,11 @@ class ViewAnnotationParser {
 
 
                     droppyBuilder.setOnClick { v, id ->
+                        if (id == 0) {
+                            field.type.getMethod("add").invoke(field.get(bindObject),adapter!!.dataList.get(spinner.selectedItemPosition))
+
+                            func()
+                        }
                         if (id == 1) {
                             val intent = Intent(viewGorup.context, DataFillActivity::class.java)
                             intent.putExtra("class", field.type)
@@ -262,13 +276,6 @@ class ViewAnnotationParser {
 
         }
     }
-}
-
-private fun <E> MutableList<E>.getData() :List<E>  {
-    var k = Class<E>.componentType
-    var f=k.genericSuperclass
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-
 }
 
 private fun Field.getTypeForThis(): Any {
