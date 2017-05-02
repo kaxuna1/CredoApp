@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import credo.ge.credoapp.anotations.BooleanFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.ObjectFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.ObjectsListFieldTypeViewAnottion;
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
@@ -19,16 +20,32 @@ public class Loan extends SugarRecord<Loan> {
         return name;
     }
 
-    @TextFieldTypeViewAnotation(name = "სახელი", deffaultValue = "", type = "text")
-    public String name = UUID.randomUUID().toString().substring(0, 5);
-    @TextFieldTypeViewAnotation(name = "თანხა", deffaultValue = "", type = "text")
+    @TextFieldTypeViewAnotation(name = "სახელი", deffaultValue = "", type = "text",mask = "###-###-###/##")
+    public String name = UUID.randomUUID().toString().substring(0,5);
+
+
+
+    @TextFieldTypeViewAnotation(name = "თანხა",
+            deffaultValue = "",
+            type = "text",visibilityPatern = {"active:true"})
     public String sum = "0";
 
 
-    @ObjectFieldTypeViewAnotation(name = "პიროვნება", displayField = "fullName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
+    @ObjectFieldTypeViewAnotation(name = "პიროვნება",
+            displayField = "fullName",
+            isMethod = true,
+            type = "comboBox",
+            sqlData = true,
+            canAddToDb = true)
     public Person person;
 
-    @ObjectFieldTypeViewAnotation(name = "თავდები", displayField = "fullName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
+    @ObjectFieldTypeViewAnotation(name = "თავდები",
+            displayField = "fullName",
+            isMethod = true,
+            type = "comboBox",
+            sqlData = true,
+            canAddToDb = true,
+            visibilityPatern = {"loanType:samomxmareblo"})
     public Person tavdebi;
 
     @ObjectFieldTypeViewAnotation(name = "ვალუტა", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
@@ -36,6 +53,9 @@ public class Loan extends SugarRecord<Loan> {
 
     @ObjectFieldTypeViewAnotation(name = "სესხის ტიპი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
     public LoanType loanType;
+
+    @BooleanFieldTypeViewAnotation(name = "აქტიურია",defaultVal = true)
+    public boolean active;
 
     @ObjectsListFieldTypeViewAnottion(name = "ოჯახის წევრები",
             displayField = "getName",
@@ -56,6 +76,7 @@ public class Loan extends SugarRecord<Loan> {
 
     public Loan() {
         family = new ArrayList<>();
+        active = false;
     }
 
 }

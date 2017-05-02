@@ -13,19 +13,20 @@ import credo.ge.credoapp.R
  * Created by vakhtanggelashvili on 4/26/17.
  */
 
-class ReflectionAdapterAdapter(val data:List<Any>, val context:Context, val nameField_:String, val isMethod_:Boolean, clazz: Class<*>, textSiz:Float) : BaseAdapter() {
+class ReflectionAdapterAdapter(val data: List<Any>, val context: Context, val nameField_: String, val isMethod_: Boolean, clazz: Class<*>, textSiz: Float) : BaseAdapter() {
     private val mInflator: LayoutInflater
-    var dataList:List<Any>
+    var dataList: List<Any>
     var clazz: Class<*>
-    var nameField:String
-    var isMethod:Boolean
-    var textSiz:Float
+    var nameField: String
+    var isMethod: Boolean
+    var textSiz: Float
+
     init {
-        this.nameField=nameField_
-        this.isMethod=isMethod_
-        this.dataList=data
-        this.clazz=clazz
-        this.textSiz=textSiz
+        this.nameField = nameField_
+        this.isMethod = isMethod_
+        this.dataList = data
+        this.clazz = clazz
+        this.textSiz = textSiz
         this.mInflator = LayoutInflater.from(context)
     }
 
@@ -34,10 +35,10 @@ class ReflectionAdapterAdapter(val data:List<Any>, val context:Context, val name
     }
 
     override fun getItem(position: Int): Any? {
-        if(isMethod){
-             return clazz.getMethod(nameField).invoke(dataList[position]) as String
-        }else{
-            return  clazz.getDeclaredField(nameField).get(dataList[position]).toString()
+        if (isMethod) {
+            return clazz.getMethod(nameField).invoke(dataList[position]) as String
+        } else {
+            return clazz.getDeclaredField(nameField).get(dataList[position]).toString()
         }
     }
 
@@ -56,16 +57,17 @@ class ReflectionAdapterAdapter(val data:List<Any>, val context:Context, val name
             view = convertView
             vh = view.tag as ListRowHolder
         }
-        var displayValue="";
-        if(isMethod){
-           displayValue = clazz.getMethod(nameField).invoke(dataList[position]) as String
-        }else{
+        var displayValue = "";
+        if (isMethod) {
+            displayValue = clazz.getMethod(nameField).invoke(dataList[position]) as String
+        } else {
             displayValue = clazz.getDeclaredField(nameField).get(dataList[position]).toString()
         }
         vh.label.text = displayValue
         //vh.label.setTextSize(TypedValue.COMPLEX_UNIT_SP ,this.textSiz)
         return view
     }
+
     private class ListRowHolder(row: View?) {
         public val label: TextView
 

@@ -18,6 +18,22 @@ public class FamilyPerson extends SugarRecord<FamilyPerson> {
 
     public Loan loan;
 
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+    public FamilyMemberType getMemberType() {
+        return memberType;
+    }
+
+    public void setMemberType(FamilyMemberType memberType) {
+        this.memberType = memberType;
+    }
+
     @ObjectFieldTypeViewAnotation(name = "კავშირი",
             displayField = "getName",
             isMethod = true,
@@ -27,7 +43,7 @@ public class FamilyPerson extends SugarRecord<FamilyPerson> {
     public FamilyMemberType memberType;
 
     public String getName(){
-        return person.fullName();
+        return person.fullName()+" "+memberType.name;
     }
 
     public static List<Person> getData(){

@@ -13,4 +13,5 @@ annotation class ObjectFieldTypeViewAnotation(val name:String,
                                               val isMethod:Boolean,
                                               val type:String,
                                               val sqlData:Boolean,
-                                              val canAddToDb:Boolean)
+                                              val canAddToDb:Boolean,
+                                              val visibilityPatern:Array<String> = arrayOf())

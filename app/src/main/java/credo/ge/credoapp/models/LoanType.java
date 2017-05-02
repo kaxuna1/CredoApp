@@ -24,4 +24,9 @@ public class LoanType extends SugarRecord<LoanType> {
     public static LoanType getById(long id){
         return LoanType.findById(LoanType.class,id);
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

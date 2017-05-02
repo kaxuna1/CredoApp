@@ -23,6 +23,8 @@ class DataFillActivity : AppCompatActivity() {
         val joinId = extras.getLong("joinId")
         val updaterUUID=extras.getString("updaterUUID")
 
+        val autoSave=extras.getBoolean("autosave")
+
 
         val ctor = classname.getConstructor()
 
@@ -37,7 +39,9 @@ class DataFillActivity : AppCompatActivity() {
             var joinObject = joinClassName.getMethod("getById",Long::class.java).invoke(null,joinId)
             classname.getField(joinFieldName).set(bindObject,joinObject)
         }
+        if(autoSave)
         classname.getMethod("save").invoke(bindObject)
+
         ViewAnnotationParser().parse(classname, layout!!,bindObject, View.OnClickListener {
             classname.getMethod("save").invoke(bindObject)
             if(updaterUUID!=null){

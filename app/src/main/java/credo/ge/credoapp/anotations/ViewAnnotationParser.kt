@@ -1,33 +1,28 @@
 package credo.ge.credoapp.anotations
 
-import android.content.Context
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 
 import java.lang.reflect.*
 
-import credo.ge.credoapp.models.TestModel
 import android.text.Editable
 import android.widget.*
-import com.jaredrummler.materialspinner.MaterialSpinner
-import com.orm.SugarRecord
-import credo.ge.credoapp.models.Person
 import credo.ge.credoapp.views.ListAdapters.ReflectionAdapterAdapter
 import com.shehabic.droppy.DroppyMenuPopup
-import com.shehabic.droppy.DroppyClickCallbackInterface
 import com.shehabic.droppy.DroppyMenuItem
-import android.content.Context.LAYOUT_INFLATER_SERVICE
-import credo.ge.credoapp.MainActivity
 import android.view.LayoutInflater
 import credo.ge.credoapp.R
-import android.widget.PopupWindow
 import android.content.Intent
+import android.support.v7.app.AlertDialog
 import credo.ge.credoapp.DataFillActivity
 import credo.ge.credoapp.StaticData
 import java.util.*
 import kotlin.collections.ArrayList
+import android.view.MotionEvent
+import br.com.sapereaude.maskedEditText.MaskedEditText
+import credo.ge.credoapp.views.ViewFieldHolder
+import kotlin.collections.HashMap
 
 
 /**
@@ -38,29 +33,36 @@ class ViewAnnotationParser {
     fun parse(clazz: Class<*>, viewGorup: ViewGroup, bindObject: Any, onSave: View.OnClickListener?) {
         var inflater = LayoutInflater.from(viewGorup.context)
         val fields = clazz.fields
+        val fieldPaterns = ArrayList<ViewFieldHolder>()
+        val fieldNameMap = HashMap<String, Field>()
+
         for (field in fields) {
+            fieldNameMap.put(field.name, field);
+
             if (field.isAnnotationPresent(TextFieldTypeViewAnotation::class.java)) {
                 val annotation = field.getAnnotation<TextFieldTypeViewAnotation>(TextFieldTypeViewAnotation::class.java)
                 val name = annotation.name
                 val type = annotation.type
                 val deffaultValue = annotation.deffaultValue
-
+                val mask = annotation.mask
+                val allowedChars = annotation.allowed_chars
+                val visibilityPater = annotation.visibilityPatern
                 val view = inflater.inflate(R.layout.text_field, null)
-
-                val editText = view.findViewById(R.id.editor) as EditText
+                val editText = view.findViewById(R.id.editor) as MaskedEditText
                 val label = view.findViewById(R.id.label) as TextView
                 label.text = name
-
+                if (!mask.isBlank())
+                    editText.mask = mask
                 val fieldValue = field.get(bindObject)
                 var valueToSet = deffaultValue;
-                if (fieldValue != null)
-                    valueToSet = fieldValue as String
-
-
+                if (fieldValue != null) {
+                    if (type == "text")
+                        valueToSet = fieldValue as String
+                    if (type == "int")
+                        valueToSet = (fieldValue as Int).toString()
+                }
                 editText.setText(valueToSet)
-
                 var obj = clazz.cast(bindObject)
-
                 viewGorup.addView(view)
                 editText.addTextChangedListener(object : TextWatcher {
 
@@ -73,10 +75,23 @@ class ViewAnnotationParser {
                     override fun onTextChanged(s: CharSequence, start: Int,
                                                before: Int, count: Int) {
 
-                        field.set(bindObject, s.toString())
+
+                        if (type == "text")
+                            field.set(bindObject, editText.rawText.toString())
+                        if (type == "int" && !s.isEmpty())
+                            field.set(bindObject, editText.rawText.toString().toInt())
+
 
                     }
                 })
+
+                var viewFieldHolder = ViewFieldHolder();
+                viewFieldHolder.bindObject = bindObject;
+                viewFieldHolder.field = field;
+                viewFieldHolder.view = view
+                viewFieldHolder.paterns = visibilityPater
+                fieldPaterns.add(viewFieldHolder)
+
             }
             if (field.isAnnotationPresent(DateFieldTypeViewAnotation::class.java)) {
                 val annotation = field.getAnnotation<TextFieldTypeViewAnotation>(TextFieldTypeViewAnotation::class.java)
@@ -90,6 +105,7 @@ class ViewAnnotationParser {
                 val displayField = annotation.displayField
                 val isMethod = annotation.isMethod
                 val type = annotation.type
+
                 val sqlData = annotation.sqlData
                 val canAddToDb = annotation.canAddToDb
                 if (type == "comboBox") {
@@ -129,6 +145,8 @@ class ViewAnnotationParser {
                         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                             override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
                                 field.set(bindObject, adapter!!.dataList.get(pos))
+                                visibilityCheck(fieldPaterns, fieldNameMap, bindObject)
+
                             }
 
                             override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
@@ -155,11 +173,13 @@ class ViewAnnotationParser {
                             val intent = Intent(viewGorup.context, DataFillActivity::class.java)
                             intent.putExtra("class", field.type)
                             intent.putExtra("updaterUUID", updaterUUID)
+                            intent.putExtra("autosave", false)
                             viewGorup.context.startActivity(intent)
                         }
                         if (id == 1) {
                             val intent = Intent(viewGorup.context, DataFillActivity::class.java)
                             intent.putExtra("class", field.type)
+                            intent.putExtra("autosave", false)
                             intent.putExtra("updaterUUID", updaterUUID)
 
                             var currentId = field.type.getMethod("getId").invoke(adapter!!.dataList.get(spinner.selectedItemPosition)) as Long
@@ -174,6 +194,12 @@ class ViewAnnotationParser {
                     val droppyMenu = droppyBuilder.build()
 
                     viewGorup.addView(view)
+                    var viewFieldHolder = ViewFieldHolder();
+                    viewFieldHolder.bindObject = bindObject;
+                    viewFieldHolder.field = field;
+                    viewFieldHolder.view = view
+                    viewFieldHolder.paterns = annotation.visibilityPatern
+                    fieldPaterns.add(viewFieldHolder)
                 }
 
 
@@ -187,51 +213,114 @@ class ViewAnnotationParser {
                 val sqlData = annotation.sqlData
                 val canAddToDb = annotation.canAddToDb
                 val joinField = annotation.joinField
-                if (type == "comboBox") {
 
-                    //ArrayList<Person>().getData()
-                    val listType = field.genericType as ParameterizedType
-                    val listClass = listType.actualTypeArguments[0] as Class<*>
 
-                    var view = inflater.inflate(R.layout.multi_value_field_layout, null)
-                    //
+                //ArrayList<Person>().getData()
+                val listType = field.genericType as ParameterizedType
+                val listClass = listType.actualTypeArguments[0] as Class<*>
 
-                    val listView = view.findViewById(R.id.listView) as ListView
-                    val btn = view.findViewById(R.id.addBtn) as Button
-                    val label = view.findViewById(R.id.textLabel) as TextView
-                    label.text = "${name}:"
-                    val updaterUUID = UUID.randomUUID().toString()
-                    var adapter: ReflectionAdapterAdapter? = null
-                    var listAdapter: ReflectionAdapterAdapter? = null
-                    val func = fun() {
+                val view = inflater.inflate(R.layout.multi_value_field_layout, null)
+                //
 
-                        val method = listClass.getMethod("findByLoan",Long::class.java)
-                        val dataToLoad = method.invoke(null,(clazz.getMethod("getId").invoke(bindObject) as Long)) as ArrayList<Any>
-                        //dataOfField.addAll(dataToLoad)
-                        listAdapter = ReflectionAdapterAdapter(dataToLoad, viewGorup.context, displayField, isMethod, listClass, 20f)
-                        listView.adapter = listAdapter
+                val listView = view.findViewById(R.id.listView) as ListView
+                val btn = view.findViewById(R.id.addBtn) as Button
+                val label = view.findViewById(R.id.textLabel) as TextView
+                label.text = "${name}:"
+                val updaterUUID = UUID.randomUUID().toString()
+                var adapter: ReflectionAdapterAdapter? = null
+                var listAdapter: ReflectionAdapterAdapter? = null
+                val func = fun() {
 
+                    val method = listClass.getMethod("findByLoan", Long::class.java)
+                    val dataToLoad = method.invoke(null, (clazz.getMethod("getId").invoke(bindObject) as Long)) as ArrayList<Any>
+                    //dataOfField.addAll(dataToLoad)
+                    listAdapter = ReflectionAdapterAdapter(dataToLoad, viewGorup.context, displayField, isMethod, listClass, 20f)
+                    listView.adapter = listAdapter
+                    listView.setOnTouchListener { v, event ->
+                        val action = event.action
+                        when (action) {
+                            MotionEvent.ACTION_DOWN ->
+                                // Disallow ScrollView to intercept touch events.
+                                v.parent.requestDisallowInterceptTouchEvent(true)
+
+                            MotionEvent.ACTION_UP ->
+                                // Allow ScrollView to intercept touch events.
+                                v.parent.requestDisallowInterceptTouchEvent(false)
+                        }
+
+                        // Handle ListView touch events.
+                        v.onTouchEvent(event)
                     }
-                    func()
-                    btn.setOnClickListener{
-                        val intent = Intent(viewGorup.context, DataFillActivity::class.java)
 
-                        intent.putExtra("updaterUUID", updaterUUID)
 
-                        var joinId = (clazz.getMethod("getId").invoke(bindObject) as Long)
-                        intent.putExtra("class", listClass)
-                        intent.putExtra("joinClass", clazz)
-                        intent.putExtra("joinId", joinId)
-                        intent.putExtra("joinField",joinField)
+                }
+                func()
+                listView.setOnItemClickListener { parent, view, position, id ->
 
-                        viewGorup.context.startActivity(intent)
+                    var dialogBody = inflater.inflate(R.layout.sub_list_prompt_layout, null);
+
+                    val builder = AlertDialog.Builder(viewGorup.context).setTitle("მოქმედება").setView(dialogBody).create()
+
+                    (dialogBody.findViewById(R.id.cancelButton) as Button).setOnClickListener {
+                        builder.hide()
                     }
+                    (dialogBody.findViewById(R.id.deleteButton) as Button).setOnClickListener {
+                        var item = listAdapter!!.dataList.get(position)
+                        listClass.getMethod("delete").invoke(item)
+                        func();
+                        builder.hide()
+                    }
+                    builder.show()
 
-                    StaticData.comboBoxUpdateFunctions.put(updaterUUID, func)
+                }
+                btn.setOnClickListener {
+                    val intent = Intent(viewGorup.context, DataFillActivity::class.java)
 
-                    viewGorup.addView(view)
+                    intent.putExtra("updaterUUID", updaterUUID)
+
+                    var joinId = (clazz.getMethod("getId").invoke(bindObject) as Long)
+                    intent.putExtra("class", listClass)
+                    intent.putExtra("joinClass", clazz)
+
+                    intent.putExtra("autosave", false)
+                    intent.putExtra("joinId", joinId)
+                    intent.putExtra("joinField", joinField)
+
+                    viewGorup.context.startActivity(intent)
                 }
 
+                StaticData.comboBoxUpdateFunctions.put(updaterUUID, func)
+
+                viewGorup.addView(view)
+                var viewFieldHolder = ViewFieldHolder();
+                viewFieldHolder.bindObject = bindObject;
+                viewFieldHolder.field = field;
+                viewFieldHolder.view = view
+                viewFieldHolder.paterns = annotation.visibilityPatern
+                fieldPaterns.add(viewFieldHolder)
+
+            }
+            if (field.isAnnotationPresent(BooleanFieldTypeViewAnotation::class.java)) {
+                val annotation = field.getAnnotation<BooleanFieldTypeViewAnotation>(BooleanFieldTypeViewAnotation::class.java)
+                val name = annotation.name
+                val defaultVal = annotation.defaultVal
+                val view = inflater.inflate(R.layout.checkbox_with_name, null)
+                val checkbox = view.findViewById(R.id.checkBox) as CheckBox
+                checkbox.text = name
+                val fieldValue = field.get(bindObject)
+                var valueToSet = defaultVal;
+                if (fieldValue != null) {
+                    valueToSet = fieldValue as Boolean
+                }
+
+                checkbox.isChecked = valueToSet;
+
+                viewGorup.addView(view)
+
+                checkbox.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+                    field.set(bindObject, isChecked)
+                    visibilityCheck(fieldPaterns, fieldNameMap, bindObject)
+                })
 
             }
         }
@@ -243,6 +332,37 @@ class ViewAnnotationParser {
         } else {
 
         }
+        visibilityCheck(fieldPaterns, fieldNameMap, bindObject)
+
+
+    }
+}
+
+fun visibilityCheck(fieldPaterns: ArrayList<ViewFieldHolder>, fieldNameMap: HashMap<String, Field>, bindObject: Any) {
+
+
+    fieldPaterns.forEach {
+        var visible = true
+
+
+        it.paterns!!.forEach {
+            val patern = it.split(":")
+            val fieldName = patern[0]
+            val fieldValueMustBe = patern[1]
+            val field = fieldNameMap.get(fieldName)
+
+            val fieldValue = field!!.get(bindObject).toString()
+            if (fieldValueMustBe != fieldValue)
+                visible = false
+        }
+
+        if (visible)
+            it.view!!.visibility = View.VISIBLE
+        else {
+            it.view!!.visibility = View.GONE
+        }
+
+
     }
 }
 
