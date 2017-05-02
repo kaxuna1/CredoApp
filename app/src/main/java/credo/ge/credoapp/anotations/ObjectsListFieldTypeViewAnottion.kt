@@ -14,4 +14,5 @@ annotation class ObjectsListFieldTypeViewAnottion (val name:String,
                                                    val isMethod:Boolean,
                                                    val type:String,
                                                    val sqlData:Boolean,
-                                                   val canAddToDb:Boolean)
+                                                   val canAddToDb:Boolean,
+                                                   val joinField:String)

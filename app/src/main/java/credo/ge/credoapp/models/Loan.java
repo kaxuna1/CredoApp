@@ -20,14 +20,14 @@ public class Loan extends SugarRecord<Loan> {
     }
 
     @TextFieldTypeViewAnotation(name = "სახელი", deffaultValue = "", type = "text")
-    public String name = UUID.randomUUID().toString().substring(0,5);
+    public String name = UUID.randomUUID().toString().substring(0, 5);
     @TextFieldTypeViewAnotation(name = "თანხა", deffaultValue = "", type = "text")
     public String sum = "0";
 
 
     @ObjectFieldTypeViewAnotation(name = "პიროვნება", displayField = "fullName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
     public Person person;
-    
+
     @ObjectFieldTypeViewAnotation(name = "თავდები", displayField = "fullName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
     public Person tavdebi;
 
@@ -38,21 +38,24 @@ public class Loan extends SugarRecord<Loan> {
     public LoanType loanType;
 
     @ObjectsListFieldTypeViewAnottion(name = "ოჯახის წევრები",
-            displayField = "fullName",
+            displayField = "getName",
             isMethod = true,
             type = "comboBox",
             sqlData = true,
-            canAddToDb = true)
-    public List<Person> family;
+            canAddToDb = true,
+            joinField = "loan")
+    public ArrayList<FamilyPerson> family;
 
-    public static List<Loan> getData(){
+    public static List<Loan> getData() {
         return Loan.listAll(Loan.class);
     }
-    public static Loan getById(long id){
-        return Loan.findById(Loan.class,id);
+
+    public static Loan getById(long id) {
+        return Loan.findById(Loan.class, id);
     }
-    public Loan(){
-        family=new ArrayList<>();
+
+    public Loan() {
+        family = new ArrayList<>();
     }
 
 }

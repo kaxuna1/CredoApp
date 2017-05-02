@@ -14,7 +14,7 @@ import android.widget.*
 import com.jaredrummler.materialspinner.MaterialSpinner
 import com.orm.SugarRecord
 import credo.ge.credoapp.models.Person
-import credo.ge.credoapp.views.ListAdapters.ComboboxAdapter
+import credo.ge.credoapp.views.ListAdapters.ReflectionAdapterAdapter
 import com.shehabic.droppy.DroppyMenuPopup
 import com.shehabic.droppy.DroppyClickCallbackInterface
 import com.shehabic.droppy.DroppyMenuItem
@@ -98,7 +98,7 @@ class ViewAnnotationParser {
 
                     val spinner = view.findViewById(R.id.spinner) as Spinner
                     val updaterUUID = UUID.randomUUID().toString()
-                    var adapter: ComboboxAdapter? = null
+                    var adapter: ReflectionAdapterAdapter? = null
                     val func = fun() {
                         val method = field.type.getMethod("getData")
                         val dataToLoad = method.invoke(null) as List<Any>
@@ -108,7 +108,7 @@ class ViewAnnotationParser {
 
 
 
-                        adapter = ComboboxAdapter(dataToLoad, viewGorup.context, displayField, isMethod, field.type, 20f)
+                        adapter = ReflectionAdapterAdapter(dataToLoad, viewGorup.context, displayField, isMethod, field.type, 20f)
                         spinner.setAdapter(adapter)
 
                         if (fieldValue != null) {
@@ -186,80 +186,48 @@ class ViewAnnotationParser {
                 val type = annotation.type
                 val sqlData = annotation.sqlData
                 val canAddToDb = annotation.canAddToDb
+                val joinField = annotation.joinField
                 if (type == "comboBox") {
 
                     //ArrayList<Person>().getData()
+                    val listType = field.genericType as ParameterizedType
+                    val listClass = listType.actualTypeArguments[0] as Class<*>
 
                     var view = inflater.inflate(R.layout.multi_value_field_layout, null)
                     //
 
-                    val spinner = view.findViewById(R.id.spinner) as Spinner
                     val listView = view.findViewById(R.id.listView) as ListView
+                    val btn = view.findViewById(R.id.addBtn) as Button
+                    val label = view.findViewById(R.id.textLabel) as TextView
+                    label.text = "${name}:"
                     val updaterUUID = UUID.randomUUID().toString()
-                    var adapter: ComboboxAdapter? = null
-                    var listAdapter: ComboboxAdapter? = null
+                    var adapter: ReflectionAdapterAdapter? = null
+                    var listAdapter: ReflectionAdapterAdapter? = null
                     val func = fun() {
-                        val listType = field.genericType as ParameterizedType
-                        val listClass = listType.actualTypeArguments[0] as Class<*>
-                        val method = listClass.getMethod("getData")
-                        val dataToLoad = method.invoke(null) as List<Any>
-                        val dataOfField = field.get(bindObject) as List<Any>
 
-
-
-
-                        listAdapter = ComboboxAdapter(dataOfField, viewGorup.context, displayField, isMethod, listClass, 20f)
-
-                        adapter = ComboboxAdapter(dataToLoad, viewGorup.context, displayField, isMethod, listClass, 20f)
-
-
-                        spinner.adapter = adapter
+                        val method = listClass.getMethod("findByLoan",Long::class.java)
+                        val dataToLoad = method.invoke(null,(clazz.getMethod("getId").invoke(bindObject) as Long)) as ArrayList<Any>
+                        //dataOfField.addAll(dataToLoad)
+                        listAdapter = ReflectionAdapterAdapter(dataToLoad, viewGorup.context, displayField, isMethod, listClass, 20f)
                         listView.adapter = listAdapter
 
                     }
                     func()
-                    StaticData.comboBoxUpdateFunctions.put(updaterUUID, func)
+                    btn.setOnClickListener{
+                        val intent = Intent(viewGorup.context, DataFillActivity::class.java)
 
-                    val anchor = view.findViewById(R.id.buttonActions) as Button
-                    val label = view.findViewById(R.id.label) as TextView
-                    label.text = "${name}:"
-                    val droppyBuilder = DroppyMenuPopup.Builder(viewGorup.context, anchor)
+                        intent.putExtra("updaterUUID", updaterUUID)
 
-                    droppyBuilder
-                            .addMenuItem(DroppyMenuItem("add to list"))
-                            .addMenuItem(DroppyMenuItem("add"))
-                            .addMenuItem(DroppyMenuItem("edit"))
-                            .addMenuItem(DroppyMenuItem("delete"))
-                            .addSeparator()
+                        var joinId = (clazz.getMethod("getId").invoke(bindObject) as Long)
+                        intent.putExtra("class", listClass)
+                        intent.putExtra("joinClass", clazz)
+                        intent.putExtra("joinId", joinId)
+                        intent.putExtra("joinField",joinField)
 
-
-                    droppyBuilder.setOnClick { v, id ->
-                        if (id == 0) {
-                            field.type.getMethod("add").invoke(field.get(bindObject),adapter!!.dataList.get(spinner.selectedItemPosition))
-
-                            func()
-                        }
-                        if (id == 1) {
-                            val intent = Intent(viewGorup.context, DataFillActivity::class.java)
-                            intent.putExtra("class", field.type)
-                            intent.putExtra("updaterUUID", updaterUUID)
-                            viewGorup.context.startActivity(intent)
-                        }
-                        if (id == 2) {
-                            val intent = Intent(viewGorup.context, DataFillActivity::class.java)
-                            intent.putExtra("class", field.type)
-                            intent.putExtra("updaterUUID", updaterUUID)
-
-                            var currentId = field.type.getMethod("getId").invoke(adapter!!.dataList.get(spinner.selectedItemPosition)) as Long
-                            intent.putExtra("id", currentId)
-                            viewGorup.context.startActivity(intent)
-                        }
-                        if (id == 3) {
-                            field.type.getMethod("delete").invoke(adapter!!.dataList.get(spinner.selectedItemPosition))
-                            func()
-                        }
+                        viewGorup.context.startActivity(intent)
                     }
-                    val droppyMenu = droppyBuilder.build()
+
+                    StaticData.comboBoxUpdateFunctions.put(updaterUUID, func)
 
                     viewGorup.addView(view)
                 }
@@ -277,6 +245,7 @@ class ViewAnnotationParser {
         }
     }
 }
+
 
 private fun Field.getTypeForThis(): Any {
     return type;

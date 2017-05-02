@@ -13,7 +13,7 @@ import credo.ge.credoapp.R
  * Created by vakhtanggelashvili on 4/26/17.
  */
 
-class ComboboxAdapter(val data:List<Any>,val context:Context,val nameField_:String,val isMethod_:Boolean,clazz: Class<*>,textSiz:Float) : BaseAdapter() {
+class ReflectionAdapterAdapter(val data:List<Any>, val context:Context, val nameField_:String, val isMethod_:Boolean, clazz: Class<*>, textSiz:Float) : BaseAdapter() {
     private val mInflator: LayoutInflater
     var dataList:List<Any>
     var clazz: Class<*>

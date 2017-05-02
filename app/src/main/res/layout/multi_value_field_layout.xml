@@ -4,9 +4,21 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <include layout="@layout/combobox_with_button"
+
+    <TextView
+        android:id="@+id/textLabel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:textSize="15dp"
+        android:text="TextView" />
+
+    <Button
+        android:id="@+id/addBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.12"
+        android:text="დამატება" />
 
     <ListView
         android:id="@id/listView"

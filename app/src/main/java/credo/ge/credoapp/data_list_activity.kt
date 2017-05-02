@@ -4,7 +4,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ListView
-import credo.ge.credoapp.views.ListAdapters.ComboboxAdapter
+import credo.ge.credoapp.views.ListAdapters.ReflectionAdapterAdapter
 
 class data_list_activity : AppCompatActivity() {
 
@@ -23,7 +23,7 @@ class data_list_activity : AppCompatActivity() {
         val method = classname.getMethod("getData")
         val dataToLoad = method.invoke(null) as List<Any>
 
-        var adapter = ComboboxAdapter(dataToLoad, context, nameFieldMethodName, true, classname,34f)
+        var adapter = ReflectionAdapterAdapter(dataToLoad, context, nameFieldMethodName, true, classname,34f)
 
 
         listView.adapter=adapter
