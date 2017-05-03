@@ -45,7 +45,7 @@ public class Loan extends SugarRecord<Loan> {
             type = "comboBox",
             sqlData = true,
             canAddToDb = true,
-            visibilityPatern = {"loanType:samomxmareblo"})
+            visibilityPatern = {"loanType:samomxmareblo,ipotekuri"})
     public Person tavdebi;
 
     @ObjectFieldTypeViewAnotation(name = "ვალუტა", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)

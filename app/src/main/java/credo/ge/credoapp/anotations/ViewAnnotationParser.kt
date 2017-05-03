@@ -348,12 +348,17 @@ fun visibilityCheck(fieldPaterns: ArrayList<ViewFieldHolder>, fieldNameMap: Hash
         it.paterns!!.forEach {
             val patern = it.split(":")
             val fieldName = patern[0]
-            val fieldValueMustBe = patern[1]
+            val fieldValueMustBe = patern[1].split(",")
             val field = fieldNameMap.get(fieldName)
 
             val fieldValue = field!!.get(bindObject).toString()
-            if (fieldValueMustBe != fieldValue)
-                visible = false
+            var visibleTemp=false
+            fieldValueMustBe.forEach {
+                if (it == fieldValue)
+                    visibleTemp = true
+            }
+            visible=visibleTemp
+
         }
 
         if (visible)
