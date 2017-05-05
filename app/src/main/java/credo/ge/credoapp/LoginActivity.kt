@@ -32,6 +32,7 @@ import java.util.ArrayList
 
 import android.Manifest.permission.READ_CONTACTS
 import android.content.SharedPreferences
+import android.util.Log
 import com.andrognito.pinlockview.PinLockListener
 import com.andrognito.pinlockview.PinLockView
 import credo.ge.credoapp.models.OnlineDataModels.LoginData
@@ -42,6 +43,8 @@ import rx.functions.Action1
 /**
  * A login screen that offers login via email/password.
  */
+
+
 class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -57,43 +60,57 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     internal var pref: SharedPreferences? = null
     internal var editor: SharedPreferences.Editor? = null
 
+
     private var loginData: LoginData? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+
         // Set up the login form.
         pref = this.applicationContext.getSharedPreferences(StaticData.preferencesName, StaticData.preferencesMode)
         editor = pref!!.edit();
-        val sessionId=pref!!.getLong("session",0)
-        if(sessionId>0){
-             loginData = LoginData.findById(LoginData::class.java,sessionId)
+        val sessionId = pref!!.getLong("session", 0)
+        if (sessionId > 0) {
+            loginData = LoginData.findById(LoginData::class.java, sessionId)
+            setContentView(R.layout.pin_layout)
+            mPinLockView = findViewById(R.id.pin_lock_view) as PinLockView
+            mPinLockView!!.setPinLockListener(object : PinLockListener {
+                override fun onComplete(pin: String) {
+                    Log.d("kkaaxxaa", "Pin complete: " + pin)
+                }
 
+                override fun onEmpty() {
+                    Log.d("kkaaxxaa", "Pin empty")
+                }
 
+                override fun onPinChange(pinLength: Int, intermediatePin: String) {
+                    Log.d("kkaaxxaa", "Pin changed, new length $pinLength with intermediate pin $intermediatePin")
+                }
+            })
 
-        }
-        mEmailView = findViewById(R.id.email) as AutoCompleteTextView
+        } else {
+            setContentView(R.layout.activity_login)
+            mEmailView = findViewById(R.id.email) as AutoCompleteTextView
 //        populateAutoComplete()
 
-        mPasswordView = findViewById(R.id.password) as EditText
-        mPasswordView!!.setOnEditorActionListener(TextView.OnEditorActionListener { textView, id, keyEvent ->
-            if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                attemptLogin()
-                return@OnEditorActionListener true
-            }
-            false
-        })
-
-        mPinLockView = findViewById(R.id.pin_lock_view) as PinLockView
-
-        val mEmailSignInButton = findViewById(R.id.email_sign_in_button) as Button
-        mEmailSignInButton.setOnClickListener { attemptLogin() }
-
-        mLoginFormView = findViewById(R.id.login_form)
-        mProgressView = findViewById(R.id.login_progress)
+            mPasswordView = findViewById(R.id.password) as EditText
+            mPasswordView!!.setOnEditorActionListener(TextView.OnEditorActionListener { textView, id, keyEvent ->
+                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                    attemptLogin()
+                    return@OnEditorActionListener true
+                }
+                false
+            })
 
 
+
+            val mEmailSignInButton = findViewById(R.id.email_sign_in_button) as Button
+            mEmailSignInButton.setOnClickListener { attemptLogin() }
+
+            mLoginFormView = findViewById(R.id.login_form)
+            mProgressView = findViewById(R.id.login_progress)
+        }
 
 
     }
@@ -153,37 +170,21 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                 if (result != null) {
                     if (result.data.expires_in != 0L) {
 
-                        mPinLockView!!.setPinLockListener(PinLockListener{
 
-                            fun onComplete(pin:String) {
-
-                            }
-
-
-                            fun  onEmpty() {
-                                Log.d(TAG, "Pin empty");
-                            }
-
-
-                            fun  onPinChange(int pinLength, String intermediatePin) {
-                                Log.d(TAG, "Pin changed, new length " + pinLength + " with intermediate pin " + intermediatePin);
-                            }
-                        })
-
-
+                        setContentView(R.layout.pin_layout)
                         result.data.save()
-                        editor!!.putLong("session",result.data.id)
+                        editor!!.putLong("session", result.data.id)
                         editor!!.commit()
                         StaticData.loggedIn = true
 
 
                         finish()
-                    }else{
+                    } else {
                         showProgress(false)
                     }
 
-                }else{
-                 showProgress(false)
+                } else {
+                    showProgress(false)
                 }
             })
         }
