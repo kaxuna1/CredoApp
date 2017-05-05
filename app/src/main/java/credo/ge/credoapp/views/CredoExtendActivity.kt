@@ -14,6 +14,9 @@ import credo.ge.credoapp.models.Person
  */
 
 open class CredoExtendActivity : AppCompatActivity() {
+
+
+
     override fun onResume() {
         super.onResume()
         if (!StaticData.loggedIn) {

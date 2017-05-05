@@ -31,7 +31,12 @@ import android.widget.TextView
 import java.util.ArrayList
 
 import android.Manifest.permission.READ_CONTACTS
+import android.content.SharedPreferences
+import com.andrognito.pinlockview.PinLockListener
+import com.andrognito.pinlockview.PinLockView
+import credo.ge.credoapp.models.OnlineDataModels.LoginData
 import credo.ge.credoapp.online.OnlineData
+import kotlinx.android.synthetic.main.spinner_row.view.*
 import rx.functions.Action1
 
 /**
@@ -47,11 +52,27 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     private var mPasswordView: EditText? = null
     private var mProgressView: View? = null
     private var mLoginFormView: View? = null
+    private var mPinLockView: PinLockView? = null
+
+    internal var pref: SharedPreferences? = null
+    internal var editor: SharedPreferences.Editor? = null
+
+    private var loginData: LoginData? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         // Set up the login form.
+        pref = this.applicationContext.getSharedPreferences(StaticData.preferencesName, StaticData.preferencesMode)
+        editor = pref!!.edit();
+        val sessionId=pref!!.getLong("session",0)
+        if(sessionId>0){
+             loginData = LoginData.findById(LoginData::class.java,sessionId)
+
+
+
+        }
         mEmailView = findViewById(R.id.email) as AutoCompleteTextView
 //        populateAutoComplete()
 
@@ -64,21 +85,23 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             false
         })
 
+        mPinLockView = findViewById(R.id.pin_lock_view) as PinLockView
+
         val mEmailSignInButton = findViewById(R.id.email_sign_in_button) as Button
         mEmailSignInButton.setOnClickListener { attemptLogin() }
 
         mLoginFormView = findViewById(R.id.login_form)
         mProgressView = findViewById(R.id.login_progress)
+
+
+
+
     }
-
-
-
 
 
     /**
      * Callback received when a permissions request has been completed.
      */
-
 
 
     /**
@@ -123,23 +146,47 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             // form field with an error.
             focusView!!.requestFocus()
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true)
-            OnlineData.login(email,password, Action1 {
-                var data=it;
 
-                if(data!=null){
-                    StaticData.loggedIn=true
-                    finish()
+            showProgress(true)
+            OnlineData.login(email, password, Action1 {
+                var result = it;
+                if (result != null) {
+                    if (result.data.expires_in != 0L) {
+
+                        mPinLockView!!.setPinLockListener(PinLockListener{
+
+                            fun onComplete(pin:String) {
+
+                            }
+
+
+                            fun  onEmpty() {
+                                Log.d(TAG, "Pin empty");
+                            }
+
+
+                            fun  onPinChange(int pinLength, String intermediatePin) {
+                                Log.d(TAG, "Pin changed, new length " + pinLength + " with intermediate pin " + intermediatePin);
+                            }
+                        })
+
+
+                        result.data.save()
+                        editor!!.putLong("session",result.data.id)
+                        editor!!.commit()
+                        StaticData.loggedIn = true
+
+
+                        finish()
+                    }else{
+                        showProgress(false)
+                    }
+
+                }else{
+                 showProgress(false)
                 }
             })
         }
-    }
-
-    private fun isEmailValid(email: String): Boolean {
-        //TODO: Replace this with your own logic
-        return email.contains("@")
     }
 
     private fun isPasswordValid(password: String): Boolean {

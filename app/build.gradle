@@ -59,6 +59,8 @@ dependencies {
     compile 'ru.egslava:MaskedEditText:1.0.5'
     compile 'com.android.support:design:25.3.1'
     testCompile 'junit:junit:4.12'
+    compile 'com.andrognito.pinlockview:pinlockview:2.0.1'
+
 }
 repositories {
     mavenCentral()

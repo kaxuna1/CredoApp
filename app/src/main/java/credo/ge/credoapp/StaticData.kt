@@ -15,4 +15,6 @@ object StaticData {
     internal var data = HashMap<String,List<Any>>()
     internal var comboBoxUpdateFunctions = HashMap<String,()->Unit>()
     internal var loggedIn = false;
+    internal var preferencesName = "CredoPreferences"
+    internal var preferencesMode = 0
 }

@@ -40,6 +40,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
                     android:inputType="text"
+                    android:text="dberikashvili"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -51,6 +52,7 @@
 
                 <EditText
                     android:id="@+id/password"
+                    android:text="Credo!@34"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
@@ -74,4 +76,8 @@
 
         </LinearLayout>
     </ScrollView>
+    <com.andrognito.pinlockview.PinLockView
+        android:id="@+id/pin_lock_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>
