@@ -33,6 +33,7 @@ import java.util.ArrayList
 import android.Manifest.permission.READ_CONTACTS
 import android.content.SharedPreferences
 import android.util.Log
+import com.andrognito.pinlockview.IndicatorDots
 import com.andrognito.pinlockview.PinLockListener
 import com.andrognito.pinlockview.PinLockView
 import credo.ge.credoapp.models.OnlineDataModels.LoginData
@@ -56,7 +57,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     private var mProgressView: View? = null
     private var mLoginFormView: View? = null
     private var mPinLockView: PinLockView? = null
-
+    private var indicatorDots: IndicatorDots? = null
     internal var pref: SharedPreferences? = null
     internal var editor: SharedPreferences.Editor? = null
 
@@ -74,7 +75,13 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         if (sessionId > 0) {
             loginData = LoginData.findById(LoginData::class.java, sessionId)
             setContentView(R.layout.pin_layout)
+            indicatorDots = findViewById(R.id.indicator_dots) as IndicatorDots
+
+            indicatorDots!!.setIndicatorType(IndicatorDots.IndicatorType.FILL_WITH_ANIMATION);
+            indicatorDots!!.setBackgroundColor(R.color.material_grey_800)
+
             mPinLockView = findViewById(R.id.pin_lock_view) as PinLockView
+            mPinLockView!!.attachIndicatorDots(indicatorDots);
             mPinLockView!!.setPinLockListener(object : PinLockListener {
                 override fun onComplete(pin: String) {
                     Log.d("kkaaxxaa", "Pin complete: " + pin)
@@ -178,7 +185,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                         StaticData.loggedIn = true
 
 
-                        finish()
+                        //finish()
                     } else {
                         showProgress(false)
                     }

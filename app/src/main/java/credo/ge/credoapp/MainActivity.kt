@@ -27,8 +27,7 @@ class MainActivity : CredoExtendActivity() {
         setContentView(R.layout.activity_main)
         layout = findViewById(R.id.mainlinear) as LinearLayout
 
-        StaticData.data.put(Currency::class.java.name,SugarRecord.listAll(Currency::class.java))
-        StaticData.data.put(Person::class.java.name,SugarRecord.listAll(Person::class.java))
+
         addLoanBtn!!.setOnClickListener {
             val intent = Intent(this, DataFillActivity::class.java)
             Loan().save()
