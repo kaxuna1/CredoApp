@@ -6,8 +6,9 @@ import android.view.View
 import android.widget.LinearLayout
 import credo.ge.credoapp.anotations.ViewAnnotationParser
 import credo.ge.credoapp.models.Loan
+import credo.ge.credoapp.views.CredoExtendActivity
 
-class DataFillActivity : AppCompatActivity() {
+class DataFillActivity : CredoExtendActivity() {
 
 
     internal var layout: LinearLayout?=null

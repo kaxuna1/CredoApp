@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
     tools:context="credo.ge.credoapp.MainActivity">
 
     <LinearLayout
@@ -22,22 +23,73 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp">
 
-        <Button
-            android:id="@+id/button"
+
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/buttonAddPerson"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            fancy:fb_borderColor="#FFFFFF"
+            fancy:fb_borderWidth="1dp"
+            fancy:fb_defaultColor="@color/colorAccent"
+            fancy:fb_focusColor="@color/colorPrimary"
+            fancy:fb_iconPosition="left"
+            fancy:fb_radius="5dp"
+            fancy:fb_text="ფიზიკური პირის დამატება"
+            fancy:fb_textColor="#FFFFFF" />
 
-        <Button
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/addLoanBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            fancy:fb_borderColor="#FFFFFF"
+            fancy:fb_borderWidth="1dp"
+            fancy:fb_defaultColor="@color/colorAccent"
+            fancy:fb_focusColor="@color/colorPrimary"
+            fancy:fb_iconPosition="left"
+            fancy:fb_radius="5dp"
+            fancy:fb_text="სესხის დამატება"
+            fancy:fb_textColor="#FFFFFF" />
+
+        <mehdi.sakout.fancybuttons.FancyButton
             android:id="@+id/loans"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="სესხები" />
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            fancy:fb_borderColor="#FFFFFF"
+            fancy:fb_borderWidth="1dp"
+            fancy:fb_defaultColor="@color/colorAccent"
+            fancy:fb_focusColor="@color/colorPrimary"
+            fancy:fb_iconPosition="left"
+            fancy:fb_radius="5dp"
+            fancy:fb_text="დაუსრულებელი განაცხადები"
+            fancy:fb_textColor="#FFFFFF" />
 
-        <Button
-            android:id="@+id/familyTypes"
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/persons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ოჯახის ტიპები" />
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            fancy:fb_borderColor="#FFFFFF"
+            fancy:fb_borderWidth="1dp"
+            fancy:fb_defaultColor="@color/colorAccent"
+            fancy:fb_focusColor="@color/colorPrimary"
+            fancy:fb_iconPosition="left"
+            fancy:fb_radius="5dp"
+            fancy:fb_text="კლიენტები"
+            fancy:fb_textColor="#FFFFFF" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

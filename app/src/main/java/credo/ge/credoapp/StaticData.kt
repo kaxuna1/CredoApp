@@ -14,4 +14,5 @@ object StaticData {
     internal var classHashMap = HashMap<String, Class<SugarRecord<*>>>()
     internal var data = HashMap<String,List<Any>>()
     internal var comboBoxUpdateFunctions = HashMap<String,()->Unit>()
+    internal var loggedIn = false;
 }

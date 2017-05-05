@@ -17,11 +17,10 @@ import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
 
 public class Loan extends SugarRecord<Loan> {
     public String getName() {
-        return name;
+        return person!=null?person.fullName():"დაუსრულებელი სესხი";
     }
 
-    @TextFieldTypeViewAnotation(name = "სახელი", deffaultValue = "", type = "text",mask = "###-###-###/##")
-    public String name = UUID.randomUUID().toString().substring(0,5);
+
 
 
 
@@ -39,32 +38,47 @@ public class Loan extends SugarRecord<Loan> {
             canAddToDb = true)
     public Person person;
 
-    @ObjectFieldTypeViewAnotation(name = "თავდები",
-            displayField = "fullName",
-            isMethod = true,
-            type = "comboBox",
-            sqlData = true,
-            canAddToDb = true,
-            visibilityPatern = {"loanType:samomxmareblo,ipotekuri"})
-    public Person tavdebi;
 
-    @ObjectFieldTypeViewAnotation(name = "ვალუტა", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
-    public Currency currency;
 
-    @ObjectFieldTypeViewAnotation(name = "სესხის ტიპი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
-    public LoanType loanType;
 
+    @ObjectFieldTypeViewAnotation(name = "ოფიცერი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
+    public CreditOficer creditOficer;
     @BooleanFieldTypeViewAnotation(name = "აქტიურია",defaultVal = true)
     public boolean active;
 
-    @ObjectsListFieldTypeViewAnottion(name = "ოჯახის წევრები",
-            displayField = "getName",
-            isMethod = true,
-            type = "comboBox",
-            sqlData = true,
-            canAddToDb = true,
-            joinField = "loan")
-    public ArrayList<FamilyPerson> family;
+
+    @ObjectFieldTypeViewAnotation(name = "ფილიალი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
+    public Filial filial;
+    @ObjectFieldTypeViewAnotation(name = "პროდუქტი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
+    public LoanType loanType;
+    @ObjectFieldTypeViewAnotation(name = "სოფელი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
+    public Vilage vilage;
+    @ObjectFieldTypeViewAnotation(name = "სოფლის კონსული", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
+    public VilageCounsel vilageCounsel;
+    @ObjectFieldTypeViewAnotation(name = "მიზნობრიობა", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
+    public Miznobrioba miznobrioba;
+    @TextFieldTypeViewAnotation(name = "გამოცდილება",deffaultValue = "1",type = "int")
+    public int gamocdileba;
+    @TextFieldTypeViewAnotation(name = "თანხა",deffaultValue = "1",type = "int")
+    public int loanSum;
+    @ObjectFieldTypeViewAnotation(name = "ვალუტა", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
+    public Currency currency;
+
+    @TextFieldTypeViewAnotation(name = "სესხის ვადა",deffaultValue = "1",type = "int")
+    public int loanDuration;
+
+    @TextFieldTypeViewAnotation(name = "კომენტარი", deffaultValue = "", type = "text")
+    public String comment;
+
+
+    @TextFieldTypeViewAnotation(name = "ცხოველების რაოდენობა",deffaultValue = "1",type = "int",
+            visibilityPatern = {"loanType:აგრო"})
+    public int numberOfAnimals;
+    @TextFieldTypeViewAnotation(name = "მიწა (ჰა)",deffaultValue = "1",type = "int",
+            visibilityPatern = {"loanType:აგრო"})
+    public int mitsa;
+
+
 
     public static List<Loan> getData() {
         return Loan.listAll(Loan.class);
@@ -75,7 +89,6 @@ public class Loan extends SugarRecord<Loan> {
     }
 
     public Loan() {
-        family = new ArrayList<>();
         active = false;
     }
 

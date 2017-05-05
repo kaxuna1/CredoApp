@@ -11,42 +11,47 @@ import com.orm.SugarRecord
 import credo.ge.credoapp.anotations.ViewAnnotationParser
 import com.orm.SugarRecord.listAll
 import credo.ge.credoapp.models.*
+import credo.ge.credoapp.views.CredoExtendActivity
+import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity() {
+
+
+class MainActivity : CredoExtendActivity() {
 
     internal var layout: LinearLayout?=null
-    internal var button: Button?=null
-    internal var familyBtn: Button?=null
 
-    internal var buttonLoans: Button?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         layout = findViewById(R.id.mainlinear) as LinearLayout
-        button = findViewById(R.id.button) as Button
-        buttonLoans = findViewById(R.id.loans) as Button
-        familyBtn = findViewById(R.id.familyTypes) as Button
-        button!!.text="ახალი სესხი"
+
         StaticData.data.put(Currency::class.java.name,SugarRecord.listAll(Currency::class.java))
         StaticData.data.put(Person::class.java.name,SugarRecord.listAll(Person::class.java))
-        button!!.setOnClickListener {
+        addLoanBtn!!.setOnClickListener {
             val intent = Intent(this, DataFillActivity::class.java)
+            Loan().save()
             intent.putExtra("class",Loan::class.java)
             intent.putExtra("autosave",true)
             startActivity(intent)
         }
-        buttonLoans!!.setOnClickListener {
+        loans!!.setOnClickListener {
             val intent = Intent(this, data_list_activity::class.java)
             intent.putExtra("class",Loan::class.java)
             intent.putExtra("nameFieldMethodName","getName")
             startActivity(intent)
         }
-        familyBtn!!.setOnClickListener {
+        persons!!.setOnClickListener {
+            val intent = Intent(this, data_list_activity::class.java)
+            intent.putExtra("class",Person::class.java)
+            intent.putExtra("nameFieldMethodName","fullName")
+            startActivity(intent)
+        }
+        buttonAddPerson.setOnClickListener {
             val intent = Intent(this, DataFillActivity::class.java)
-            intent.putExtra("class", FamilyMemberType::class.java)
-            intent.putExtra("autosave",false)
+            intent.putExtra("class", Person::class.java)
+            intent.putExtra("autosave",true)
             startActivity(intent)
         }
 

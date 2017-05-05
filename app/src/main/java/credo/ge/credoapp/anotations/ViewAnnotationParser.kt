@@ -15,6 +15,8 @@ import android.view.LayoutInflater
 import credo.ge.credoapp.R
 import android.content.Intent
 import android.support.v7.app.AlertDialog
+import android.text.InputType.TYPE_CLASS_NUMBER
+import android.text.InputType.TYPE_CLASS_PHONE
 import credo.ge.credoapp.DataFillActivity
 import credo.ge.credoapp.StaticData
 import java.util.*
@@ -62,6 +64,9 @@ class ViewAnnotationParser {
                         valueToSet = (fieldValue as Int).toString()
                 }
                 editText.setText(valueToSet)
+                if (type == "int"){
+                    editText.inputType= TYPE_CLASS_NUMBER
+                }
                 var obj = clazz.cast(bindObject)
                 viewGorup.addView(view)
                 editText.addTextChangedListener(object : TextWatcher {
@@ -231,7 +236,7 @@ class ViewAnnotationParser {
                 var listAdapter: ReflectionAdapterAdapter? = null
                 val func = fun() {
 
-                    val method = listClass.getMethod("findByLoan", Long::class.java)
+                    val method = listClass.getMethod("findby"+joinField, Long::class.java)
                     val dataToLoad = method.invoke(null, (clazz.getMethod("getId").invoke(bindObject) as Long)) as ArrayList<Any>
                     //dataOfField.addAll(dataToLoad)
                     listAdapter = ReflectionAdapterAdapter(dataToLoad, viewGorup.context, displayField, isMethod, listClass, 20f)
@@ -351,7 +356,11 @@ fun visibilityCheck(fieldPaterns: ArrayList<ViewFieldHolder>, fieldNameMap: Hash
             val fieldValueMustBe = patern[1].split(",")
             val field = fieldNameMap.get(fieldName)
 
-            val fieldValue = field!!.get(bindObject).toString()
+            val rs=field!!.get(bindObject);
+            var fieldValue="";
+            if(rs != null){
+                 fieldValue = rs.toString()
+            }
             var visibleTemp=false
             fieldValueMustBe.forEach {
                 if (it == fieldValue)

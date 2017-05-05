@@ -4,9 +4,10 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ListView
+import credo.ge.credoapp.views.CredoExtendActivity
 import credo.ge.credoapp.views.ListAdapters.ReflectionAdapterAdapter
 
-class data_list_activity : AppCompatActivity() {
+class data_list_activity : CredoExtendActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
