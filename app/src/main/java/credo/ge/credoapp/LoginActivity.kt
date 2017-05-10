@@ -71,20 +71,38 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         // Set up the login form.
         pref = this.applicationContext.getSharedPreferences(StaticData.preferencesName, StaticData.preferencesMode)
         editor = pref!!.edit();
+        //editor!!.putLong("session",0)
+        //editor!!.commit();
         val sessionId = pref!!.getLong("session", 0)
         if (sessionId > 0) {
+
+
             loginData = LoginData.findById(LoginData::class.java, sessionId)
             setContentView(R.layout.pin_layout)
             indicatorDots = findViewById(R.id.indicator_dots) as IndicatorDots
 
             indicatorDots!!.setIndicatorType(IndicatorDots.IndicatorType.FILL_WITH_ANIMATION);
-            indicatorDots!!.setBackgroundColor(R.color.material_grey_800)
+            ///indicatorDots!!.setBackgroundColor(R.color.material_grey_800)
+            var logoutBtn = findViewById(R.id.logoutBtn) as TextView
+            logoutBtn.visibility = View.VISIBLE
+
+            logoutBtn.setOnClickListener {
+                editor!!.putLong("session",0)
+                editor!!.commit()
+                initLoginPage()
+            }
+
 
             mPinLockView = findViewById(R.id.pin_lock_view) as PinLockView
             mPinLockView!!.attachIndicatorDots(indicatorDots);
             mPinLockView!!.setPinLockListener(object : PinLockListener {
                 override fun onComplete(pin: String) {
                     Log.d("kkaaxxaa", "Pin complete: " + pin)
+                    if(pin == loginData!!.pin){
+                        StaticData.loggedIn=true;
+                        StaticData.loginData=loginData
+                        finish()
+                    }
                 }
 
                 override fun onEmpty() {
@@ -97,29 +115,33 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             })
 
         } else {
-            setContentView(R.layout.activity_login)
-            mEmailView = findViewById(R.id.email) as AutoCompleteTextView
-//        populateAutoComplete()
-
-            mPasswordView = findViewById(R.id.password) as EditText
-            mPasswordView!!.setOnEditorActionListener(TextView.OnEditorActionListener { textView, id, keyEvent ->
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin()
-                    return@OnEditorActionListener true
-                }
-                false
-            })
-
-
-
-            val mEmailSignInButton = findViewById(R.id.email_sign_in_button) as Button
-            mEmailSignInButton.setOnClickListener { attemptLogin() }
-
-            mLoginFormView = findViewById(R.id.login_form)
-            mProgressView = findViewById(R.id.login_progress)
+            initLoginPage()
         }
 
 
+    }
+
+    fun initLoginPage(){
+        setContentView(R.layout.activity_login)
+        mEmailView = findViewById(R.id.email) as AutoCompleteTextView
+//        populateAutoComplete()
+
+        mPasswordView = findViewById(R.id.password) as EditText
+        mPasswordView!!.setOnEditorActionListener(TextView.OnEditorActionListener { textView, id, keyEvent ->
+            if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                attemptLogin()
+                return@OnEditorActionListener true
+            }
+            false
+        })
+
+
+
+        val mEmailSignInButton = findViewById(R.id.email_sign_in_button) as Button
+        mEmailSignInButton.setOnClickListener { attemptLogin() }
+
+        mLoginFormView = findViewById(R.id.login_form)
+        mProgressView = findViewById(R.id.login_progress)
     }
 
 
@@ -179,10 +201,36 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
 
                         setContentView(R.layout.pin_layout)
-                        result.data.save()
-                        editor!!.putLong("session", result.data.id)
-                        editor!!.commit()
-                        StaticData.loggedIn = true
+                        indicatorDots = findViewById(R.id.indicator_dots) as IndicatorDots
+                        indicatorDots!!.setIndicatorType(IndicatorDots.IndicatorType.FILL_WITH_ANIMATION);
+
+                        mPinLockView = findViewById(R.id.pin_lock_view) as PinLockView
+                        mPinLockView!!.attachIndicatorDots(indicatorDots);
+                        mPinLockView!!.setPinLockListener(object : PinLockListener {
+                            override fun onComplete(pin: String) {
+                                Log.d("kkaaxxaa", "Pin complete: " + pin)
+                                result.data.pin=pin
+                                result.data.save()
+                                editor!!.putLong("session", result.data.id)
+                                editor!!.commit()
+                                StaticData.loggedIn = true
+                                StaticData.loginData = result.data
+                                finish()
+                            }
+
+                            override fun onEmpty() {
+                                Log.d("kkaaxxaa", "Pin empty")
+                            }
+
+                            override fun onPinChange(pinLength: Int, intermediatePin: String) {
+                                Log.d("kkaaxxaa", "Pin changed, new length $pinLength with intermediate pin $intermediatePin")
+                            }
+                        })
+
+
+
+
+
 
 
                         //finish()

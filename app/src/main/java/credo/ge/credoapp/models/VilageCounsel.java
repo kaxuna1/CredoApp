@@ -12,11 +12,12 @@ import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
 
 public class VilageCounsel extends SugarRecord<VilageCounsel> {
     @TextFieldTypeViewAnotation(name = "სახელი",deffaultValue = "",type = "text")
-    public String name;
+    public String consul;
 
+    public int villageId;
 
     public String getName() {
-        return name;
+        return consul;
     }
 
 
@@ -24,6 +25,14 @@ public class VilageCounsel extends SugarRecord<VilageCounsel> {
         return VilageCounsel.listAll(VilageCounsel.class);
     }
     public static VilageCounsel getById(long id){
-        return CreditOficer.findById(VilageCounsel.class,id);
+        return LoanOficer.findById(VilageCounsel.class,id);
+    }
+
+    public int getVillageId() {
+        return villageId;
+    }
+
+    public void setVillageId(int villageId) {
+        this.villageId = villageId;
     }
 }

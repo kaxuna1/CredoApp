@@ -1,6 +1,7 @@
 package credo.ge.credoapp
 
 import com.orm.SugarRecord
+import credo.ge.credoapp.models.OnlineDataModels.LoginData
 
 import java.util.HashMap
 
@@ -17,4 +18,5 @@ object StaticData {
     internal var loggedIn = false;
     internal var preferencesName = "CredoPreferences"
     internal var preferencesMode = 0
+    internal var loginData: LoginData?=null
 }

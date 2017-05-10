@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@color/colorAccent"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <com.andrognito.pinlockview.IndicatorDots
@@ -18,7 +19,7 @@
         app:keypadVerticalSpacing="24dp"
         app:keypadHorizontalSpacing="36dp"
         app:pinLength="4"
-        app:keypadTextColor="#000000"
+        app:keypadTextColor="#ffffff"
         app:keypadTextSize="25dp"
         app:keypadDeleteButtonSize="25dp"
 
@@ -29,4 +30,17 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/logoutBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/white"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="14dp"
+        android:layout_marginTop="12dp"
+        android:text="გამოსვლა" />
+
 </RelativeLayout>

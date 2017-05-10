@@ -10,32 +10,23 @@ import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
  * Created by vakhtanggelashvili on 5/3/17.
  */
 
-public class Vilage extends SugarRecord {
+public class LoanOficer extends SugarRecord<LoanOficer> {
     @TextFieldTypeViewAnotation(name = "სახელი",deffaultValue = "",type = "text")
-    public String village;
-
-    public String city;
+    public String loanOfficer;
 
     public int branchId;
 
+
     public String getName() {
-        return village;
+        return loanOfficer;
     }
 
 
-    public static List<Vilage> getData(){
-        return Vilage.listAll(Vilage.class);
+    public static List<LoanOficer> getData(){
+        return LoanOficer.listAll(LoanOficer.class);
     }
-    public static Vilage getById(long id){
-        return Vilage.findById(Vilage.class,id);
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
+    public static LoanOficer getById(long id){
+        return LoanOficer.findById(LoanOficer.class,id);
     }
 
     public int getBranchId() {

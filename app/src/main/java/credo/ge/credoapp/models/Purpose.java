@@ -10,20 +10,20 @@ import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
  * Created by vakhtanggelashvili on 5/3/17.
  */
 
-public class Miznobrioba extends SugarRecord<Miznobrioba> {
+public class Purpose extends SugarRecord<Purpose> {
     @TextFieldTypeViewAnotation(name = "სახელი",deffaultValue = "",type = "text")
-    public String name;
+    public String purpose;
 
 
     public String getName() {
-        return name;
+        return purpose;
     }
 
 
-    public static List<Miznobrioba> getData(){
-        return Miznobrioba.listAll(Miznobrioba.class);
+    public static List<Purpose> getData(){
+        return Purpose.listAll(Purpose.class);
     }
-    public static Miznobrioba getById(long id){
-        return Miznobrioba.findById(Miznobrioba.class,id);
+    public static Purpose getById(long id){
+        return Purpose.findById(Purpose.class,id);
     }
 }

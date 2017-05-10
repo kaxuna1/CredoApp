@@ -2,13 +2,10 @@ package credo.ge.credoapp.models;
 
 import com.orm.SugarRecord;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import credo.ge.credoapp.anotations.BooleanFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.ObjectFieldTypeViewAnotation;
-import credo.ge.credoapp.anotations.ObjectsListFieldTypeViewAnottion;
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
 
 /**
@@ -42,21 +39,21 @@ public class Loan extends SugarRecord<Loan> {
 
 
     @ObjectFieldTypeViewAnotation(name = "ოფიცერი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
-    public CreditOficer creditOficer;
+    public LoanOficer loanOficer;
     @BooleanFieldTypeViewAnotation(name = "აქტიურია",defaultVal = true)
     public boolean active;
 
 
     @ObjectFieldTypeViewAnotation(name = "ფილიალი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
-    public Filial filial;
+    public Branch branch;
     @ObjectFieldTypeViewAnotation(name = "პროდუქტი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
-    public LoanType loanType;
+    public Product product;
     @ObjectFieldTypeViewAnotation(name = "სოფელი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
     public Vilage vilage;
     @ObjectFieldTypeViewAnotation(name = "სოფლის კონსული", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
     public VilageCounsel vilageCounsel;
     @ObjectFieldTypeViewAnotation(name = "მიზნობრიობა", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
-    public Miznobrioba miznobrioba;
+    public Purpose purpose;
     @TextFieldTypeViewAnotation(name = "გამოცდილება",deffaultValue = "1",type = "int")
     public int gamocdileba;
     @TextFieldTypeViewAnotation(name = "თანხა",deffaultValue = "1",type = "int")
@@ -72,10 +69,10 @@ public class Loan extends SugarRecord<Loan> {
 
 
     @TextFieldTypeViewAnotation(name = "ცხოველების რაოდენობა",deffaultValue = "1",type = "int",
-            visibilityPatern = {"loanType:აგრო"})
+            visibilityPatern = {"product:აგრო"})
     public int numberOfAnimals;
     @TextFieldTypeViewAnotation(name = "მიწა (ჰა)",deffaultValue = "1",type = "int",
-            visibilityPatern = {"loanType:აგრო"})
+            visibilityPatern = {"product:აგრო"})
     public int mitsa;
 
 
