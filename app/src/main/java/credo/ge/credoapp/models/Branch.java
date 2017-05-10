@@ -1,8 +1,5 @@
 package credo.ge.credoapp.models;
 
-import com.google.gson.annotations.SerializedName;
-import com.orm.SugarRecord;
-
 import java.util.List;
 
 import credo.ge.credoapp.ExtensionClasses.DBAdapter;
@@ -15,7 +12,7 @@ import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
 public class Branch extends DBAdapter<Branch> {
 
 
-    @TextFieldTypeViewAnotation(name = "სახელი", deffaultValue = "", type = "text")
+    @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "", type = "text")
     public String branch;
 
     public String city;

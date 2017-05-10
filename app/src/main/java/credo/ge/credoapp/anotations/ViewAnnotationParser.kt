@@ -16,7 +16,6 @@ import credo.ge.credoapp.R
 import android.content.Intent
 import android.support.v7.app.AlertDialog
 import android.text.InputType.TYPE_CLASS_NUMBER
-import android.text.InputType.TYPE_CLASS_PHONE
 import credo.ge.credoapp.DataFillActivity
 import credo.ge.credoapp.StaticData
 import java.util.*
@@ -45,7 +44,7 @@ class ViewAnnotationParser {
                 val annotation = field.getAnnotation<TextFieldTypeViewAnotation>(TextFieldTypeViewAnotation::class.java)
                 val name = annotation.name
                 val type = annotation.type
-                val deffaultValue = annotation.deffaultValue
+                val deffaultValue = annotation.defaultValue
                 val mask = annotation.mask
                 val allowedChars = annotation.allowed_chars
                 val visibilityPater = annotation.visibilityPatern

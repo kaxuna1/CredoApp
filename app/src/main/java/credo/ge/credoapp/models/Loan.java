@@ -22,7 +22,7 @@ public class Loan extends SugarRecord<Loan> {
 
 
     @TextFieldTypeViewAnotation(name = "თანხა",
-            deffaultValue = "",
+            defaultValue = "",
             type = "text",visibilityPatern = {"active:true"})
     public String sum = "0";
 
@@ -54,24 +54,24 @@ public class Loan extends SugarRecord<Loan> {
     public VilageCounsel vilageCounsel;
     @ObjectFieldTypeViewAnotation(name = "მიზნობრიობა", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
     public Purpose purpose;
-    @TextFieldTypeViewAnotation(name = "გამოცდილება",deffaultValue = "1",type = "int")
+    @TextFieldTypeViewAnotation(name = "გამოცდილება", defaultValue = "1",type = "int")
     public int gamocdileba;
-    @TextFieldTypeViewAnotation(name = "თანხა",deffaultValue = "1",type = "int")
+    @TextFieldTypeViewAnotation(name = "თანხა", defaultValue = "1",type = "int")
     public int loanSum;
     @ObjectFieldTypeViewAnotation(name = "ვალუტა", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
     public Currency currency;
 
-    @TextFieldTypeViewAnotation(name = "სესხის ვადა",deffaultValue = "1",type = "int")
+    @TextFieldTypeViewAnotation(name = "სესხის ვადა", defaultValue = "1",type = "int")
     public int loanDuration;
 
-    @TextFieldTypeViewAnotation(name = "კომენტარი", deffaultValue = "", type = "text")
+    @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "", type = "text")
     public String comment;
 
 
-    @TextFieldTypeViewAnotation(name = "ცხოველების რაოდენობა",deffaultValue = "1",type = "int",
+    @TextFieldTypeViewAnotation(name = "ცხოველების რაოდენობა", defaultValue = "1",type = "int",
             visibilityPatern = {"product:აგრო"})
     public int numberOfAnimals;
-    @TextFieldTypeViewAnotation(name = "მიწა (ჰა)",deffaultValue = "1",type = "int",
+    @TextFieldTypeViewAnotation(name = "მიწა (ჰა)", defaultValue = "1",type = "int",
             visibilityPatern = {"product:აგრო"})
     public int mitsa;
 

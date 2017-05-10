@@ -11,7 +11,7 @@ import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
  */
 
 public class Vilage extends SugarRecord {
-    @TextFieldTypeViewAnotation(name = "სახელი",deffaultValue = "",type = "text")
+    @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "",type = "text")
     public String village;
 
     public String city;

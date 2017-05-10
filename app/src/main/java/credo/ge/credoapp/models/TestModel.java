@@ -3,7 +3,6 @@ package credo.ge.credoapp.models;
 
 import android.util.Log;
 
-import credo.ge.credoapp.anotations.DateFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
 
 /**
@@ -11,9 +10,9 @@ import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
  */
 
 public class TestModel {
-    @TextFieldTypeViewAnotation(name = "Name",deffaultValue = "kaxa",type = "text")
+    @TextFieldTypeViewAnotation(name = "Name", defaultValue = "kaxa",type = "text")
     public String name;
-    @TextFieldTypeViewAnotation(name = "Surname",deffaultValue = "gelashvili",type = "text")
+    @TextFieldTypeViewAnotation(name = "Surname", defaultValue = "gelashvili",type = "text")
     public String surname;
 
     public void kaxa(String k){

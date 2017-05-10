@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy
 @Target(AnnotationTarget.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 annotation class TextFieldTypeViewAnotation(val name: String,
-                                            val deffaultValue: String,
+                                            val defaultValue: String,
                                             val type: String,
                                             val mask:String="",
                                             val allowed_chars:String="",

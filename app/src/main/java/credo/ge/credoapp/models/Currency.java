@@ -16,7 +16,7 @@ public class Currency extends SugarRecord<Currency> implements ComboboxBindingIn
         return name;
     }
 
-    @TextFieldTypeViewAnotation(name = "Name",deffaultValue = "kaxa",type = "text")
+    @TextFieldTypeViewAnotation(name = "Name", defaultValue = "kaxa",type = "text")
     public String name;
 
     public static List<Currency> getData(){

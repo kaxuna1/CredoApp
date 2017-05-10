@@ -12,12 +12,12 @@ import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
  */
 
 public class FamilyPerson extends SugarRecord<FamilyPerson> {
-    @TextFieldTypeViewAnotation(name = "სახელი",deffaultValue = "kaxa",type = "text")
+    @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "kaxa",type = "text")
     public String name;
 
 
 
-    @TextFieldTypeViewAnotation(name = "გვარი",deffaultValue = "gelashvili",type = "text")
+    @TextFieldTypeViewAnotation(name = "გვარი", defaultValue = "gelashvili",type = "text")
     public String surname;
 
 

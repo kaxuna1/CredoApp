@@ -14,31 +14,31 @@ import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
  */
 
 public class Person extends SugarRecord<Person> {
-    @TextFieldTypeViewAnotation(name = "პირადი ნომერი",deffaultValue = "",type = "text",mask = "###########")
+    @TextFieldTypeViewAnotation(name = "პირადი ნომერი", defaultValue = "",type = "text",mask = "###########")
     public String personalNumber;
 
-    @TextFieldTypeViewAnotation(name = "სახელი",deffaultValue = "",type = "text")
+    @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "",type = "text")
     public String name;
 
-    @TextFieldTypeViewAnotation(name = "გვარი",deffaultValue = "",type = "text")
+    @TextFieldTypeViewAnotation(name = "გვარი", defaultValue = "",type = "text")
     public String surname;
 
-    @TextFieldTypeViewAnotation(name = "დაბადების თარიღი",deffaultValue = "",type = "text",mask = "##/##/####")
+    @TextFieldTypeViewAnotation(name = "დაბადების თარიღი", defaultValue = "",type = "text",mask = "##/##/####")
     public String birthDate;
 
 
-    @TextFieldTypeViewAnotation(name = "ფაქტობრივი მისამართი",deffaultValue = "",type = "text")
+    @TextFieldTypeViewAnotation(name = "ფაქტობრივი მისამართი", defaultValue = "",type = "text")
     public String address;
 
     @ObjectFieldTypeViewAnotation(name = "ტიპი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
     public PersonType personType;
 
-    @TextFieldTypeViewAnotation(name = "მობილური",deffaultValue = "",type = "text",mask = "(5##)-###-###")
+    @TextFieldTypeViewAnotation(name = "მობილური", defaultValue = "",type = "text",mask = "(5##)-###-###")
     public String mobile;
 
-    @TextFieldTypeViewAnotation(name = "ტელეფონი",deffaultValue = "",type = "text")
+    @TextFieldTypeViewAnotation(name = "ტელეფონი", defaultValue = "",type = "text")
     public String phone;
-    @TextFieldTypeViewAnotation(name = "დამოკიდებულ პირთა რაოდენობა",deffaultValue = "",type = "text")
+    @TextFieldTypeViewAnotation(name = "დამოკიდებულ პირთა რაოდენობა", defaultValue = "",type = "text")
     public String connectedPersonsNumber;
 
 
