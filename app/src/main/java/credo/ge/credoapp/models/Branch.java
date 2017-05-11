@@ -4,6 +4,7 @@ import java.util.List;
 
 import credo.ge.credoapp.ExtensionClasses.DBAdapter;
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
+import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.BranchAdapterClass;
 
 /**
  * Created by vakhtanggelashvili on 5/3/17.
@@ -17,8 +18,18 @@ public class Branch extends DBAdapter<Branch> {
 
     public String city;
 
+    public long serverId;
+
     public String getName() {
         return branch;
+    }
+    public Branch(){
+
+    }
+    public Branch(BranchAdapterClass adapterClassItem){
+        this.branch=adapterClassItem.branch;
+        this.serverId=adapterClassItem.id;
+        this.city=adapterClassItem.city;
     }
 
 

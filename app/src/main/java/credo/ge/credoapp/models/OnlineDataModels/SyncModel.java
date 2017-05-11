@@ -2,9 +2,15 @@ package credo.ge.credoapp.models.OnlineDataModels;
 
 import java.util.ArrayList;
 
-import credo.ge.credoapp.models.Branch;
 import credo.ge.credoapp.models.Industry;
 import credo.ge.credoapp.models.LoanOficer;
+import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.BranchAdapterClass;
+import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.IndustryAdapter;
+import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.LoanOficerAdapter;
+import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.ProductAdapter;
+import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.PurposeAdapter;
+import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.VilageAdapter;
+import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.VilageCounselAdapter;
 import credo.ge.credoapp.models.Product;
 import credo.ge.credoapp.models.Purpose;
 import credo.ge.credoapp.models.Vilage;
@@ -15,67 +21,67 @@ import credo.ge.credoapp.models.VilageCounsel;
  */
 
 public class SyncModel {
-    private ArrayList<Branch> branches;
-    private ArrayList<LoanOficer> loanOfficers;
-    private ArrayList<Vilage> villages;
-    private ArrayList<VilageCounsel> consuls;
-    private ArrayList<Purpose> purposes;
-    private ArrayList<Product> products;
-    private ArrayList<Industry> industries;
+    private ArrayList<BranchAdapterClass> branches;
+    private ArrayList<LoanOficerAdapter> loanOfficers;
+    private ArrayList<VilageAdapter> villages;
+    private ArrayList<VilageCounselAdapter> consuls;
+    private ArrayList<PurposeAdapter> purposes;
+    private ArrayList<ProductAdapter> products;
+    private ArrayList<IndustryAdapter> industries;
 
-    public ArrayList<Branch> getBranches() {
+    public ArrayList<BranchAdapterClass> getBranches() {
         return branches;
     }
 
-    public void setBranches(ArrayList<Branch> branches) {
+    public void setBranches(ArrayList<BranchAdapterClass> branches) {
         this.branches = branches;
     }
 
-    public ArrayList<LoanOficer> getLoanOfficers() {
+    public ArrayList<LoanOficerAdapter> getLoanOfficers() {
         return loanOfficers;
     }
 
-    public void setLoanOfficers(ArrayList<LoanOficer> loanOfficers) {
+    public void setLoanOfficers(ArrayList<LoanOficerAdapter> loanOfficers) {
         this.loanOfficers = loanOfficers;
     }
 
-    public ArrayList<Vilage> getVillages() {
+    public ArrayList<VilageAdapter> getVillages() {
         return villages;
     }
 
-    public void setVillages(ArrayList<Vilage> villages) {
+    public void setVillages(ArrayList<VilageAdapter> villages) {
         this.villages = villages;
     }
 
-    public ArrayList<VilageCounsel> getConsuls() {
+    public ArrayList<VilageCounselAdapter> getConsuls() {
         return consuls;
     }
 
-    public void setConsuls(ArrayList<VilageCounsel> consuls) {
+    public void setConsuls(ArrayList<VilageCounselAdapter> consuls) {
         this.consuls = consuls;
     }
 
-    public ArrayList<Purpose> getPurposes() {
+    public ArrayList<PurposeAdapter> getPurposes() {
         return purposes;
     }
 
-    public void setPurposes(ArrayList<Purpose> purposes) {
+    public void setPurposes(ArrayList<PurposeAdapter> purposes) {
         this.purposes = purposes;
     }
 
-    public ArrayList<Product> getProducts() {
+    public ArrayList<ProductAdapter> getProducts() {
         return products;
     }
 
-    public void setProducts(ArrayList<Product> products) {
+    public void setProducts(ArrayList<ProductAdapter> products) {
         this.products = products;
     }
 
-    public ArrayList<Industry> getIndustries() {
+    public ArrayList<IndustryAdapter> getIndustries() {
         return industries;
     }
 
-    public void setIndustries(ArrayList<Industry> industries) {
+    public void setIndustries(ArrayList<IndustryAdapter> industries) {
         this.industries = industries;
     }
 }

@@ -1,4 +1,4 @@
-package credo.ge.credoapp.models.OnlineDataModels;
+package credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters;
 
 /**
  * Created by kaxge on 5/10/2017.
@@ -7,4 +7,5 @@ package credo.ge.credoapp.models.OnlineDataModels;
 public class BranchAdapterClass {
     public int id;
     public String branch;
+    public String city;
 }

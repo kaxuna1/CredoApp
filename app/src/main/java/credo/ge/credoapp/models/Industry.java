@@ -5,6 +5,7 @@ import com.orm.SugarRecord;
 import java.util.List;
 
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
+import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.IndustryAdapter;
 
 /**
  * Created by vakhtanggelashvili on 5/3/17.
@@ -14,9 +15,16 @@ public class Industry extends SugarRecord<Industry>{
     @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "",type = "text")
     public String name;
 
+    public int serverId;
 
     public String getName() {
         return name;
+    }
+
+    public Industry(){}
+    public Industry(IndustryAdapter adapterItem){
+        this.name=adapterItem.name;
+        this.serverId=adapterItem.id;
     }
 
 

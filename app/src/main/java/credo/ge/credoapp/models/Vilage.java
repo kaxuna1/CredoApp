@@ -5,6 +5,7 @@ import com.orm.SugarRecord;
 import java.util.List;
 
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
+import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.VilageAdapter;
 
 /**
  * Created by vakhtanggelashvili on 5/3/17.
@@ -17,6 +18,17 @@ public class Vilage extends SugarRecord {
     public String city;
 
     public int branchId;
+
+    public int serverId;
+
+    public Vilage(){}
+
+    public Vilage(VilageAdapter adapter){
+        this.serverId = adapter.id;
+        this.branchId = adapter.branchId;
+        this.city = adapter.city;
+        this.village = adapter.village;
+    }
 
     public String getName() {
         return village;

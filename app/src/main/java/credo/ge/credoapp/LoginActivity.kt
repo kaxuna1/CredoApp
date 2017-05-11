@@ -3,8 +3,7 @@ package credo.ge.credoapp
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
-import android.content.pm.PackageManager
-import android.support.design.widget.Snackbar
+import android.app.Activity
 import android.support.v7.app.AppCompatActivity
 import android.app.LoaderManager.LoaderCallbacks
 
@@ -12,15 +11,12 @@ import android.content.CursorLoader
 import android.content.Loader
 import android.database.Cursor
 import android.net.Uri
-import android.os.AsyncTask
 
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.text.TextUtils
-import android.view.KeyEvent
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -30,15 +26,18 @@ import android.widget.TextView
 
 import java.util.ArrayList
 
-import android.Manifest.permission.READ_CONTACTS
 import android.content.SharedPreferences
+import android.hardware.fingerprint.FingerprintManager
+import android.preference.PreferenceManager
 import android.util.Log
 import com.andrognito.pinlockview.IndicatorDots
 import com.andrognito.pinlockview.PinLockListener
 import com.andrognito.pinlockview.PinLockView
+import com.multidots.fingerprintauth.AuthErrorCodes
+import com.multidots.fingerprintauth.FingerPrintAuthCallback
+import com.multidots.fingerprintauth.FingerPrintAuthHelper
 import credo.ge.credoapp.models.OnlineDataModels.LoginData
 import credo.ge.credoapp.online.OnlineData
-import kotlinx.android.synthetic.main.spinner_row.view.*
 import rx.functions.Action1
 
 /**
@@ -47,6 +46,27 @@ import rx.functions.Action1
 
 
 class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
+
+/*
+    val mAuthTask: UserLoginTask? = null;
+
+    internal val KEY_ALIAS = "sitepoint";
+    internal val KEYSTORE = "AndroidKeyStore";
+    internal val PREFERENCES_KEY_EMAIL = "email";
+    internal val PREFERENCES_KEY_PASS = "pass";
+    internal val PREFERENCES_KEY_IV = "iv";
+
+    var keyStore: KeyStore? = null;
+    var generator: KeyGenerator? = null;
+    var cipher: Cipher? = null
+    var fingerprintManager: FingerprintManager? = null
+    var keyguardManager: KeyguardManager? = null
+    var cryptoObject: FingerprintManager.CryptoObject? = null
+
+
+    val encrypting = false*/
+
+
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -59,23 +79,29 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     private var mPinLockView: PinLockView? = null
     private var indicatorDots: IndicatorDots? = null
     internal var pref: SharedPreferences? = null
+    internal var sharedPreferences: SharedPreferences? = null
     internal var editor: SharedPreferences.Editor? = null
-
+    var mFingerPrintAuthHelper: FingerPrintAuthHelper? = null
+    var sessionId = 0L
 
     private var loginData: LoginData? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
+        var fingerCallback=FingerPrintAuthCallbackCredo()
+        mFingerPrintAuthHelper = FingerPrintAuthHelper.getHelper(this, fingerCallback);
         super.onCreate(savedInstanceState)
 
         // Set up the login form.
         pref = this.applicationContext.getSharedPreferences(StaticData.preferencesName, StaticData.preferencesMode)
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = pref!!.edit();
         //editor!!.putLong("session",0)
         //editor!!.commit();
-        val sessionId = pref!!.getLong("session", 0)
+        sessionId = pref!!.getLong("session", 0)
         if (sessionId > 0) {
-
 
             loginData = LoginData.findById(LoginData::class.java, sessionId)
             setContentView(R.layout.pin_layout)
@@ -87,20 +113,21 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             logoutBtn.visibility = View.VISIBLE
 
             logoutBtn.setOnClickListener {
-                editor!!.putLong("session",0)
+                editor!!.putLong("session", 0)
                 editor!!.commit()
                 initLoginPage()
             }
-
+            fingerCallback.activity=this
+            fingerCallback.loginData=loginData
 
             mPinLockView = findViewById(R.id.pin_lock_view) as PinLockView
             mPinLockView!!.attachIndicatorDots(indicatorDots);
             mPinLockView!!.setPinLockListener(object : PinLockListener {
                 override fun onComplete(pin: String) {
                     Log.d("kkaaxxaa", "Pin complete: " + pin)
-                    if(pin == loginData!!.pin){
-                        StaticData.loggedIn=true;
-                        StaticData.loginData=loginData
+                    if (pin == loginData!!.pin) {
+                        StaticData.loggedIn = true;
+                        StaticData.loginData = loginData
                         finish()
                     }
                 }
@@ -121,7 +148,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
     }
 
-    fun initLoginPage(){
+    fun initLoginPage() {
         setContentView(R.layout.activity_login)
         mEmailView = findViewById(R.id.email) as AutoCompleteTextView
 //        populateAutoComplete()
@@ -134,7 +161,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             }
             false
         })
-
 
 
         val mEmailSignInButton = findViewById(R.id.email_sign_in_button) as Button
@@ -209,7 +235,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                         mPinLockView!!.setPinLockListener(object : PinLockListener {
                             override fun onComplete(pin: String) {
                                 Log.d("kkaaxxaa", "Pin complete: " + pin)
-                                result.data.pin=pin
+                                result.data.pin = pin
                                 result.data.save()
                                 editor!!.putLong("session", result.data.id)
                                 editor!!.commit()
@@ -226,11 +252,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                                 Log.d("kkaaxxaa", "Pin changed, new length $pinLength with intermediate pin $intermediatePin")
                             }
                         })
-
-
-
-
-
 
 
                         //finish()
@@ -332,14 +353,125 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         }
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
+    override fun onResume() {
+        super.onResume()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && sessionId > 0) {
+            mFingerPrintAuthHelper!!.startAuth()
+        };
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mFingerPrintAuthHelper!!.stopAuth();
+    }
 
     override fun onBackPressed() {
         System.exit(0);
     }
+
+
+    public class FingerPrintAuthCallbackCredo() : FingerPrintAuthCallback {
+
+        public var loginData: LoginData?=null
+
+        public var activity: Activity?=null
+
+
+        override public fun onNoFingerPrintHardwareFound() {
+            //Device does not have finger print scanner.
+        }
+
+        override
+        public fun onNoFingerPrintRegistered() {
+            //There are no finger prints registered on this device.
+        }
+
+
+        override
+        public fun onBelowMarshmallow() {
+            //Device running below API 23 version of android that does not support finger print authentication.
+        }
+
+        override
+        public fun onAuthSuccess(cryptoObject: FingerprintManager.CryptoObject) {
+            //Authentication sucessful.
+            StaticData.loggedIn = true;
+            StaticData.loginData = loginData
+            activity!!.finish()
+        }
+
+        override
+        public fun onAuthFailed(errorCode: Int, errorMessage: String?) {
+            when (errorCode) {
+            //Parse the error code for recoverable/non recoverable error.
+                AuthErrorCodes.CANNOT_RECOGNIZE_ERROR -> {
+                    Log.d("Finger","Error 1")
+                }
+                AuthErrorCodes.NON_RECOVERABLE_ERROR -> {
+                    Log.d("Finger","Error 2")
+                }
+            //This is not recoverable error. Try other options for user authentication. like pin, password.
+                AuthErrorCodes.RECOVERABLE_ERROR -> {
+                    Log.d("Finger","Error 3")
+                }
+            //Any recoverable error. Display message to the user.
+            }
+        }
+    }
+
+
+    /*@SuppressLint("NewApi") fun testFingerPrintSettings(): Boolean {
+        print("Testing Fingerprint Settings");
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            print("This Android version does not support fingerprint authentication.");
+            return false;
+        }
+
+        keyguardManager =  getSystemService (KEYGUARD_SERVICE) as KeyguardManager
+        fingerprintManager =  getSystemService (FINGERPRINT_SERVICE) as FingerprintManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            if (!keyguardManager!!.isKeyguardSecure()) {
+                print("User hasn't enabled Lock Screen");
+                return false;
+            }
+        }
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+            print("User hasn't granted permission to use Fingerprint");
+            return false;
+        }
+
+        if (!fingerprintManager!!.hasEnrolledFingerprints()) {
+            print("User hasn't registered any fingerprints");
+            return false;
+        }
+
+        print("Fingerprint authentication is set.\n");
+
+        return true;
+
+    }
+
+    private fun usersRegistered(): Boolean {
+        if (pref!!.getString(PREFERENCES_KEY_EMAIL, null) == null) {
+            print("No user is registered")
+            return false
+        }
+
+        return true
+    }
+    @TargetApi(Build.VERSION_CODES.M)
+    class FingerprintHelper : FingerprintManager.AuthenticationCallback() {
+
+    }
+
+    interface FingerprintHelperListener{
+        public fun authenticationFailed( error:String);
+        public fun authenticationSucceeded( result:FingerprintManager.AuthenticationResult);
+
+    }*/
 
 }
 

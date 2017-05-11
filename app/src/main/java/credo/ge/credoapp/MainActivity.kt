@@ -91,7 +91,25 @@ class MainActivity : CredoExtendActivity() {
                     var k = it
 
                     it.data.syncModel.branches.forEach {
-                        it.save()
+                        Branch(it).save()
+                    }
+                    it.data.syncModel.consuls.forEach {
+                        VilageCounsel(it).save()
+                    }
+                    it.data.syncModel.industries.forEach {
+                        Industry(it).save()
+                    }
+                    it.data.syncModel.loanOfficers.forEach {
+                        LoanOficer(it).save();
+                    }
+                    it.data.syncModel.products.forEach {
+                        Product(it).save()
+                    }
+                    it.data.syncModel.purposes.forEach {
+                        Purpose(it).save()
+                    }
+                    it.data.syncModel.villages.forEach {
+                        Vilage(it).save()
                     }
 
 

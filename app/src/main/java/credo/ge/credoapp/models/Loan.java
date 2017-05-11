@@ -23,7 +23,7 @@ public class Loan extends SugarRecord<Loan> {
 
     @TextFieldTypeViewAnotation(name = "თანხა",
             defaultValue = "",
-            type = "text",visibilityPatern = {"active:true"})
+            type = "text")
     public String sum = "0";
 
 
@@ -40,8 +40,6 @@ public class Loan extends SugarRecord<Loan> {
 
     @ObjectFieldTypeViewAnotation(name = "ოფიცერი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
     public LoanOficer loanOficer;
-    @BooleanFieldTypeViewAnotation(name = "აქტიურია",defaultVal = true)
-    public boolean active;
 
 
     @ObjectFieldTypeViewAnotation(name = "ფილიალი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true)
@@ -86,7 +84,7 @@ public class Loan extends SugarRecord<Loan> {
     }
 
     public Loan() {
-        active = false;
+
     }
 
 }
