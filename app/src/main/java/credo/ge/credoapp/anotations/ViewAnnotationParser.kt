@@ -176,6 +176,9 @@ class ViewAnnotationParser {
                     StaticData.comboBoxUpdateFunctions.put(updaterUUID, func)
 
                     val anchor = view.findViewById(R.id.buttonActions) as Button
+                    if(!canAddToDb){
+                        anchor.visibility=View.GONE
+                    }
                     val label = view.findViewById(R.id.label) as TextView
                     label.text = "${name}:"
                     val droppyBuilder = DroppyMenuPopup.Builder(viewGorup.context, anchor)

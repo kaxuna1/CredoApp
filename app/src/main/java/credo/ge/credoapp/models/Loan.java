@@ -23,31 +23,31 @@ public class Loan extends SugarRecord<Loan> {
             isMethod = true,
             type = "comboBox",
             sqlData = true,
-            canAddToDb = true, position = 1)
+            canAddToDb = false, position = 1)
     public Person person;
 
 
 
 
-    @ObjectFieldTypeViewAnotation(name = "ფილიალი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true, position = 2)
+    @ObjectFieldTypeViewAnotation(name = "ფილიალი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 2)
     public Branch branch;
 
 
-    @ObjectFieldTypeViewAnotation(name = "ოფიცერი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true, position = 3)
+    @ObjectFieldTypeViewAnotation(name = "ოფიცერი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 3)
     public LoanOficer loanOficer;
-    @ObjectFieldTypeViewAnotation(name = "პროდუქტი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true, position = 4)
+    @ObjectFieldTypeViewAnotation(name = "პროდუქტი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 4)
     public Product product;
-    @ObjectFieldTypeViewAnotation(name = "სოფელი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true, position = 5)
+    @ObjectFieldTypeViewAnotation(name = "სოფელი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 5)
     public Vilage vilage;
-    @ObjectFieldTypeViewAnotation(name = "სოფლის კონსული", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true, position = 6)
+    @ObjectFieldTypeViewAnotation(name = "სოფლის კონსული", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 6)
     public VilageCounsel vilageCounsel;
-    @ObjectFieldTypeViewAnotation(name = "მიზნობრიობა", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true, position = 7)
+    @ObjectFieldTypeViewAnotation(name = "მიზნობრიობა", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 7)
     public Purpose purpose;
     @TextFieldTypeViewAnotation(name = "გამოცდილება", defaultValue = "1",type = "int", position = 8)
     public int gamocdileba;
     @TextFieldTypeViewAnotation(name = "თანხა", defaultValue = "1",type = "int", position = 9)
     public int loanSum;
-    @ObjectFieldTypeViewAnotation(name = "ვალუტა", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true, position = 10,filterWith="type=16")
+    @ObjectFieldTypeViewAnotation(name = "ვალუტა", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 10,filterWith="16")
     public Dictionary currency;
 
     @TextFieldTypeViewAnotation(name = "სესხის ვადა", defaultValue = "1",type = "int", position = 11)

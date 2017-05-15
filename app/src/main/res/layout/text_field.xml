@@ -20,12 +20,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView"
+                android:textColor="@color/colorPrimary"
                 android:textSize="18sp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true" />
 
             <br.com.sapereaude.maskedEditText.MaskedEditText
                 android:id="@+id/editor"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
                 mask:mask="########################"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

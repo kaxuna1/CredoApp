@@ -30,8 +30,8 @@ public class Person extends SugarRecord<Person> {
     @TextFieldTypeViewAnotation(name = "ფაქტობრივი მისამართი", defaultValue = "",type = "text", position = 5)
     public String address;
 
-    @ObjectFieldTypeViewAnotation(name = "ტიპი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 6)
-    public PersonType personType;
+    @ObjectFieldTypeViewAnotation(name = "ტიპი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 6,filterWith = "13")
+    public Dictionary personType;
 
     @TextFieldTypeViewAnotation(name = "მობილური", defaultValue = "",type = "text",mask = "(5##)-###-###", position = 7)
     public String mobile;
@@ -42,18 +42,22 @@ public class Person extends SugarRecord<Person> {
     public String connectedPersonsNumber;
 
 
-    @ObjectFieldTypeViewAnotation(name = "სქესი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true, position = 10)
-    public SexType sexType;
+    @ObjectFieldTypeViewAnotation(name = "სქესი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 10, filterWith = "3")
+    public Dictionary sexType;
 
-    @ObjectFieldTypeViewAnotation(name = "ოჯახური მდგომარეობა", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true, position = 11)
-    public OjaxuriMdgomareoba ojaxuriMdgomareoba;
+    @ObjectFieldTypeViewAnotation(name = "ოჯახური მდგომარეობა",
+            displayField = "getName", isMethod = true,
+            type = "comboBox", sqlData = true,
+            canAddToDb = false, position = 11,
+            filterWith = "44")
+    public Dictionary ojaxuriMdgomareoba;
 
 
-    @ObjectFieldTypeViewAnotation(name = "სექტორი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true, position = 12)
-    public Sector sector;
+    @ObjectFieldTypeViewAnotation(name = "სექტორი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 12,filterWith = "1100")
+    public Dictionary sector;
 
-    @ObjectFieldTypeViewAnotation(name = "ინდუსტრია", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = true, position = 13)
-    public Industry industry;
+    @ObjectFieldTypeViewAnotation(name = "ინდუსტრია", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 13,filterWith = "1101")
+    public Dictionary industry;
 
 
 
@@ -67,7 +71,7 @@ public class Person extends SugarRecord<Person> {
             isMethod = true,
             type = "comboBox",
             sqlData = true,
-            canAddToDb = true,
+            canAddToDb = false,
             joinField = "person", position = 14)
     public ArrayList<FamilyPerson> family;
 
