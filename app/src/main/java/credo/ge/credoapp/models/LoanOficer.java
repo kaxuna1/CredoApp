@@ -12,7 +12,6 @@ import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.LoanOficerAd
  */
 
 public class LoanOficer extends SugarRecord<LoanOficer> {
-    @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "",type = "text")
     public String loanOfficer;
 
     public int branchId;

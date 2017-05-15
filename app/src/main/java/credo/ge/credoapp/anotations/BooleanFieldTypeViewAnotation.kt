@@ -8,4 +8,5 @@ import java.lang.annotation.RetentionPolicy
  */
 @Target(AnnotationTarget.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-annotation class BooleanFieldTypeViewAnotation (val name:String,val defaultVal:Boolean);
+annotation class BooleanFieldTypeViewAnotation (val name:String,val defaultVal:Boolean,
+                                                val position:Int);

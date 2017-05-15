@@ -31,11 +31,14 @@ import kotlin.collections.HashMap
  */
 
 class ViewAnnotationParser {
-    fun parse(clazz: Class<*>, viewGorup: ViewGroup, bindObject: Any, onSave: View.OnClickListener?) {
+    fun parse(clazz: Class<*>, viewGorup: ViewGroup, bindObject: Any, onSave: View.OnClickListener?, saveText: String) {
         var inflater = LayoutInflater.from(viewGorup.context)
         val fields = clazz.fields
         val fieldPaterns = ArrayList<ViewFieldHolder>()
         val fieldNameMap = HashMap<String, Field>()
+
+        val viewList: HashMap<Int, View> = HashMap<Int, View>();
+
 
         for (field in fields) {
             fieldNameMap.put(field.name, field);
@@ -63,11 +66,10 @@ class ViewAnnotationParser {
                         valueToSet = (fieldValue as Int).toString()
                 }
                 editText.setText(valueToSet)
-                if (type == "int"){
-                    editText.inputType= TYPE_CLASS_NUMBER
+                if (type == "int") {
+                    editText.inputType = TYPE_CLASS_NUMBER
                 }
                 var obj = clazz.cast(bindObject)
-                viewGorup.addView(view)
                 editText.addTextChangedListener(object : TextWatcher {
 
                     override fun afterTextChanged(s: Editable) {}
@@ -96,12 +98,14 @@ class ViewAnnotationParser {
                 viewFieldHolder.paterns = visibilityPater
                 fieldPaterns.add(viewFieldHolder)
 
+                viewList.put(annotation.position, view);
+
             }
             if (field.isAnnotationPresent(DateFieldTypeViewAnotation::class.java)) {
                 val annotation = field.getAnnotation<TextFieldTypeViewAnotation>(TextFieldTypeViewAnotation::class.java)
                 val name = annotation.name
                 var datePicker = DatePicker(viewGorup.context)
-                viewGorup.addView(datePicker)
+                viewList.put(annotation.position, datePicker)
             }
             if (field.isAnnotationPresent(ObjectFieldTypeViewAnotation::class.java)) {
                 val annotation = field.getAnnotation<ObjectFieldTypeViewAnotation>(ObjectFieldTypeViewAnotation::class.java)
@@ -109,6 +113,7 @@ class ViewAnnotationParser {
                 val displayField = annotation.displayField
                 val isMethod = annotation.isMethod
                 val type = annotation.type
+                val filter = annotation.filterWith;
 
                 val sqlData = annotation.sqlData
                 val canAddToDb = annotation.canAddToDb
@@ -116,14 +121,23 @@ class ViewAnnotationParser {
                     var view = inflater.inflate(R.layout.combobox_with_button, null)
                     //
 
+
                     val spinner = view.findViewById(R.id.spinner) as Spinner
                     val updaterUUID = UUID.randomUUID().toString()
                     var adapter: ReflectionAdapterAdapter? = null
                     val func = fun() {
-                        val method = field.type.getMethod("getData")
-                        val dataToLoad = method.invoke(null) as List<Any>
-                        val fieldValue = field.get(bindObject)
+                        var dataToLoad:List<Any>?=null;
 
+
+                        val fieldValue = field.get(bindObject)
+                        if (filter.isNullOrEmpty()) {
+                            val method = field.type.getMethod("getData")
+                            dataToLoad = method.invoke(null) as List<Any>
+                        }else{
+
+                            val method = field.type.getMethod("getData",String::class.java)
+                            dataToLoad = method.invoke(null,filter) as List<Any>
+                        }
 
 
 
@@ -197,13 +211,13 @@ class ViewAnnotationParser {
                     }
                     val droppyMenu = droppyBuilder.build()
 
-                    viewGorup.addView(view)
                     var viewFieldHolder = ViewFieldHolder();
                     viewFieldHolder.bindObject = bindObject;
                     viewFieldHolder.field = field;
                     viewFieldHolder.view = view
                     viewFieldHolder.paterns = annotation.visibilityPatern
                     fieldPaterns.add(viewFieldHolder)
+                    viewList.put(annotation.position, view);
                 }
 
 
@@ -235,7 +249,7 @@ class ViewAnnotationParser {
                 var listAdapter: ReflectionAdapterAdapter? = null
                 val func = fun() {
 
-                    val method = listClass.getMethod("findby"+joinField, Long::class.java)
+                    val method = listClass.getMethod("findby" + joinField, Long::class.java)
                     val dataToLoad = method.invoke(null, (clazz.getMethod("getId").invoke(bindObject) as Long)) as ArrayList<Any>
                     //dataOfField.addAll(dataToLoad)
                     listAdapter = ReflectionAdapterAdapter(dataToLoad, viewGorup.context, displayField, isMethod, listClass, 20f)
@@ -295,14 +309,14 @@ class ViewAnnotationParser {
 
                 StaticData.comboBoxUpdateFunctions.put(updaterUUID, func)
 
-                viewGorup.addView(view)
+
                 var viewFieldHolder = ViewFieldHolder();
                 viewFieldHolder.bindObject = bindObject;
                 viewFieldHolder.field = field;
                 viewFieldHolder.view = view
                 viewFieldHolder.paterns = annotation.visibilityPatern
                 fieldPaterns.add(viewFieldHolder)
-
+                viewList.put(annotation.position, view);
             }
             if (field.isAnnotationPresent(BooleanFieldTypeViewAnotation::class.java)) {
                 val annotation = field.getAnnotation<BooleanFieldTypeViewAnotation>(BooleanFieldTypeViewAnotation::class.java)
@@ -319,18 +333,23 @@ class ViewAnnotationParser {
 
                 checkbox.isChecked = valueToSet;
 
-                viewGorup.addView(view)
+
 
                 checkbox.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
                     field.set(bindObject, isChecked)
                     visibilityCheck(fieldPaterns, fieldNameMap, bindObject)
                 })
+                viewList.put(annotation.position, view);
 
             }
         }
+        val orderedList = viewList.toSortedMap();
+        orderedList.forEach { t, u ->
+            viewGorup.addView(u)
+        }
         if (onSave != null) {
             val saveBtn = Button(viewGorup.context)
-            saveBtn.text = "save"
+            saveBtn.text = saveText
             saveBtn.setOnClickListener(onSave)
             viewGorup.addView(saveBtn)
         } else {
@@ -355,17 +374,17 @@ fun visibilityCheck(fieldPaterns: ArrayList<ViewFieldHolder>, fieldNameMap: Hash
             val fieldValueMustBe = patern[1].split(",")
             val field = fieldNameMap.get(fieldName)
 
-            val rs=field!!.get(bindObject);
-            var fieldValue="";
-            if(rs != null){
-                 fieldValue = rs.toString()
+            val rs = field!!.get(bindObject);
+            var fieldValue = "";
+            if (rs != null) {
+                fieldValue = rs.toString()
             }
-            var visibleTemp=false
+            var visibleTemp = false
             fieldValueMustBe.forEach {
                 if (it == fieldValue)
                     visibleTemp = true
             }
-            visible=visibleTemp
+            visible = visibleTemp
 
         }
 

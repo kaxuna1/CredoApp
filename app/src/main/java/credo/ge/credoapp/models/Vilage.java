@@ -12,7 +12,7 @@ import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.VilageAdapte
  */
 
 public class Vilage extends SugarRecord {
-    @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "",type = "text")
+
     public String village;
 
     public String city;

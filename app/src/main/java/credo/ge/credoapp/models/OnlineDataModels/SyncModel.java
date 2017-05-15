@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import credo.ge.credoapp.models.Industry;
 import credo.ge.credoapp.models.LoanOficer;
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.BranchAdapterClass;
+import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.DictionaryAdapter;
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.IndustryAdapter;
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.LoanOficerAdapter;
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.ProductAdapter;
@@ -28,6 +29,7 @@ public class SyncModel {
     private ArrayList<PurposeAdapter> purposes;
     private ArrayList<ProductAdapter> products;
     private ArrayList<IndustryAdapter> industries;
+    private ArrayList<DictionaryAdapter> dictionaries;
 
     public ArrayList<BranchAdapterClass> getBranches() {
         return branches;
@@ -83,5 +85,13 @@ public class SyncModel {
 
     public void setIndustries(ArrayList<IndustryAdapter> industries) {
         this.industries = industries;
+    }
+
+    public ArrayList<DictionaryAdapter> getDictionaries() {
+        return dictionaries;
+    }
+
+    public void setDictionaries(ArrayList<DictionaryAdapter> dictionaries) {
+        this.dictionaries = dictionaries;
     }
 }

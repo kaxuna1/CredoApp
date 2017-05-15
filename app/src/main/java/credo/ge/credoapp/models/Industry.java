@@ -12,18 +12,17 @@ import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.IndustryAdap
  */
 
 public class Industry extends SugarRecord<Industry>{
-    @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "",type = "text")
-    public String name;
+    public String industry;
 
     public int serverId;
 
     public String getName() {
-        return name;
+        return industry;
     }
 
     public Industry(){}
     public Industry(IndustryAdapter adapterItem){
-        this.name=adapterItem.name;
+        this.industry=adapterItem.industry;
         this.serverId=adapterItem.id;
     }
 

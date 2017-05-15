@@ -12,7 +12,6 @@ import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.VilageCounse
  */
 
 public class VilageCounsel extends SugarRecord<VilageCounsel> {
-    @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "",type = "text")
     public String consul;
 
     public int villageId;

@@ -12,7 +12,6 @@ import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.PurposeAdapt
  */
 
 public class Purpose extends SugarRecord<Purpose> {
-    @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "",type = "text")
     public String purpose;
 
     public int serverId;

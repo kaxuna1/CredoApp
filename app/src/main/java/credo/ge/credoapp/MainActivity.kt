@@ -88,6 +88,7 @@ class MainActivity : CredoExtendActivity() {
                     Product.deleteAll(Product::class.java)
                     Purpose.deleteAll(Purpose::class.java)
                     Vilage.deleteAll(Vilage::class.java)
+                    Dictionary.deleteAll(Dictionary::class.java)
                     var k = it
 
                     it.data.syncModel.branches.forEach {
@@ -110,6 +111,9 @@ class MainActivity : CredoExtendActivity() {
                     }
                     it.data.syncModel.villages.forEach {
                         Vilage(it).save()
+                    }
+                    it.data.syncModel.dictionaries.forEach {
+                        Dictionary(it).save()
                     }
 
 

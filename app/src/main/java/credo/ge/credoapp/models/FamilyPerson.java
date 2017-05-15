@@ -12,12 +12,20 @@ import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
  */
 
 public class FamilyPerson extends SugarRecord<FamilyPerson> {
-    @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "kaxa",type = "text")
+    @ObjectFieldTypeViewAnotation(name = "კავშირი",
+            displayField = "getName",
+            isMethod = true,
+            type = "comboBox",
+            sqlData = true,
+            canAddToDb = true,position = 1)
+    public FamilyMemberType memberType;
+
+    @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "kaxa",type = "text",position = 2)
     public String name;
 
 
 
-    @TextFieldTypeViewAnotation(name = "გვარი", defaultValue = "gelashvili",type = "text")
+    @TextFieldTypeViewAnotation(name = "გვარი", defaultValue = "gelashvili",type = "text",position = 3)
     public String surname;
 
 
@@ -40,13 +48,7 @@ public class FamilyPerson extends SugarRecord<FamilyPerson> {
         this.memberType = memberType;
     }
 
-    @ObjectFieldTypeViewAnotation(name = "კავშირი",
-            displayField = "getName",
-            isMethod = true,
-            type = "comboBox",
-            sqlData = true,
-            canAddToDb = true)
-    public FamilyMemberType memberType;
+
 
     public String getName(){
         return name+" "+surname;

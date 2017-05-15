@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
-
     <application
         android:name="com.orm.SugarApp"
         android:allowBackup="true"
@@ -21,10 +20,10 @@
             android:value="sugar_example.db" />
         <meta-data
             android:name="VERSION"
-            android:value="26" />
+            android:value="30" />
         <meta-data
             android:name="QUERY_LOG"
-            android:value="true" />
+            android:value="false" />
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="credo.ge" />
@@ -32,21 +31,27 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".DataFillActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".data_list_activity" />
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ScrollingMainActivity"
+            android:label="@string/title_activity_scrolling_main"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
 
-            android:name=".DataFillActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".data_list_activity" />
-        <activity
-            android:screenOrientation="portrait"
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+        </activity>
     </application>
 
 </manifest>

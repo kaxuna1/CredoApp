@@ -13,7 +13,6 @@ import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.BranchAdapte
 public class Branch extends DBAdapter<Branch> {
 
 
-    @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "", type = "text")
     public String branch;
 
     public String city;

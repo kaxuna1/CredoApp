@@ -5,6 +5,6 @@ package credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters;
  */
 
 public class IndustryAdapter {
-    public String name;
+    public String industry;
     public int id;
 }

@@ -16,7 +16,6 @@ public class Product extends SugarRecord<Product> {
         return product;
     }
 
-    @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "",type = "text")
     public String product;
 
     public int serverId;

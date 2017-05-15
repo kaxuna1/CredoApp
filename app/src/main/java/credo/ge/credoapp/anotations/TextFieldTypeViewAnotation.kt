@@ -14,4 +14,5 @@ annotation class TextFieldTypeViewAnotation(val name: String,
                                             val type: String,
                                             val mask:String="",
                                             val allowed_chars:String="",
-                                            val visibilityPatern:Array<String> = arrayOf())
+                                            val visibilityPatern:Array<String> = arrayOf(),
+                                            val position:Int)

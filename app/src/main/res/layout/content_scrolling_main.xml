@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="credo.ge.credoapp.ScrollingMainActivity"
+    tools:showIn="@layout/activity_scrolling_main">
+
+    <LinearLayout
+        android:id="@+id/mainlinear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+
+        android:orientation="vertical">
+
+
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/buttonAddPerson"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="50px"
+            android:padding="40px"
+            fancy:fb_borderColor="#EA6E26"
+            fancy:fb_iconResource="@drawable/person"
+            fancy:fb_borderWidth="2dp"
+            fancy:fb_defaultColor="@color/white"
+            fancy:fb_focusColor="@color/colorPrimary"
+
+            fancy:fb_iconPosition="left"
+            fancy:fb_radius="5dp"
+            fancy:fb_text="ფიზიკური პირის დამატება"
+            fancy:fb_textColor="@color/colorPrimary" />
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/buttonAutoCheck"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="50px"
+            android:padding="40px"
+
+            fancy:fb_borderColor="#EA6E26"
+            fancy:fb_iconResource="@drawable/auto"
+            fancy:fb_borderWidth="2dp"
+            fancy:fb_defaultColor="@color/white"
+            fancy:fb_focusColor="@color/colorPrimary"
+            fancy:fb_iconPosition="left"
+            fancy:fb_radius="5dp"
+            fancy:fb_text="ავტომატური გადამოწმება"
+            fancy:fb_textColor="@color/colorPrimary" />
+
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/addLoanBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="50px"
+            android:padding="40px"
+            fancy:fb_iconPaddingRight="60dp"
+            fancy:fb_iconResource="@drawable/loan"
+            fancy:fb_borderColor="#EA6E26"
+            fancy:fb_borderWidth="2dp"
+            fancy:fb_defaultColor="@color/white"
+            fancy:fb_focusColor="@color/colorPrimary"
+            fancy:fb_iconPosition="left"
+            fancy:fb_radius="5dp"
+            fancy:fb_text="სესხის დამატება"
+            fancy:fb_textColor="@color/colorPrimary" />
+
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/loansComplete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="50px"
+            android:padding="40px"
+            fancy:fb_borderColor="#EA6E26"
+
+            fancy:fb_iconResource="@drawable/complite"
+            fancy:fb_borderWidth="2dp"
+            fancy:fb_defaultColor="@color/white"
+            fancy:fb_focusColor="@color/colorPrimary"
+            fancy:fb_iconPosition="left"
+            fancy:fb_radius="5dp"
+            fancy:fb_text="შევსებული განაცხადები"
+            fancy:fb_textColor="@color/colorPrimary" />
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/loans"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="50px"
+            android:padding="40px"
+
+            fancy:fb_iconResource="@drawable/partial"
+            fancy:fb_borderColor="#EA6E26"
+            fancy:fb_borderWidth="2dp"
+            fancy:fb_defaultColor="@color/white"
+            fancy:fb_focusColor="@color/colorPrimary"
+            fancy:fb_iconPosition="left"
+            fancy:fb_radius="5dp"
+            fancy:fb_iconPaddingLeft="20dp"
+            fancy:fb_text="დაუსრულებელი განაცხადები"
+            fancy:fb_textColor="@color/colorPrimary" />
+
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/persons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="50px"
+            android:padding="40px"
+            fancy:fb_borderColor="#EA6E26"
+            fancy:fb_borderWidth="2dp"
+            fancy:fb_defaultColor="@color/white"
+            fancy:fb_focusColor="@color/colorPrimary"
+            fancy:fb_iconPosition="left"
+            fancy:fb_radius="5dp"
+            fancy:fb_iconPaddingRight="100dp"
+            fancy:fb_iconResource="@drawable/person"
+            fancy:fb_text="კლიენტები"
+            fancy:fb_textColor="@color/colorPrimary" />
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/fileUpload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="50px"
+            android:padding="40px"
+            fancy:fb_borderColor="#EA6E26"
+            fancy:fb_iconPaddingRight="30dp"
+            fancy:fb_iconResource="@drawable/files"
+            fancy:fb_borderWidth="2dp"
+            fancy:fb_defaultColor="@color/white"
+            fancy:fb_focusColor="@color/colorPrimary"
+            fancy:fb_iconPosition="left"
+            fancy:fb_radius="5dp"
+            fancy:fb_text="ფაილის ატვირთვა"
+            fancy:fb_textColor="@color/colorPrimary" />
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

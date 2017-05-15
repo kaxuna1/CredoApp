@@ -12,7 +12,6 @@ import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
 
 public class FamilyMemberType extends SugarRecord<FamilyMemberType> {
 
-    @TextFieldTypeViewAnotation(name = "ტიპის id", defaultValue = "1",type = "int")
     public int typeId;
 
     public FamilyMemberType() {
@@ -27,7 +26,6 @@ public class FamilyMemberType extends SugarRecord<FamilyMemberType> {
     public void setName(String name) {
         this.name = name;
     }
-    @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "name",type = "text")
     public String name;
 
     public static List<FamilyMemberType> getData(){

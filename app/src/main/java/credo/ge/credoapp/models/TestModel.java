@@ -10,9 +10,8 @@ import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
  */
 
 public class TestModel {
-    @TextFieldTypeViewAnotation(name = "Name", defaultValue = "kaxa",type = "text")
+
     public String name;
-    @TextFieldTypeViewAnotation(name = "Surname", defaultValue = "gelashvili",type = "text")
     public String surname;
 
     public void kaxa(String k){

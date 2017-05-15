@@ -50,7 +50,7 @@ class DataFillActivity : CredoExtendActivity() {
                 func()
             }
             finish()
-        })
+        },"შენახვა");
 
     }
 }
