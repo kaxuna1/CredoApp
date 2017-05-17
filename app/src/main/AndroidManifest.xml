@@ -20,7 +20,7 @@
             android:value="sugar_example.db" />
         <meta-data
             android:name="VERSION"
-            android:value="30" />
+            android:value="32" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="false" />
@@ -30,9 +30,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".DataFillActivity"
             android:screenOrientation="portrait" />
@@ -50,8 +48,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
+        <activity android:name=".AutoCheckActivity"></activity>
     </application>
 
 </manifest>

@@ -15,8 +15,8 @@ import com.orm.SugarRecord
 import credo.ge.credoapp.models.*
 import credo.ge.credoapp.online.OnlineData
 import credo.ge.credoapp.views.CredoExtendActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_scrolling_main.*
+import kotlinx.android.synthetic.main.content_scrolling_main.*
 import rx.functions.Action1
 
 class ScrollingMainActivity : CredoExtendActivity() {
@@ -29,87 +29,22 @@ class ScrollingMainActivity : CredoExtendActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scrolling_main)
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
-        setSupportActionBar(toolbar)
+
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { view ->
-            progressDialog!!.setMessage("მიმდინარეობს განახლება!")
-            progressDialog!!.setCancelable(false)
-            progressDialog!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-            progressDialog!!.show()
-            OnlineData.syncData(StaticData.loginData!!.access_token, Action1 {
-
-                var ka= VilageCounsel.findAll(VilageCounsel::class.java)
-
-                Branch.deleteAll(Branch::class.java)
-                VilageCounsel.deleteAll(VilageCounsel::class.java)
-                Industry.deleteAll(Industry::class.java)
-                LoanOficer.deleteAll(LoanOficer::class.java)
-                Product.deleteAll(Product::class.java)
-                Purpose.deleteAll(Purpose::class.java)
-                Vilage.deleteAll(Vilage::class.java)
-                Dictionary.deleteAll(Dictionary::class.java)
-                var k = it
-                var branches = ArrayList<Branch>();
-                val consuls = ArrayList<VilageCounsel>();
-                val industries = ArrayList<Industry>();
-                val oficers = ArrayList<LoanOficer>();
-                val products = ArrayList<Product>();
-                val purposes = ArrayList<Purpose>();
-                val vilages = ArrayList<Vilage>();
-                val dictionaries = ArrayList<Dictionary>();
-
-                it.data.syncModel.branches.forEach {
-                    branches.add(Branch(it))//.save()
-                }
-                it.data.syncModel.consuls.forEach {
-                    consuls.add(VilageCounsel(it))//.save()
-                }
-                it.data.syncModel.industries.forEach {
-                    industries.add(Industry(it))//.save()
-                }
-                it.data.syncModel.loanOfficers.forEach {
-                    oficers.add(LoanOficer(it))//.save();
-                }
-                it.data.syncModel.products.forEach {
-                    products.add(Product(it))//.save()
-                }
-                it.data.syncModel.purposes.forEach {
-                    purposes.add(Purpose(it))//.save()
-                }
-                it.data.syncModel.villages.forEach {
-                    vilages.add(Vilage(it))//.save()
-                }
-                it.data.syncModel.dictionaries.forEach {
-                    dictionaries.add(Dictionary(it))//.save()
-                }
-
-
-                SugarRecord.saveInTx(branches)
-                SugarRecord.saveInTx(consuls)
-                SugarRecord.saveInTx(industries)
-                SugarRecord.saveInTx(oficers)
-                SugarRecord.saveInTx(products)
-                SugarRecord.saveInTx(purposes)
-                SugarRecord.saveInTx(vilages)
-                SugarRecord.saveInTx(dictionaries)
-
-
-                progressDialog!!.hide()
-                Snackbar.make(view, "სინქრონიზაცია დასრულდა წარმატებით!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show()
-                /*  it.data.syncModel.branches.forEach {
-                      Log.d("logKaxa",it.name)
-                  }*/
-            })
-
+            syncData(view)
         }
         layout = findViewById(R.id.mainlinear) as LinearLayout
         progressDialog = ProgressDialog(this)
         var activity = this
 
         addLoanBtn!!.setOnClickListener {
+            if (checkSync()) {
+                Snackbar.make(buttonAutoCheck, "სინქრონიზაცია აუცილებელია", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show()
+                return@setOnClickListener
+            }
             val intent = Intent(this, DataFillActivity::class.java)
             Loan().save()
             intent.putExtra("class", Loan::class.java)
@@ -117,24 +52,131 @@ class ScrollingMainActivity : CredoExtendActivity() {
             startActivity(intent)
         }
         loans!!.setOnClickListener {
+            if (checkSync()) {
+                Snackbar.make(buttonAutoCheck, "სინქრონიზაცია აუცილებელია", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show()
+                return@setOnClickListener
+            }
             val intent = Intent(this, data_list_activity::class.java)
             intent.putExtra("class", Loan::class.java)
             intent.putExtra("nameFieldMethodName", "getName")
             startActivity(intent)
         }
         persons!!.setOnClickListener {
+            if(checkSync()){
+                Snackbar.make(buttonAutoCheck, "სინქრონიზაცია აუცილებელია", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show()
+                return@setOnClickListener
+            }
             val intent = Intent(this, data_list_activity::class.java)
             intent.putExtra("class", Person::class.java)
             intent.putExtra("nameFieldMethodName", "fullName")
             startActivity(intent)
         }
         buttonAddPerson.setOnClickListener {
+            if (checkSync()) {
+                Snackbar.make(buttonAutoCheck, "სინქრონიზაცია აუცილებელია", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show()
+                return@setOnClickListener
+            }
             val intent = Intent(this, DataFillActivity::class.java)
             intent.putExtra("class", Person::class.java)
             intent.putExtra("autosave", true)
             startActivity(intent)
         }
 
+        buttonAutoCheck.setOnClickListener {
 
+
+            if (checkSync()) {
+                Snackbar.make(buttonAutoCheck, "სინქრონიზაცია აუცილებელია", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show()
+                return@setOnClickListener
+            }
+
+            val intent = Intent(this, AutoCheckActivity::class.java)
+            startActivity(intent)
+            overridePendingTransition(R.anim.trans_left_in,
+                    R.anim.trans_left_out)
+
+        }
+
+
+    }
+
+    fun checkSync(): Boolean {
+        return !Branch.findAll(Branch::class.java).hasNext()
+    }
+
+    fun syncData(view: View) {
+        progressDialog!!.setMessage("მიმდინარეობს განახლება!")
+        progressDialog!!.setCancelable(false)
+        progressDialog!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        progressDialog!!.show()
+        OnlineData.syncData(StaticData.loginData!!.access_token, Action1 {
+
+            var ka = VilageCounsel.findAll(VilageCounsel::class.java)
+
+            Branch.deleteAll(Branch::class.java)
+            VilageCounsel.deleteAll(VilageCounsel::class.java)
+            Industry.deleteAll(Industry::class.java)
+            LoanOficer.deleteAll(LoanOficer::class.java)
+            Product.deleteAll(Product::class.java)
+            Purpose.deleteAll(Purpose::class.java)
+            Vilage.deleteAll(Vilage::class.java)
+            Dictionary.deleteAll(Dictionary::class.java)
+            var k = it
+            var branches = ArrayList<Branch>();
+            val consuls = ArrayList<VilageCounsel>();
+            val industries = ArrayList<Industry>();
+            val oficers = ArrayList<LoanOficer>();
+            val products = ArrayList<Product>();
+            val purposes = ArrayList<Purpose>();
+            val vilages = ArrayList<Vilage>();
+            val dictionaries = ArrayList<Dictionary>();
+
+            it.data.syncModel.branches.forEach {
+                branches.add(Branch(it))//.save()
+            }
+            it.data.syncModel.consuls.forEach {
+                consuls.add(VilageCounsel(it))//.save()
+            }
+            it.data.syncModel.industries.forEach {
+                industries.add(Industry(it))//.save()
+            }
+            it.data.syncModel.loanOfficers.forEach {
+                oficers.add(LoanOficer(it))//.save();
+            }
+            it.data.syncModel.products.forEach {
+                products.add(Product(it))//.save()
+            }
+            it.data.syncModel.purposes.forEach {
+                purposes.add(Purpose(it))//.save()
+            }
+            it.data.syncModel.villages.forEach {
+                vilages.add(Vilage(it))//.save()
+            }
+            it.data.syncModel.dictionaries.forEach {
+                dictionaries.add(Dictionary(it))//.save()
+            }
+
+
+            SugarRecord.saveInTx(branches)
+            SugarRecord.saveInTx(consuls)
+            SugarRecord.saveInTx(industries)
+            SugarRecord.saveInTx(oficers)
+            SugarRecord.saveInTx(products)
+            SugarRecord.saveInTx(purposes)
+            SugarRecord.saveInTx(vilages)
+            SugarRecord.saveInTx(dictionaries)
+
+
+            progressDialog!!.hide()
+            Snackbar.make(view, "სინქრონიზაცია დასრულდა წარმატებით!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+            /*  it.data.syncModel.branches.forEach {
+                  Log.d("logKaxa",it.name)
+              }*/
+        })
     }
 }

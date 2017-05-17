@@ -33,11 +33,13 @@ import android.util.Log
 import com.andrognito.pinlockview.IndicatorDots
 import com.andrognito.pinlockview.PinLockListener
 import com.andrognito.pinlockview.PinLockView
+import com.mattprecious.swirl.SwirlView
 import com.multidots.fingerprintauth.AuthErrorCodes
 import com.multidots.fingerprintauth.FingerPrintAuthCallback
 import com.multidots.fingerprintauth.FingerPrintAuthHelper
 import credo.ge.credoapp.models.OnlineDataModels.LoginData
 import credo.ge.credoapp.online.OnlineData
+import kotlinx.android.synthetic.main.pin_layout.*
 import rx.functions.Action1
 
 /**
@@ -82,6 +84,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     internal var sharedPreferences: SharedPreferences? = null
     internal var editor: SharedPreferences.Editor? = null
     var mFingerPrintAuthHelper: FingerPrintAuthHelper? = null
+    internal var swirlView:SwirlView?=null
     var sessionId = 0L
 
     private var loginData: LoginData? = null
@@ -120,6 +123,9 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             fingerCallback.activity=this
             fingerCallback.loginData=loginData
 
+            swirlView = findViewById(R.id.swirlView) as SwirlView;
+
+            swirlView!!.setState(SwirlView.State.ON)
             mPinLockView = findViewById(R.id.pin_lock_view) as PinLockView
             mPinLockView!!.attachIndicatorDots(indicatorDots);
             mPinLockView!!.setPinLockListener(object : PinLockListener {
@@ -129,6 +135,8 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                         StaticData.loggedIn = true;
                         StaticData.loginData = loginData
                         finish()
+                    }else{
+                        swirlView!!.setState(SwirlView.State.ERROR)
                     }
                 }
 
@@ -137,6 +145,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                 }
 
                 override fun onPinChange(pinLength: Int, intermediatePin: String) {
+                    swirlView!!.setState(SwirlView.State.ON)
                     Log.d("kkaaxxaa", "Pin changed, new length $pinLength with intermediate pin $intermediatePin")
                 }
             })
@@ -398,6 +407,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             StaticData.loggedIn = true;
             StaticData.loginData = loginData
             activity!!.finish()
+            activity!!.swirlView.setState(SwirlView.State.ON)
         }
 
         override
@@ -406,13 +416,16 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             //Parse the error code for recoverable/non recoverable error.
                 AuthErrorCodes.CANNOT_RECOGNIZE_ERROR -> {
                     Log.d("Finger","Error 1")
+                    activity!!.swirlView.setState(SwirlView.State.ERROR)
                 }
                 AuthErrorCodes.NON_RECOVERABLE_ERROR -> {
                     Log.d("Finger","Error 2")
+                    activity!!.swirlView.setState(SwirlView.State.ERROR)
                 }
             //This is not recoverable error. Try other options for user authentication. like pin, password.
                 AuthErrorCodes.RECOVERABLE_ERROR -> {
                     Log.d("Finger","Error 3")
+                    activity!!.swirlView.setState(SwirlView.State.ERROR)
                 }
             //Any recoverable error. Display message to the user.
             }
