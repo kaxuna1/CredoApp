@@ -25,6 +25,11 @@ android {
     }
 
 }
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+}
 
 apply plugin: 'kotlin-android-extensions'
 
@@ -36,13 +41,17 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
     compile 'com.github.barteksc:android-pdf-viewer:2.5.1'
-
+    compile 'com.flipkart.springyheads:library:0.9.6'
+    compile 'io.reactivex:rxjava-string:1.1.1'
 
 
     compile 'com.mattprecious.swirl:swirl:1.0.0'
 
 
     compile 'com.github.medyo:fancybuttons:1.8.3'
+// https://mvnrepository.com/artifact/com.esotericsoftware.kryo/kryo
+    compile group: 'com.esotericsoftware.kryo', name: 'kryo', version: '2.24.0'
+    compile 'com.github.recruit-lifestyle:FloatingView:2.2'
 
 
     compile 'com.multidots:fingerprint-auth:1.0.1'

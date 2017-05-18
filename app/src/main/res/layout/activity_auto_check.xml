@@ -42,6 +42,7 @@
             app:srcCompat="@drawable/arrow"
             android:layout_below="@+id/imageView2"
             android:layout_alignParentStart="true" />
+
     </RelativeLayout>
 
     <com.github.florent37.materialtextfield.MaterialTextField
@@ -50,12 +51,14 @@
         android:paddingTop="50dp"
         app:mtf_image="@drawable/person"
         android:layout_below="@+id/relativeLayout"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:id="@+id/materialTextField">
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="ძებნა"
+            android:text="01017023512"
             android:textColor="#333"
             android:id="@+id/idNumber"
             android:textColorHint="#666"
@@ -77,6 +80,26 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true">
     </mehdi.sakout.fancybuttons.FancyButton>
+
+    <RelativeLayout
+        android:id="@+id/pdfPlace"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/btn_search"
+        android:layout_centerHorizontal="true">
+        <com.github.barteksc.pdfviewer.PDFView
+            android:id="@+id/pdfView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="clear"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>
