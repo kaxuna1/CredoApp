@@ -81,17 +81,6 @@
         android:layout_centerHorizontal="true">
     </mehdi.sakout.fancybuttons.FancyButton>
 
-    <RelativeLayout
-        android:id="@+id/pdfPlace"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/btn_search"
-        android:layout_centerHorizontal="true">
-        <com.github.barteksc.pdfviewer.PDFView
-            android:id="@+id/pdfView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </RelativeLayout>
 
     <Button
         android:id="@+id/clear"

@@ -3,12 +3,14 @@ package credo.ge.credoapp;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.sromku.simple.storage.InternalStorage;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import credo.ge.credoapp.models.OnlineDataModels.AutoCheckMethod;
@@ -35,27 +37,35 @@ import rx.schedulers.Schedulers;
  */
 
 public class StaticJava {
-    static String TAG="kaxaaa";
-    public void download(String token, String pn, String branchId, String byUserID, Action1<PdfFile> onSync){
+    static String TAG = "kaxaaa";
+
+    public void download(InternalStorage storage, String token, String pn, String branchId, String byUserID, Action1<PdfFile> onSync) {
         AutoCheckService downloadService = createService(AutoCheckService.class, "http://109.238.225.188:8081/");
 
 
-        Map<String,String> headers=new HashMap<>();
-        headers.put("Authorization","Bearer "+token);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + token);
 
 
-        List<PdfFile> pdfFiles = PdfFile.find(PdfFile.class,"p_id = ?",pn);
-        if(pdfFiles.size()>0){
-            onSync.call(pdfFiles.get(0));
-        }else{
-            downloadService.downloadFileByUrlRx(headers,new Gson().toJsonTree(new AutoCheckMethod("GetPersonCreditInfo", branchId, byUserID, pn)).getAsJsonObject(),"api/CallServiceMethodFile")
+        try {
+            byte[] file = storage.readFile("pdf", pn);
+            PdfFile pdfFile = new PdfFile();
+
+            pdfFile.pdf=file;
+
+            onSync.call(pdfFile);
+
+        } catch (Exception e) {
+            downloadService.downloadFileByUrlRx(headers, new Gson().toJsonTree(new AutoCheckMethod("GetPersonCreditInfo",
+                    branchId, byUserID, pn)).getAsJsonObject(), "api/CallServiceMethodFile")
                     .flatMap(processResponse())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(handleResult(onSync,pn));
+                    .subscribe(handleResult(onSync, pn,storage));
         }
 
     }
+
     private Func1<Response<ResponseBody>, Observable<PdfFile>> processResponse() {
         return new Func1<Response<ResponseBody>, Observable<PdfFile>>() {
             @Override
@@ -74,7 +84,6 @@ public class StaticJava {
                     String filename = header.replace("attachment; filename=", "");
 
 
-
                     PdfFile pdfFile = new PdfFile();
 
                     pdfFile.pId = "";
@@ -90,7 +99,7 @@ public class StaticJava {
         });
     }
 
-    private Observer<PdfFile> handleResult(final Action1<PdfFile> onSync, final String pn) {
+    private Observer<PdfFile> handleResult(final Action1<PdfFile> onSync, final String pn, final InternalStorage storage) {
 
         return new Observer<PdfFile>() {
             @Override
@@ -106,8 +115,10 @@ public class StaticJava {
 
             @Override
             public void onNext(PdfFile file) {
-                file.pId=pn;
-             //   file.save();
+                file.pId = pn;
+
+                storage.createFile("pdf",pn,file.pdf);
+                //   file.save();
                 onSync.call(file);
             }
         };

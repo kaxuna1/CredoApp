@@ -1,11 +1,9 @@
 package credo.ge.credoapp
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import credo.ge.credoapp.anotations.ViewAnnotationParser
-import credo.ge.credoapp.models.Loan
 import credo.ge.credoapp.views.CredoExtendActivity
 
 class DataFillActivity : CredoExtendActivity() {
@@ -50,7 +48,7 @@ class DataFillActivity : CredoExtendActivity() {
                 func()
             }
             finish()
-        },"შენახვა");
+        },"შენახვა",autoSave);
 
     }
 }

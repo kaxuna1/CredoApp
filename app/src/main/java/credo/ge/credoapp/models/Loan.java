@@ -2,10 +2,13 @@ package credo.ge.credoapp.models;
 
 import com.orm.SugarRecord;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import credo.ge.credoapp.anotations.BooleanFieldTypeViewAnotation;
+import credo.ge.credoapp.anotations.LabelFieldTypeViewAnotaion;
 import credo.ge.credoapp.anotations.ObjectFieldTypeViewAnotation;
+import credo.ge.credoapp.anotations.ObjectsListFieldTypeViewAnottion;
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
 
 /**
@@ -63,6 +66,28 @@ public class Loan extends SugarRecord<Loan> {
     @TextFieldTypeViewAnotation(name = "მიწა (ჰა)", defaultValue = "1",type = "int",
             visibilityPatern = {"product:აგრო"}, position = 14)
     public int mitsa;
+
+    @LabelFieldTypeViewAnotaion(label = "ანალიტიკა",position = 15)
+    public String label0;
+
+
+    @ObjectsListFieldTypeViewAnottion(name = "აგრო პროდუქტი",
+            displayField = "getName",
+            isMethod = true,
+            type = "comboBox",
+            sqlData = true,
+            canAddToDb = false,
+            joinField = "loan", position = 16)
+    public ArrayList<AgroProduct> agroProducts;
+    @ObjectsListFieldTypeViewAnottion(name = "ურბანული პროდუქტი",
+            displayField = "getName",
+            isMethod = true,
+            type = "comboBox",
+            sqlData = true,
+            canAddToDb = false,
+            joinField = "loan", position = 17)
+    public ArrayList<UrbaProduct> urbaProducts;
+
 
 
 

@@ -31,7 +31,7 @@ import kotlin.collections.HashMap
  */
 
 class ViewAnnotationParser {
-    fun parse(clazz: Class<*>, viewGorup: ViewGroup, bindObject: Any, onSave: View.OnClickListener?, saveText: String) {
+    fun parse(clazz: Class<*>, viewGorup: ViewGroup, bindObject: Any, onSave: View.OnClickListener?, saveText: String, autoSave: Boolean) {
         var inflater = LayoutInflater.from(viewGorup.context)
         val fields = clazz.fields
         val fieldPaterns = ArrayList<ViewFieldHolder>()
@@ -86,8 +86,9 @@ class ViewAnnotationParser {
                             field.set(bindObject, editText.rawText.toString())
                         if (type == "int" && !s.isEmpty())
                             field.set(bindObject, editText.rawText.toString().toInt())
+                        if(autoSave){
 
-
+                        }
                     }
                 })
 
@@ -97,6 +98,16 @@ class ViewAnnotationParser {
                 viewFieldHolder.view = view
                 viewFieldHolder.paterns = visibilityPater
                 fieldPaterns.add(viewFieldHolder)
+
+                viewList.put(annotation.position, view);
+
+            }
+            if (field.isAnnotationPresent(LabelFieldTypeViewAnotaion::class.java)) {
+                val annotation = field.getAnnotation<LabelFieldTypeViewAnotaion>(LabelFieldTypeViewAnotaion::class.java)
+
+                val view = inflater.inflate(R.layout.label_field, null)
+                val label = view.findViewById(R.id.label) as TextView
+                label.text = annotation.label
 
                 viewList.put(annotation.position, view);
 

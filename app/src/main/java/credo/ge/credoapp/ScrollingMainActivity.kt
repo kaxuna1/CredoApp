@@ -46,7 +46,6 @@ class ScrollingMainActivity : CredoExtendActivity() {
                 return@setOnClickListener
             }
             val intent = Intent(this, DataFillActivity::class.java)
-            Loan().save()
             intent.putExtra("class", Loan::class.java)
             intent.putExtra("autosave", true)
             startActivity(intent)
