@@ -21,6 +21,8 @@ class ReflectionAdapterAdapter(val data: List<Any>, val context: Context, val na
     var isMethod: Boolean
     var textSiz: Float
 
+    var nameList:ArrayList<String> = ArrayList();
+
     init {
         this.nameField = nameField_
         this.isMethod = isMethod_
@@ -63,6 +65,10 @@ class ReflectionAdapterAdapter(val data: List<Any>, val context: Context, val na
         } else {
             displayValue = clazz.getDeclaredField(nameField).get(dataList[position]).toString()
         }
+
+        nameList.add(displayValue)
+
+
         vh.label.text = displayValue
         //vh.label.setTextSize(TypedValue.COMPLEX_UNIT_SP ,this.textSiz)
         return view

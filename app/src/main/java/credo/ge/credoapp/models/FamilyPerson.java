@@ -5,12 +5,13 @@ import com.orm.SugarRecord;
 import java.util.List;
 
 import credo.ge.credoapp.anotations.ObjectFieldTypeViewAnotation;
+import credo.ge.credoapp.anotations.ParserClassAnnotation;
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
 
 /**
  * Created by vakhtanggelashvili on 5/1/17.
  */
-
+@ParserClassAnnotation
 public class FamilyPerson extends SugarRecord<FamilyPerson> {
     @ObjectFieldTypeViewAnotation(name = "კავშირი",
             displayField = "getName",
@@ -51,7 +52,7 @@ public class FamilyPerson extends SugarRecord<FamilyPerson> {
 
 
     public String getName() {
-        return joinperson.name + " " + joinperson.surname;
+        return joinperson.name + " " + joinperson.surname+" "+memberType.getName();
     }
 
     public static List<Person> getData() {

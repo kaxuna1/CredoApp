@@ -7,21 +7,22 @@ import java.util.List;
 
 import credo.ge.credoapp.anotations.ObjectFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.ObjectsListFieldTypeViewAnottion;
+import credo.ge.credoapp.anotations.ParserClassAnnotation;
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
 
 /**
  * Created by vakhtanggelashvili on 4/26/17.
  */
-
+@ParserClassAnnotation(cols = {"მომხმარებელი","ოჯახის წევრები"})
 public class Person extends SugarRecord<Person> {
     @TextFieldTypeViewAnotation(name = "პირადი ნომერი", defaultValue = "", type = "text", mask = "###########", position = 1)
     public String personalNumber;
 
     @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "",type = "text", position = 2)
-    public String name;
+    public String name = "";
 
     @TextFieldTypeViewAnotation(name = "გვარი", defaultValue = "",type = "text", position = 3)
-    public String surname;
+    public String surname = "";
 
     @TextFieldTypeViewAnotation(name = "დაბადების თარიღი", defaultValue = "",type = "text",mask = "##/##/####", position = 4)
     public String birthDate;
@@ -66,17 +67,18 @@ public class Person extends SugarRecord<Person> {
 
 
 
+
     @ObjectsListFieldTypeViewAnottion(name = "ოჯახის წევრები",
             displayField = "getName",
             isMethod = true,
             type = "comboBox",
             sqlData = true,
             canAddToDb = false,
-            joinField = "person", position = 14)
+            joinField = "person", position = 14,page = 1)
     public ArrayList<FamilyPerson> family;
 
     public String fullName() {
-        return name + " " + surname;
+        return (name==null?"სახელი":name) + " " + (surname==null?"გვარი":surname);
     }
 
     public static List<Person> getData(){

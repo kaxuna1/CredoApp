@@ -1,4 +1,4 @@
-package credo.ge.credoapp.models;
+package credo.ge.credoapp.models.analysis;
 
 import com.orm.SugarRecord;
 
@@ -6,13 +6,16 @@ import java.util.List;
 
 import credo.ge.credoapp.anotations.LabelFieldTypeViewAnotaion;
 import credo.ge.credoapp.anotations.ObjectFieldTypeViewAnotation;
+import credo.ge.credoapp.anotations.ParserClassAnnotation;
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
+import credo.ge.credoapp.models.Dictionary;
+import credo.ge.credoapp.models.Loan;
 
 /**
  * Created by kaxge on 5/22/2017.
  */
-
-public class AgroProduct extends SugarRecord<AgroProduct>{
+@ParserClassAnnotation
+public class AgroProductType extends SugarRecord<AgroProductType>{
 
     @LabelFieldTypeViewAnotaion(label = "აგრო პროდუქტი",position = 1)
     public String label0;
@@ -57,8 +60,8 @@ public class AgroProduct extends SugarRecord<AgroProduct>{
     public int sum;
 
 
-    public static List<AgroProduct> findbyloan(long id) {
-        return AgroProduct.find(AgroProduct.class, "loan = ?", id + "");
+    public static List<AgroProductType> findbyloan(long id) {
+        return AgroProductType.find(AgroProductType.class, "loan = ?", id + "");
     }
 
     public Loan loan;

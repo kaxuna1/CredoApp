@@ -4,8 +4,7 @@ import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 
 /**
- * Created by vakhtanggelashvili on 4/25/17.
- */
-@Target(AnnotationTarget.FIELD)
+ * Created by kaxge on 5/24/2017.
+ */@Target(AnnotationTarget.CLASS)
 @Retention(RetentionPolicy.RUNTIME)
-annotation class DateFieldTypeViewAnotation (val name:String, val page:Int=0)
+annotation class ParserClassAnnotation ( val cols:Array<String> = arrayOf());

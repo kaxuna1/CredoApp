@@ -35,6 +35,9 @@ class MainActivity : CredoExtendActivity() {
         progressDialog = ProgressDialog(this)
         var activity = this
 
+
+
+
         addLoanBtn!!.setOnClickListener {
             val intent = Intent(this, DataFillActivity::class.java)
             Loan().save()

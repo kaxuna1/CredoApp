@@ -5,16 +5,24 @@ import com.orm.SugarRecord;
 import java.util.ArrayList;
 import java.util.List;
 
-import credo.ge.credoapp.anotations.BooleanFieldTypeViewAnotation;
-import credo.ge.credoapp.anotations.LabelFieldTypeViewAnotaion;
 import credo.ge.credoapp.anotations.ObjectFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.ObjectsListFieldTypeViewAnottion;
+import credo.ge.credoapp.anotations.ParserClassAnnotation;
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
+import credo.ge.credoapp.models.analysis.AgroProductType;
+import credo.ge.credoapp.models.analysis.BusinesExpanse;
+import credo.ge.credoapp.models.analysis.FamilyExpanse;
+import credo.ge.credoapp.models.analysis.OtherExpanse;
+import credo.ge.credoapp.models.analysis.OtherIncomeType;
+import credo.ge.credoapp.models.analysis.TourismProductType;
+import credo.ge.credoapp.models.analysis.UrbaProductType;
 
 /**
  * Created by vakhtanggelashvili on 4/26/17.
  */
 
+
+@ParserClassAnnotation(cols = {"მთავარი","აგრო","ურბანული","ტურისტული","სხვა შემოსავალი","ხარჯები"})
 public class Loan extends SugarRecord<Loan> {
     public String getName() {
         return person!=null?person.fullName():"დაუსრულებელი სესხი";
@@ -67,7 +75,7 @@ public class Loan extends SugarRecord<Loan> {
             visibilityPatern = {"product:აგრო"}, position = 14)
     public int mitsa;
 
-    @LabelFieldTypeViewAnotaion(label = "ანალიტიკა",position = 15)
+    //@LabelFieldTypeViewAnotaion(label = "ანალიტიკა",position = 15,page = 1)
     public String label0;
 
 
@@ -77,16 +85,68 @@ public class Loan extends SugarRecord<Loan> {
             type = "comboBox",
             sqlData = true,
             canAddToDb = false,
-            joinField = "loan", position = 16)
-    public ArrayList<AgroProduct> agroProducts;
+            joinField = "loan", position = 16,page = 1)
+    public ArrayList<AgroProductType> agroProductTypes;
     @ObjectsListFieldTypeViewAnottion(name = "ურბანული პროდუქტი",
             displayField = "getName",
             isMethod = true,
             type = "comboBox",
             sqlData = true,
             canAddToDb = false,
-            joinField = "loan", position = 17)
-    public ArrayList<UrbaProduct> urbaProducts;
+            joinField = "loan", position = 17,page = 2)
+    public ArrayList<UrbaProductType> urbaProductTypes;
+    @ObjectsListFieldTypeViewAnottion(name = "ტურისტული პროდუქტი",
+            displayField = "getName",
+            isMethod = true,
+            type = "comboBox",
+            sqlData = true,
+            canAddToDb = false,
+            joinField = "loan", position = 18,page = 3)
+    public ArrayList<TourismProductType> tourismProductTypes;
+    @ObjectsListFieldTypeViewAnottion(name = "სხვა შემოსავლები",
+            displayField = "getName",
+            isMethod = true,
+            type = "comboBox",
+            sqlData = true,
+            canAddToDb = false,
+            joinField = "loan", position = 19,page = 4)
+    public ArrayList<OtherIncomeType> otherIncomeTypes;
+    @ObjectsListFieldTypeViewAnottion(name = "ბიზნეს ხარჯები",
+            displayField = "getName",
+            isMethod = true,
+            type = "comboBox",
+            sqlData = true,
+            canAddToDb = false,
+            joinField = "loan", position = 20,page = 5)
+    public ArrayList<BusinesExpanse> businesExpanses;
+    @ObjectsListFieldTypeViewAnottion(name = "სხვა ხარჯები",
+            displayField = "getName",
+            isMethod = true,
+            type = "comboBox",
+            sqlData = true,
+            canAddToDb = false,
+            joinField = "loan", position = 21,page = 5)
+    public ArrayList<OtherExpanse> otherExpanses;
+    @ObjectsListFieldTypeViewAnottion(name = "ოჯახის ხარჯები",
+            displayField = "getName",
+            isMethod = true,
+            type = "comboBox",
+            sqlData = true,
+            canAddToDb = false,
+            joinField = "loan", position = 22,page = 5)
+    public ArrayList<FamilyExpanse> familyExpanses;
+    @TextFieldTypeViewAnotation(name = "ოჯახის წევრების რაოდენობა", defaultValue = "1",type = "int",page = 5,position = 23)
+    public int familyQuantity;
+
+    @ObjectFieldTypeViewAnotation(name = "დასახლების ტიპი",
+            displayField = "getName",
+            isMethod = true,
+            type = "comboBox",
+            sqlData = true,
+            canAddToDb = false, position = 24,
+            page = 5,
+            filterWith ="1087")
+    public Dictionary expanseType;
 
 
 

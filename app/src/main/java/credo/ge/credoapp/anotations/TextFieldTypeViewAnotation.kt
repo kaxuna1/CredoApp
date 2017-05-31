@@ -13,6 +13,7 @@ annotation class TextFieldTypeViewAnotation(val name: String,
                                             val defaultValue: String,
                                             val type: String,
                                             val mask:String="",
+                                            val page:Int=0,
                                             val allowed_chars:String="",
                                             val visibilityPatern:Array<String> = arrayOf(),
                                             val position:Int)

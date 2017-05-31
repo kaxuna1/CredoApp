@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.LinearLayout
 import credo.ge.credoapp.anotations.ViewAnnotationParser
 import credo.ge.credoapp.views.CredoExtendActivity
+import kotlinx.android.synthetic.main.activity_data_fill.*
 
 class DataFillActivity : CredoExtendActivity() {
 
@@ -14,7 +15,7 @@ class DataFillActivity : CredoExtendActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_data_fill)
-        layout = findViewById(R.id.linearFormPlace) as LinearLayout
+//        layout = findViewById(R.id.linearFormPlace) as LinearLayout
         val extras = intent.extras
         val classname:Class<*> = extras.getSerializable("class") as Class<*>
 
@@ -41,14 +42,20 @@ class DataFillActivity : CredoExtendActivity() {
         if(autoSave)
         classname.getMethod("save").invoke(bindObject)
 
-        ViewAnnotationParser().parse(classname, layout!!,bindObject, View.OnClickListener {
+
+        tabs.setBackgroundColor(resources.getColor(R.color.colorPrimary));
+        tabs.setTextColor(getResources().getColor(R.color.white));
+        tabs.setUnderlineColor(getResources().getColor(R.color.white));
+        tabs.setIndicatorColor(getResources().getColor(R.color.white));
+
+        ViewAnnotationParser().parse(classname,bindObject, View.OnClickListener {
             classname.getMethod("save").invoke(bindObject)
             if(updaterUUID!=null){
                 val func=StaticData.comboBoxUpdateFunctions.get(updaterUUID) as ()->Unit
                 func()
             }
             finish()
-        },"შენახვა",autoSave);
+        },"რეგისტრაცია",autoSave,supportFragmentManager,pager,tabs);
 
     }
 }

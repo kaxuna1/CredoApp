@@ -8,4 +8,4 @@ import java.lang.annotation.RetentionPolicy
  */
 @Target(AnnotationTarget.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-annotation class LabelFieldTypeViewAnotaion (val label:String,val position:Int);
+annotation class LabelFieldTypeViewAnotaion (val label:String,val position:Int, val page:Int=0);

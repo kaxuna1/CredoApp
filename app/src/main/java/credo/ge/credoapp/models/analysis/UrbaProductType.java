@@ -1,4 +1,4 @@
-package credo.ge.credoapp.models;
+package credo.ge.credoapp.models.analysis;
 
 import com.orm.SugarRecord;
 
@@ -7,12 +7,14 @@ import java.util.List;
 import credo.ge.credoapp.anotations.LabelFieldTypeViewAnotaion;
 import credo.ge.credoapp.anotations.ObjectFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
+import credo.ge.credoapp.models.Dictionary;
+import credo.ge.credoapp.models.Loan;
 
 /**
  * Created by kaxge on 5/22/2017.
  */
 
-public class UrbaProduct extends SugarRecord<UrbaProduct> {
+public class UrbaProductType extends SugarRecord<UrbaProductType> {
 
     @LabelFieldTypeViewAnotaion(label = "ურბანული პროდუქტი",position = 1)
     public String label0;
@@ -52,8 +54,8 @@ public class UrbaProduct extends SugarRecord<UrbaProduct> {
     public int sum;
 
 
-    public static List<UrbaProduct> findbyloan(long id) {
-        return UrbaProduct.find(UrbaProduct.class, "loan = ?", id + "");
+    public static List<UrbaProductType> findbyloan(long id) {
+        return UrbaProductType.find(UrbaProductType.class, "loan = ?", id + "");
     }
 
     public Loan loan;
