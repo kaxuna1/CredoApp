@@ -51,6 +51,8 @@ class AutoCheckActivity : AppCompatActivity() {
 
     private var storage: InternalStorage? = null
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
 
@@ -95,6 +97,10 @@ class AutoCheckActivity : AppCompatActivity() {
                 closeButton.setOnClickListener {
                     floaty!!.stopService()
                 }
+
+
+
+
                 floaty = Floaty.createInstance(this, head, body, NOTIFICATION_ID, notification, object : FloatyOrientationListener {
                     override
                     fun beforeOrientationChange(floaty: Floaty) {
@@ -106,7 +112,19 @@ class AutoCheckActivity : AppCompatActivity() {
                         Toast.makeText(me, "Orientation Change End", Toast.LENGTH_SHORT).show();
                     }
                 });
-                floaty!!.startService();
+                //
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                    if(Settings.canDrawOverlays(this)){
+                        floaty!!.startService();
+                    }else{
+                        val intent2 = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                Uri.parse("package:" + packageName))
+                        startActivityForResult(intent2, 1234)
+                    }
+
+                }else{
+                    floaty!!.startService();
+                }
 
 
                 pdfView.fromBytes(it.pdf)
@@ -141,12 +159,8 @@ class AutoCheckActivity : AppCompatActivity() {
     private val CUSTOM_OVERLAY_PERMISSION_REQUEST_CODE = 101
 
     @TargetApi(Build.VERSION_CODES.M)
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        if (requestCode == CHATHEAD_OVERLAY_PERMISSION_REQUEST_CODE) {
-            showChatHead(applicationContext, false)
-        } else if (requestCode == CUSTOM_OVERLAY_PERMISSION_REQUEST_CODE) {
-            showCustomFloatingView(applicationContext, false)
-        }
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        floaty!!.startService();
     }
 
     /**

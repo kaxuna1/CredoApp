@@ -6,6 +6,7 @@ import java.util.List;
 
 import credo.ge.credoapp.anotations.LabelFieldTypeViewAnotaion;
 import credo.ge.credoapp.anotations.ObjectFieldTypeViewAnotation;
+import credo.ge.credoapp.anotations.ParserClassAnnotation;
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
 import credo.ge.credoapp.models.Dictionary;
 import credo.ge.credoapp.models.Loan;
@@ -13,7 +14,7 @@ import credo.ge.credoapp.models.Loan;
 /**
  * Created by kaxge on 5/22/2017.
  */
-
+@ParserClassAnnotation
 public class UrbaProductType extends SugarRecord<UrbaProductType> {
 
     @LabelFieldTypeViewAnotaion(label = "ურბანული პროდუქტი",position = 1)

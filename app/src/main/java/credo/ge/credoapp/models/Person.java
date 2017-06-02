@@ -34,7 +34,7 @@ public class Person extends SugarRecord<Person> {
     @ObjectFieldTypeViewAnotation(name = "ტიპი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 6,filterWith = "13")
     public Dictionary personType;
 
-    @TextFieldTypeViewAnotation(name = "მობილური", defaultValue = "",type = "text",mask = "(5##)-###-###", position = 7)
+    @TextFieldTypeViewAnotation(name = "მობილური", defaultValue = "",type = "number",mask = "(5##)-###-###", position = 7)
     public String mobile;
 
     @TextFieldTypeViewAnotation(name = "ტელეფონი", defaultValue = "",type = "text", position = 8)

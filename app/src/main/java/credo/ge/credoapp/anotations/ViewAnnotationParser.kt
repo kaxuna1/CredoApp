@@ -13,6 +13,7 @@ import com.shehabic.droppy.DroppyMenuItem
 import android.view.LayoutInflater
 import credo.ge.credoapp.R
 import android.content.Intent
+import android.graphics.Color
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
 import android.text.InputType.TYPE_CLASS_NUMBER
@@ -26,8 +27,12 @@ import credo.ge.credoapp.views.CredoPageAdapter
 import credo.ge.credoapp.views.ViewFieldHolder
 import kotlin.collections.HashMap
 import android.support.v4.view.ViewPager
+import android.text.InputType
 import com.astuetz.PagerSlidingTabStrip
 import mehdi.sakout.fancybuttons.FancyButton
+import java.util.concurrent.ConcurrentHashMap
+import android.graphics.Color.parseColor
+import android.support.v7.widget.LinearLayoutCompat
 
 
 /**
@@ -52,7 +57,7 @@ class ViewAnnotationParser {
             titles = annotation.cols
         }
         val adapter = CredoPageAdapter(fragmentManager,titles);
-        val viewPagesList:HashMap<Int,HashMap<Int,View> > = HashMap();
+        val viewPagesList:ConcurrentHashMap<Int,ConcurrentHashMap<Int,View> > = ConcurrentHashMap();
 
 
         val viewList: HashMap<Int, View> = HashMap<Int, View>();
@@ -85,7 +90,11 @@ class ViewAnnotationParser {
                 }
                 editText.setText(valueToSet)
                 if (type == "int") {
-                    editText.inputType = TYPE_CLASS_NUMBER
+                    editText.inputType = TYPE_CLASS_NUMBER;
+                }else{
+                    if (type=="number") {
+                        editText.inputType = InputType.TYPE_CLASS_PHONE
+                    }
                 }
                 var obj = clazz.cast(bindObject)
                 editText.addTextChangedListener(object : TextWatcher {
@@ -100,7 +109,7 @@ class ViewAnnotationParser {
                                                before: Int, count: Int) {
 
 
-                        if (type == "text")
+                        if (type == "text"||type == "number")
                             field.set(bindObject, editText.rawText.toString())
                         if (type == "int" && !s.isEmpty())
                             field.set(bindObject, editText.rawText.toString().toInt())
@@ -118,7 +127,7 @@ class ViewAnnotationParser {
                 fieldPaterns.add(viewFieldHolder)
 
 
-                viewPagesList.putIfAbsent(annotation.page, HashMap())
+                viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
                 viewPagesList.get(annotation.page)!!.put(annotation.position, view);
 
             }
@@ -129,14 +138,14 @@ class ViewAnnotationParser {
                 val label = view.findViewById(R.id.label) as TextView
                 label.text = annotation.label
 
-                viewPagesList.putIfAbsent(annotation.page, HashMap())
+                viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
                 viewPagesList.get(annotation.page)!!.put(annotation.position, view);
             }
             if (field.isAnnotationPresent(DateFieldTypeViewAnotation::class.java)) {
                 val annotation = field.getAnnotation<TextFieldTypeViewAnotation>(TextFieldTypeViewAnotation::class.java)
                 val name = annotation.name
                 var datePicker = DatePicker(pager.context)
-                viewPagesList.putIfAbsent(annotation.page, HashMap())
+                viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
                 viewPagesList.get(annotation.page)!!.put(annotation.position, datePicker);
             }
             if (field.isAnnotationPresent(ObjectFieldTypeViewAnotation::class.java)) {
@@ -358,7 +367,7 @@ class ViewAnnotationParser {
                     viewFieldHolder.view = view
                     viewFieldHolder.paterns = annotation.visibilityPatern
                     fieldPaterns.add(viewFieldHolder)
-                    viewPagesList.putIfAbsent(annotation.page, HashMap())
+                    viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
                     viewPagesList.get(annotation.page)!!.put(annotation.position, view);
                 }
 
@@ -458,7 +467,7 @@ class ViewAnnotationParser {
                 viewFieldHolder.view = view
                 viewFieldHolder.paterns = annotation.visibilityPatern
                 fieldPaterns.add(viewFieldHolder)
-                viewPagesList.putIfAbsent(annotation.page, HashMap())
+                viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
                 viewPagesList.get(annotation.page)!!.put(annotation.position, view);
             }
             if (field.isAnnotationPresent(BooleanFieldTypeViewAnotation::class.java)) {
@@ -482,7 +491,7 @@ class ViewAnnotationParser {
                     field.set(bindObject, isChecked)
                     visibilityCheck(fieldPaterns, fieldNameMap, bindObject)
                 })
-                viewPagesList.putIfAbsent(annotation.page, HashMap())
+                viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
                 viewPagesList.get(annotation.page)!!.put(annotation.position, view);
 
             }
@@ -512,10 +521,25 @@ class ViewAnnotationParser {
 
 
         if (onSave != null) {
-            val saveBtn = Button(pager.context)
-            saveBtn.text = saveText
-            saveBtn.setOnClickListener(onSave)
-            viewPagesList.get(0)!!.put(100, saveBtn);
+
+
+            val saveButton = FancyButton(pager.context)
+            saveButton.setText(saveText)
+            saveButton.setBackgroundColor(Color.parseColor("#3b5998"))
+            saveButton.setFocusBackgroundColor(Color.parseColor("#5474b8"))
+            saveButton.setTextSize(17)
+            saveButton.setRadius(5)
+            saveButton.setIconResource("\uf0c7")
+            saveButton.setIconPosition(FancyButton.POSITION_LEFT)
+            saveButton.setFontIconSize(30)
+
+            val params = LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT,150)
+            params.setMargins(50,50,50,50);
+
+            saveButton.setLayoutParams( params);
+
+            saveButton.setOnClickListener(onSave)
+            viewPagesList.get(0)!!.put(100, saveButton);
         } else {
 
         }

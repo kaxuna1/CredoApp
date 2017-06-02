@@ -6,13 +6,6 @@
     android:background="@color/colorAccent"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.mattprecious.swirl.SwirlView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:id="@+id/swirlView"
-        android:layout_above="@+id/indicator_dots"
-        tools:swirl_state="on"
-        android:layout_centerHorizontal="true" />
     <com.andrognito.pinlockview.IndicatorDots
         android:id="@+id/indicator_dots"
         android:layout_width="wrap_content"
@@ -49,6 +42,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginEnd="14dp"
         android:layout_marginTop="12dp"
-        android:text="გამოსვლა" />
+        android:text="გამოსვლა"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="14dp" />
 
 </RelativeLayout>

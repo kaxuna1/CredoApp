@@ -12,9 +12,15 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+
+
 
 
     <application
+
         android:name="com.orm.SugarApp"
         tools:replace="android:icon,android:theme,android:label,android:name"
         android:allowBackup="true"
@@ -27,7 +33,7 @@
             android:value="sugar_example.db" />
         <meta-data
             android:name="VERSION"
-            android:value="41" />
+            android:value="42" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="false" />

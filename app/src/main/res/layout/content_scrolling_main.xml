@@ -15,7 +15,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
 
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_alignParentLeft="true">
 
 
         <mehdi.sakout.fancybuttons.FancyButton
@@ -26,7 +27,7 @@
             android:padding="40px"
             fancy:fb_borderColor="#EA6E26"
             fancy:fb_iconResource="@drawable/person"
-            fancy:fb_borderWidth="2dp"
+            fancy:fb_borderWidth="1dp"
             fancy:fb_defaultColor="@color/white"
             fancy:fb_focusColor="@color/colorPrimary"
 
@@ -43,7 +44,7 @@
 
             fancy:fb_borderColor="#EA6E26"
             fancy:fb_iconResource="@drawable/auto"
-            fancy:fb_borderWidth="2dp"
+            fancy:fb_borderWidth="1dp"
             fancy:fb_defaultColor="@color/white"
             fancy:fb_focusColor="@color/colorPrimary"
             fancy:fb_iconPosition="left"
@@ -60,7 +61,7 @@
             fancy:fb_iconPaddingRight="60dp"
             fancy:fb_iconResource="@drawable/loan"
             fancy:fb_borderColor="#EA6E26"
-            fancy:fb_borderWidth="2dp"
+            fancy:fb_borderWidth="1dp"
             fancy:fb_defaultColor="@color/white"
             fancy:fb_focusColor="@color/colorPrimary"
             fancy:fb_iconPosition="left"
@@ -77,7 +78,7 @@
             fancy:fb_borderColor="#EA6E26"
 
             fancy:fb_iconResource="@drawable/complite"
-            fancy:fb_borderWidth="2dp"
+            fancy:fb_borderWidth="1dp"
             fancy:fb_defaultColor="@color/white"
             fancy:fb_focusColor="@color/colorPrimary"
             fancy:fb_iconPosition="left"
@@ -93,7 +94,7 @@
 
             fancy:fb_iconResource="@drawable/partial"
             fancy:fb_borderColor="#EA6E26"
-            fancy:fb_borderWidth="2dp"
+            fancy:fb_borderWidth="1dp"
             fancy:fb_defaultColor="@color/white"
             fancy:fb_focusColor="@color/colorPrimary"
             fancy:fb_iconPosition="left"
@@ -109,7 +110,7 @@
             android:layout_margin="50px"
             android:padding="40px"
             fancy:fb_borderColor="#EA6E26"
-            fancy:fb_borderWidth="2dp"
+            fancy:fb_borderWidth="1dp"
             fancy:fb_defaultColor="@color/white"
             fancy:fb_focusColor="@color/colorPrimary"
             fancy:fb_iconPosition="left"
@@ -127,7 +128,7 @@
             fancy:fb_borderColor="#EA6E26"
             fancy:fb_iconPaddingRight="30dp"
             fancy:fb_iconResource="@drawable/files"
-            fancy:fb_borderWidth="2dp"
+            fancy:fb_borderWidth="1dp"
             fancy:fb_defaultColor="@color/white"
             fancy:fb_focusColor="@color/colorPrimary"
             fancy:fb_iconPosition="left"

@@ -84,7 +84,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     internal var sharedPreferences: SharedPreferences? = null
     internal var editor: SharedPreferences.Editor? = null
     var mFingerPrintAuthHelper: FingerPrintAuthHelper? = null
-    internal var swirlView:SwirlView?=null
+    //internal var swirlView:SwirlView?=null
     var sessionId = 0L
 
     private var loginData: LoginData? = null
@@ -92,9 +92,15 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
+        var fingerCallback: FingerPrintAuthCallbackCredo? = null
 
-        var fingerCallback=FingerPrintAuthCallbackCredo()
-        mFingerPrintAuthHelper = FingerPrintAuthHelper.getHelper(this, fingerCallback);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            fingerCallback = FingerPrintAuthCallbackCredo()
+            mFingerPrintAuthHelper = FingerPrintAuthHelper.getHelper(this, fingerCallback);
+        }
+
         super.onCreate(savedInstanceState)
 
         // Set up the login form.
@@ -120,12 +126,18 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                 editor!!.commit()
                 initLoginPage()
             }
-            fingerCallback.activity=this
-            fingerCallback.loginData=loginData
 
-            swirlView = findViewById(R.id.swirlView) as SwirlView;
 
-            swirlView!!.setState(SwirlView.State.ON)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+
+                fingerCallback!!.activity = this
+                fingerCallback.loginData = loginData
+
+            }
+            //swirlView = findViewById(R.id.swirlView) as SwirlView;
+
+            //swirlView!!.setState(SwirlView.State.ON)
             mPinLockView = findViewById(R.id.pin_lock_view) as PinLockView
             mPinLockView!!.attachIndicatorDots(indicatorDots);
             mPinLockView!!.setPinLockListener(object : PinLockListener {
@@ -135,8 +147,8 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                         StaticData.loggedIn = true;
                         StaticData.loginData = loginData
                         finish()
-                    }else{
-                        swirlView!!.setState(SwirlView.State.ERROR)
+                    } else {
+                        //swirlView!!.setState(SwirlView.State.ERROR)
                     }
                 }
 
@@ -145,7 +157,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                 }
 
                 override fun onPinChange(pinLength: Int, intermediatePin: String) {
-                    swirlView!!.setState(SwirlView.State.ON)
+                    //swirlView!!.setState(SwirlView.State.ON)
                     Log.d("kkaaxxaa", "Pin changed, new length $pinLength with intermediate pin $intermediatePin")
                 }
             })
@@ -229,49 +241,55 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         } else {
 
             showProgress(true)
-            OnlineData.login(email, password, Action1 {
-                var result = it;
-                if (result != null) {
-                    if (result.data.expires_in != 0L) {
+            try {
+                OnlineData.login(email, password, Action1 {
+                    var result = it;
+                    if (result != null) {
+                        if (result.data.expires_in != 0L) {
 
 
-                        setContentView(R.layout.pin_layout)
-                        indicatorDots = findViewById(R.id.indicator_dots) as IndicatorDots
-                        indicatorDots!!.setIndicatorType(IndicatorDots.IndicatorType.FILL_WITH_ANIMATION);
+                            setContentView(R.layout.pin_layout)
+                            indicatorDots = findViewById(R.id.indicator_dots) as IndicatorDots
+                            indicatorDots!!.setIndicatorType(IndicatorDots.IndicatorType.FILL_WITH_ANIMATION);
 
-                        mPinLockView = findViewById(R.id.pin_lock_view) as PinLockView
-                        mPinLockView!!.attachIndicatorDots(indicatorDots);
-                        mPinLockView!!.setPinLockListener(object : PinLockListener {
-                            override fun onComplete(pin: String) {
-                                Log.d("kkaaxxaa", "Pin complete: " + pin)
-                                result.data.pin = pin
-                                result.data.save()
-                                editor!!.putLong("session", result.data.id)
-                                editor!!.commit()
-                                StaticData.loggedIn = true
-                                StaticData.loginData = result.data
-                                finish()
-                            }
+                            mPinLockView = findViewById(R.id.pin_lock_view) as PinLockView
+                            mPinLockView!!.attachIndicatorDots(indicatorDots);
+                            mPinLockView!!.setPinLockListener(object : PinLockListener {
+                                override fun onComplete(pin: String) {
+                                    Log.d("kkaaxxaa", "Pin complete: " + pin)
+                                    result.data.pin = pin
+                                    result.data.save()
+                                    editor!!.putLong("session", result.data.id)
+                                    editor!!.commit()
+                                    StaticData.loggedIn = true
+                                    StaticData.loginData = result.data
+                                    finish()
+                                }
 
-                            override fun onEmpty() {
-                                Log.d("kkaaxxaa", "Pin empty")
-                            }
+                                override fun onEmpty() {
+                                    Log.d("kkaaxxaa", "Pin empty")
+                                }
 
-                            override fun onPinChange(pinLength: Int, intermediatePin: String) {
-                                Log.d("kkaaxxaa", "Pin changed, new length $pinLength with intermediate pin $intermediatePin")
-                            }
-                        })
+                                override fun onPinChange(pinLength: Int, intermediatePin: String) {
+                                    Log.d("kkaaxxaa", "Pin changed, new length $pinLength with intermediate pin $intermediatePin")
+                                }
+                            })
 
 
-                        //finish()
+                            //finish()
+                        } else {
+                            showProgress(false)
+                        }
+
                     } else {
                         showProgress(false)
                     }
+                })
+            } catch (e: Exception) {
+                e.printStackTrace()
 
-                } else {
-                    showProgress(false)
-                }
-            })
+            }
+
         }
     }
 
@@ -371,7 +389,10 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
     override fun onPause() {
         super.onPause()
-        mFingerPrintAuthHelper!!.stopAuth();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mFingerPrintAuthHelper!!.stopAuth();
+        }
     }
 
     override fun onBackPressed() {
@@ -381,9 +402,9 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
     public class FingerPrintAuthCallbackCredo() : FingerPrintAuthCallback {
 
-        public var loginData: LoginData?=null
+        public var loginData: LoginData? = null
 
-        public var activity: Activity?=null
+        public var activity: Activity? = null
 
 
         override public fun onNoFingerPrintHardwareFound() {
@@ -407,7 +428,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             StaticData.loggedIn = true;
             StaticData.loginData = loginData
             activity!!.finish()
-            activity!!.swirlView.setState(SwirlView.State.ON)
+            //activity!!.swirlView.setState(SwirlView.State.ON)
         }
 
         override
@@ -415,17 +436,17 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             when (errorCode) {
             //Parse the error code for recoverable/non recoverable error.
                 AuthErrorCodes.CANNOT_RECOGNIZE_ERROR -> {
-                    Log.d("Finger","Error 1")
-                    activity!!.swirlView.setState(SwirlView.State.ERROR)
+                    Log.d("Finger", "Error 1")
+                    //activity!!.swirlView.setState(SwirlView.State.ERROR)
                 }
                 AuthErrorCodes.NON_RECOVERABLE_ERROR -> {
-                    Log.d("Finger","Error 2")
-                    activity!!.swirlView.setState(SwirlView.State.ERROR)
+                    Log.d("Finger", "Error 2")
+                    //activity!!.swirlView.setState(SwirlView.State.ERROR)
                 }
             //This is not recoverable error. Try other options for user authentication. like pin, password.
                 AuthErrorCodes.RECOVERABLE_ERROR -> {
-                    Log.d("Finger","Error 3")
-                    activity!!.swirlView.setState(SwirlView.State.ERROR)
+                    Log.d("Finger", "Error 3")
+                    //activity!!.swirlView.setState(SwirlView.State.ERROR)
                 }
             //Any recoverable error. Display message to the user.
             }

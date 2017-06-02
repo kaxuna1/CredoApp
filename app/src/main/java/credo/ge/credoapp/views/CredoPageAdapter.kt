@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.view.View
 
 import java.util.HashMap
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Created by kaxge on 5/23/2017.
@@ -14,7 +15,7 @@ import java.util.HashMap
 class CredoPageAdapter(fragmentManager: FragmentManager, var titles: Array<String>) : FragmentPagerAdapter(fragmentManager) {
 
 
-    var items: HashMap<Int, HashMap<Int, View>>? = null
+    var items: ConcurrentHashMap<Int, ConcurrentHashMap<Int, View>>? = null
 
     override fun getPageTitle(position: Int): CharSequence {
         return titles[position]

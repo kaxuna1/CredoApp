@@ -30,7 +30,8 @@
                 android:paddingRight="25dp"
                 app:srcCompat="@drawable/logo1"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
 
         </RelativeLayout>
     </android.support.design.widget.AppBarLayout>

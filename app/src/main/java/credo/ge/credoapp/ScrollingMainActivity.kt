@@ -1,16 +1,21 @@
 package credo.ge.credoapp
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.location.LocationServices
 import com.orm.SugarRecord
 import credo.ge.credoapp.models.*
 import credo.ge.credoapp.online.OnlineData
@@ -18,6 +23,11 @@ import credo.ge.credoapp.views.CredoExtendActivity
 import kotlinx.android.synthetic.main.activity_scrolling_main.*
 import kotlinx.android.synthetic.main.content_scrolling_main.*
 import rx.functions.Action1
+import android.content.Context.LOCATION_SERVICE
+import android.location.Location
+import android.location.LocationManager
+
+
 
 class ScrollingMainActivity : CredoExtendActivity() {
 
@@ -26,9 +36,50 @@ class ScrollingMainActivity : CredoExtendActivity() {
 
     internal var activity: CredoExtendActivity? = null
 
+    protected var mGoogleApiClient: GoogleApiClient? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scrolling_main)
+
+
+        val utilLocation: Location? = null
+        val manager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+
+
+
+        val location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+
+
+
+
+
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(object: GoogleApiClient.ConnectionCallbacks {
+                        override fun onConnected(connectionHint: Bundle?) {
+                            val mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                                    mGoogleApiClient)
+                            if (mLastLocation != null) {
+                                Log.d("locationX",(mLastLocation.latitude.toString()));
+                                Log.d("locationY",(mLastLocation.longitude.toString()));
+                            }
+                        }
+
+                        override fun onConnectionSuspended(p0: Int) {
+
+                        }
+
+                    })
+                    .addOnConnectionFailedListener(object: GoogleApiClient.OnConnectionFailedListener{
+                        override fun onConnectionFailed(p0: ConnectionResult) {
+                            Log.d("location","cantConnect")
+                        }
+
+                    })
+                    .addApi(LocationServices.API)
+                    .build()
+        }
 
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
@@ -99,7 +150,11 @@ class ScrollingMainActivity : CredoExtendActivity() {
                     R.anim.trans_left_out)
 
         }
+        loansComplete!!.setOnClickListener {
+            Snackbar.make(buttonAutoCheck, "კოორდინატები ${location.longitude}:${location.latitude}", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
 
+        }
 
     }
 

@@ -43,7 +43,8 @@
             fancy:fb_radius="15dp"
             fancy:fb_text="დამატება"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"></mehdi.sakout.fancybuttons.FancyButton>
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"></mehdi.sakout.fancybuttons.FancyButton>
         <ListView
             android:id="@id/listView"
             android:layout_width="match_parent"
@@ -52,7 +53,8 @@
             android:layout_weight="0.12"
             android:background="@drawable/border_grey"
             android:layout_below="@+id/addBtn"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true" />
     </RelativeLayout>
 
 

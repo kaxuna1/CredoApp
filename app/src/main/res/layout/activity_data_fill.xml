@@ -9,10 +9,42 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context="credo.ge.credoapp.DataFillActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/colorPrimary"
+        android:id="@+id/relativeLayout"
+        android:layout_alignParentLeft="true">
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+
+            android:paddingRight="45dp"
+            app:srcCompat="@drawable/logo1"
+            android:layout_alignParentTop="true"
+            android:layout_alignBottom="@+id/backBtn"
+            android:layout_toRightOf="@+id/backBtn"
+            android:layout_toEndOf="@+id/backBtn" />
+
+        <ImageView
+            android:id="@+id/backBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:paddingLeft="15dp"
+            app:srcCompat="@drawable/arrow"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/tabs"
         fontPath="fonts/bpg_square_mtavruli_2009.ttf"
         android:layout_width="match_parent"
+        android:layout_below="@+id/relativeLayout"
         android:layout_height="50dp" />
 
     <android.support.v4.view.ViewPager
@@ -20,9 +52,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity"
+        android:background="#cecece"
         android:layout_below="@+id/tabs"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true" />
 
 
 </RelativeLayout>
