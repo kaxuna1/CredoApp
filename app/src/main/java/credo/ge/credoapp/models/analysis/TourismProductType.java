@@ -20,6 +20,11 @@ public class TourismProductType extends SugarRecord<TourismProductType>{
     public String label0;
 
 
+    public static TourismProductType getById(long id){
+        return TourismProductType.findById(TourismProductType.class,id);
+    }
+
+
 
     @ObjectFieldTypeViewAnotation(name = "ტურისტული ზონა",
             displayField = "getName",

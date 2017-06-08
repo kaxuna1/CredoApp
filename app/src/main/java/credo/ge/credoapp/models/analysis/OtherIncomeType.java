@@ -21,6 +21,9 @@ public class OtherIncomeType extends SugarRecord<OtherIncomeType> {
     @LabelFieldTypeViewAnotaion(label = "სხვა შემოსავალი",position = 1)
     public String label0;
 
+    public static OtherIncomeType getById(long id){
+        return OtherIncomeType.findById(OtherIncomeType.class,id);
+    }
 
     @ObjectFieldTypeViewAnotation(name = "შემოსავლის წიპი",
             displayField = "getName",

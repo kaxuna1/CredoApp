@@ -64,6 +64,10 @@ public class AgroProductType extends SugarRecord<AgroProductType>{
         return AgroProductType.find(AgroProductType.class, "loan = ?", id + "");
     }
 
+    public static AgroProductType getById(long id){
+        return AgroProductType.findById(AgroProductType.class,id);
+    }
+
     public Loan loan;
 
 }

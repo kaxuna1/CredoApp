@@ -21,6 +21,10 @@ public class UrbaProductType extends SugarRecord<UrbaProductType> {
     public String label0;
 
 
+    public static UrbaProductType getById(long id){
+        return UrbaProductType.findById(UrbaProductType.class,id);
+    }
+
     @ObjectFieldTypeViewAnotation(name = "სერვისი",
             displayField = "getName",
             isMethod = true,

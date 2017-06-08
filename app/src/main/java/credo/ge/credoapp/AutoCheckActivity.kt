@@ -65,17 +65,13 @@ class AutoCheckActivity : AppCompatActivity() {
         storage!!.createFile("pdf", "kaxa", "some content of the file");
 
 
-        var k = storage!!.readTextFile("pdf","kaxa")
-
-
-        var kkk=4;
-
         backBtn.setOnClickListener {
             finish()
         }
         clear.setOnClickListener {
             PdfFile.deleteAll(PdfFile::class.java)
         }
+
         val head = LayoutInflater.from(this).inflate(R.layout.float_head, null);
         val body = LayoutInflater.from(this).inflate(R.layout.float_body, null)
         btn_search.setOnClickListener {
@@ -92,7 +88,8 @@ class AutoCheckActivity : AppCompatActivity() {
 
 
 
-                var closeButton = body.findViewById(R.id.closebtn) as Button
+                var closeButton =
+                        body.findViewById(R.id.closebtn) as Button
                 val pdfView = body.findViewById(R.id.pdfView) as PDFView
                 closeButton.setOnClickListener {
                     floaty!!.stopService()

@@ -82,16 +82,13 @@ class DataFillActivity : CredoExtendActivity() {
         ViewAnnotationParser().parse(classname,bindObject, View.OnClickListener {
 
 
-
-
-
             classname.getMethod("save").invoke(bindObject)
             if(updaterUUID!=null){
                 val func=StaticData.comboBoxUpdateFunctions.get(updaterUUID) as ()->Unit
                 func()
             }
             finish()
-        },"შენახვა",autoSave,supportFragmentManager,pager,tabs);
+        },"შენახვა",true,supportFragmentManager,pager,tabs);
 
 
         backBtn.setOnClickListener {

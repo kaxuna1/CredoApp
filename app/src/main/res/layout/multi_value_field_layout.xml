@@ -8,54 +8,48 @@
     android:weightSum="1">
 
 
-    <TextView
-        android:id="@+id/textLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18sp"
-        android:paddingBottom="10dp"
-        android:text="TextView" />
-
     <RelativeLayout
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
+        android:layout_height="50dp">
 
         <mehdi.sakout.fancybuttons.FancyButton
-            android:id="@+id/addBtn"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_marginRight="10dp"
+            android:id="@+id/fieldName"
+            android:layout_width="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_height="match_parent"
             android:layout_weight="0.07"
-            android:layout_marginLeft="10dp"
             android:padding="10dp"
             fancy:fb_defaultColor="@color/colorAccent"
-            fancy:fb_textSize="25sp"
+            fancy:fb_textSize="15sp"
             fancy:fb_focusColor="@color/colorPrimary"
-            fancy:fb_fontIconResource="&#xf055;"
-            fancy:fb_iconPaddingLeft="0dp"
-            fancy:fb_iconPaddingRight="10dp"
-            fancy:fb_borderWidth="2dp"
-            fancy:fb_borderColor="@color/colorPrimary"
-            fancy:fb_radius="15dp"
-            fancy:fb_text="დამატება"
+            fancy:fb_radius="5dp"
+            fancy:fb_text="ველი"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/fieldValue"
+            android:layout_toStartOf="@+id/fieldValue"
+            android:layout_marginLeft="15dp" />
+
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/fieldValue"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0.07"
+            android:padding="10dp"
+            fancy:fb_defaultColor="@color/colorAccent"
+            fancy:fb_textSize="20sp"
+            fancy:fb_focusColor="@color/colorPrimary"
+            fancy:fb_radius="5dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"></mehdi.sakout.fancybuttons.FancyButton>
-        <ListView
-            android:id="@id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_margin="10dp"
-            android:layout_weight="0.12"
-            android:background="@drawable/border_grey"
-            android:layout_below="@+id/addBtn"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentRight="true" />
     </RelativeLayout>
+
 
 
 </LinearLayout>

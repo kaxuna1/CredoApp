@@ -46,8 +46,6 @@ class ScrollingMainActivity : CredoExtendActivity() {
         val manager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
 
-
-
         val location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 
 

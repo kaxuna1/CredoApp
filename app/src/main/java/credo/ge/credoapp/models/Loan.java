@@ -5,12 +5,16 @@ import com.orm.SugarRecord;
 import java.util.ArrayList;
 import java.util.List;
 
+import credo.ge.credoapp.anotations.DataGroupContainerTypeViewAnotation;
+import credo.ge.credoapp.anotations.DataGroupFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.ObjectFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.ObjectsListFieldTypeViewAnottion;
 import credo.ge.credoapp.anotations.ParserClassAnnotation;
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
 import credo.ge.credoapp.models.analysis.AgroProductType;
+import credo.ge.credoapp.models.analysis.Balance;
 import credo.ge.credoapp.models.analysis.BusinesExpanse;
+import credo.ge.credoapp.models.analysis.BusinessBalance;
 import credo.ge.credoapp.models.analysis.FamilyExpanse;
 import credo.ge.credoapp.models.analysis.OtherExpanse;
 import credo.ge.credoapp.models.analysis.OtherIncomeType;
@@ -22,10 +26,10 @@ import credo.ge.credoapp.models.analysis.UrbaProductType;
  */
 
 
-@ParserClassAnnotation(cols = {"მთავარი","აგრო","ურბანული","ტურისტული","სხვა შემოსავალი","ხარჯები"})
+@ParserClassAnnotation(cols = {"მთავარი","შემოსავალები","ხარჯები","ბალანსი"})
 public class Loan extends SugarRecord<Loan> {
     public String getName() {
-        return person!=null?person.fullName():"დაუსრულებელი სესხი";
+        return person!=null?(person.fullName()+(product!=null?"":"")):"დაუსრულებელი სესხი";
     }
 
 
@@ -93,7 +97,7 @@ public class Loan extends SugarRecord<Loan> {
             type = "comboBox",
             sqlData = true,
             canAddToDb = false,
-            joinField = "loan", position = 17,page = 2)
+            joinField = "loan", position = 17,page = 1)
     public ArrayList<UrbaProductType> urbaProductTypes;
     @ObjectsListFieldTypeViewAnottion(name = "ტურისტული პროდუქტი",
             displayField = "getName",
@@ -101,7 +105,7 @@ public class Loan extends SugarRecord<Loan> {
             type = "comboBox",
             sqlData = true,
             canAddToDb = false,
-            joinField = "loan", position = 18,page = 3)
+            joinField = "loan", position = 18,page = 1)
     public ArrayList<TourismProductType> tourismProductTypes;
     @ObjectsListFieldTypeViewAnottion(name = "სხვა შემოსავლები",
             displayField = "getName",
@@ -109,7 +113,7 @@ public class Loan extends SugarRecord<Loan> {
             type = "comboBox",
             sqlData = true,
             canAddToDb = false,
-            joinField = "loan", position = 19,page = 4)
+            joinField = "loan", position = 19,page = 1)
     public ArrayList<OtherIncomeType> otherIncomeTypes;
     @ObjectsListFieldTypeViewAnottion(name = "ბიზნეს ხარჯები",
             displayField = "getName",
@@ -117,7 +121,7 @@ public class Loan extends SugarRecord<Loan> {
             type = "comboBox",
             sqlData = true,
             canAddToDb = false,
-            joinField = "loan", position = 20,page = 5)
+            joinField = "loan", position = 20,page = 2)
     public ArrayList<BusinesExpanse> businesExpanses;
     @ObjectsListFieldTypeViewAnottion(name = "სხვა ხარჯები",
             displayField = "getName",
@@ -125,7 +129,7 @@ public class Loan extends SugarRecord<Loan> {
             type = "comboBox",
             sqlData = true,
             canAddToDb = false,
-            joinField = "loan", position = 21,page = 5)
+            joinField = "loan", position = 21,page = 2)
     public ArrayList<OtherExpanse> otherExpanses;
     @ObjectsListFieldTypeViewAnottion(name = "ოჯახის ხარჯები",
             displayField = "getName",
@@ -133,7 +137,7 @@ public class Loan extends SugarRecord<Loan> {
             type = "comboBox",
             sqlData = true,
             canAddToDb = false,
-            joinField = "loan", position = 22,page = 5)
+            joinField = "loan", position = 22,page = 2)
     public ArrayList<FamilyExpanse> familyExpanses;
     @TextFieldTypeViewAnotation(name = "ოჯახის წევრების რაოდენობა", defaultValue = "1",type = "int",page = 5,position = 23)
     public int familyQuantity;
@@ -144,9 +148,13 @@ public class Loan extends SugarRecord<Loan> {
             type = "comboBox",
             sqlData = true,
             canAddToDb = false, position = 24,
-            page = 5,
+            page = 2,
             filterWith ="1087")
     public Dictionary expanseType;
+
+
+    @DataGroupContainerTypeViewAnotation(name = "ბიზნეს ბალანსი",page = 3,position = 25)
+    public BusinessBalance businessBalance = new BusinessBalance();
 
 
 
@@ -160,7 +168,18 @@ public class Loan extends SugarRecord<Loan> {
     }
 
     public Loan() {
+        try{
+            businessBalance.save();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public Loan(boolean save){
 
     }
 
+    @Override
+    public void save() {
+        super.save();
+    }
 }

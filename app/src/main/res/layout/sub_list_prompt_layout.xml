@@ -4,6 +4,12 @@
     android:layout_height="match_parent">
 
     <Button
+        android:id="@+id/editButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="შეცვლა" />
+
+    <Button
         android:id="@+id/deleteButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,5 +19,5 @@
         android:id="@+id/cancelButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="გაუქმება" />
+        android:text="დახურვა" />
 </LinearLayout>

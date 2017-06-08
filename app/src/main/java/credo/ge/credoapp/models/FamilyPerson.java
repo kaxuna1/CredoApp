@@ -78,4 +78,6 @@ public class FamilyPerson extends SugarRecord<FamilyPerson> {
     public void setJoinPerson(Person joinPerson) {
         this.joinperson = joinPerson;
     }
+
+
 }

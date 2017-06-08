@@ -33,7 +33,7 @@
             android:value="sugar_example.db" />
         <meta-data
             android:name="VERSION"
-            android:value="42" />
+            android:value="46" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="false" />
@@ -66,3 +66,4 @@
     </application>
 
 </manifest>
+

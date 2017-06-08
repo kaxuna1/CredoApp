@@ -48,6 +48,10 @@ public class FamilyExpanse extends SugarRecord<FamilyExpanse> {
         return FamilyExpanse.find(FamilyExpanse.class, "loan = ?", id + "");
     }
 
+    public static FamilyExpanse getById(long id){
+        return FamilyExpanse.findById(FamilyExpanse.class,id);
+    }
+
 
     public String getName() {
         return expanseType.name +" "+sum ;

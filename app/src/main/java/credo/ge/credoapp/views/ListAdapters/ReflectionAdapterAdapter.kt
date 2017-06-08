@@ -1,6 +1,7 @@
 package credo.ge.credoapp.views.ListAdapters
 
 import android.content.Context
+import android.graphics.Typeface
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +23,7 @@ class ReflectionAdapterAdapter(val data: List<Any>, val context: Context, val na
     var textSiz: Float
 
     var nameList:ArrayList<String> = ArrayList();
-
+    val font1: Typeface
     init {
         this.nameField = nameField_
         this.isMethod = isMethod_
@@ -30,6 +31,9 @@ class ReflectionAdapterAdapter(val data: List<Any>, val context: Context, val na
         this.clazz = clazz
         this.textSiz = textSiz
         this.mInflator = LayoutInflater.from(context)
+
+        font1 = Typeface.createFromAsset(context.getAssets(), "fonts/font1.ttf");
+
     }
 
     override fun getCount(): Int {
@@ -69,7 +73,9 @@ class ReflectionAdapterAdapter(val data: List<Any>, val context: Context, val na
         nameList.add(displayValue)
 
 
+
         vh.label.text = displayValue
+        vh.label.typeface = font1
         //vh.label.setTextSize(TypedValue.COMPLEX_UNIT_SP ,this.textSiz)
         return view
     }

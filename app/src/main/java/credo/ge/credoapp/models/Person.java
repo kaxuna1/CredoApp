@@ -78,7 +78,7 @@ public class Person extends SugarRecord<Person> {
     public ArrayList<FamilyPerson> family;
 
     public String fullName() {
-        return (name==null?"სახელი":name) + " " + (surname==null?"გვარი":surname);
+        return (name==""?"სახელი":name) + " " + (surname==""?"გვარი":surname);
     }
 
     public static List<Person> getData(){

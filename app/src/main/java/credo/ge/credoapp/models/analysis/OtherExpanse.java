@@ -20,6 +20,10 @@ public class OtherExpanse extends SugarRecord<OtherExpanse> {
     public String label0;
 
 
+    public static OtherExpanse getById(long id){
+        return OtherExpanse.findById(OtherExpanse.class,id);
+    }
+
     @ObjectFieldTypeViewAnotation(name = "სხვა ხარჯები",
             displayField = "getName",
             isMethod = true,
