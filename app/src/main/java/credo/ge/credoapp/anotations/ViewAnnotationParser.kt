@@ -379,6 +379,55 @@ class ViewAnnotationParser {
                     val listClass = listType.actualTypeArguments[0] as Class<*>
 
 
+
+                    val view = inflater.inflate(R.layout.inline_objects_list_view, null)
+                    val addBtn = view.findViewById(R.id.addObjectButton) as FancyButton
+                    val label = view.findViewById(R.id.label) as TextView
+                    val linearPlace = view.findViewById(R.id.linearForObjects) as LinearLayout
+
+
+
+                    val updaterUUID = UUID.randomUUID().toString()
+
+                    val func = fun(){
+                        val method = listClass.getMethod("findby" + joinField, Long::class.java)
+                        val dataToLoad = method.invoke(null, (clazz.getMethod("getId").invoke(myLocalObject) as Long)) as ArrayList<Any>
+                        linearPlace.removeAllViews()
+                        dataToLoad.forEach {
+                            val objectItemView = inflater.inflate(R.layout.inline_objects_item_linear, null)
+
+
+
+
+
+                        }
+
+
+
+                    }
+
+                    func()
+
+                    addBtn.setOnClickListener {
+                        var joinId = (clazz.getMethod("getId").invoke(myLocalObject) as Long)
+                        val ctor = listClass.getConstructor()
+                        var objectItemToSave = ctor.newInstance()
+                        val joinClassName:Class<*> = clazz as Class<*>
+                        val joinFieldName:String = joinField
+                        var joinObject = joinClassName.getMethod("getById",Long::class.java).invoke(null,joinId)
+                        listClass.getField(joinFieldName).set(objectItemToSave,joinObject)
+                        listClass.getMethod("save").invoke(objectItemToSave)
+
+
+                        func();
+                    }
+
+
+
+
+
+
+
                 }
 
                 if (field.isAnnotationPresent(ObjectsListFieldTypeViewAnottion::class.java)) {

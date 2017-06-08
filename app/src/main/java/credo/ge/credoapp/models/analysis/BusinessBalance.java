@@ -28,7 +28,7 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
             type = "inlineView",
             sqlData = true,
             canAddToDb = false,
-            joinField = "businessBalance", position = 3)
+            joinField = "businessbalance", position = 3)
     public ArrayList<ObligationsToReceive> obligationsToReceives;
 
     public BusinessBalance() {
