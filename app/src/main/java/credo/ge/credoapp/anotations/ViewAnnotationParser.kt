@@ -364,7 +364,7 @@ class ViewAnnotationParser {
 
                 }
 
-                if (field.isAnnotationPresent(InlineObjectsListFieldTypeViewAnotation::class.java)){
+                if (field.isAnnotationPresent(InlineObjectsListFieldTypeViewAnotation::class.java)) {
                     val annotation = field.getAnnotation<InlineObjectsListFieldTypeViewAnotation>(InlineObjectsListFieldTypeViewAnotation::class.java)
                     val name = annotation.name
                     val displayField = annotation.displayField
@@ -379,43 +379,61 @@ class ViewAnnotationParser {
                     val listClass = listType.actualTypeArguments[0] as Class<*>
 
 
-
                     val view = inflater.inflate(R.layout.inline_objects_list_view, null)
                     val addBtn = view.findViewById(R.id.addObjectButton) as FancyButton
                     val label = view.findViewById(R.id.label) as TextView
                     val linearPlace = view.findViewById(R.id.linearForObjects) as LinearLayout
 
 
+                    label.typeface = font1
+                    label.text = annotation.name
+
 
                     val updaterUUID = UUID.randomUUID().toString()
 
-                    val func = fun(){
+                    val func = fun() {
                         val method = listClass.getMethod("findby" + joinField, Long::class.java)
                         val dataToLoad = method.invoke(null, (clazz.getMethod("getId").invoke(myLocalObject) as Long)) as ArrayList<Any>
                         linearPlace.removeAllViews()
                         dataToLoad.forEach {
                             val objectItemView = inflater.inflate(R.layout.inline_objects_item_linear, null)
 
+                            val linearForObjectFields = objectItemView.findViewById(R.id.linearForObjectFields) as LinearLayout
+                            val deleteItemBtn = objectItemView.findViewById(R.id.removeObjectButton)
+                            deleteItemBtn.setOnClickListener {
+                                listClass.getMethod("delete").invoke(it)
+                                val func1=StaticData.comboBoxUpdateFunctions.get(updaterUUID) as ()->Unit
+                                func1()
+                            }
 
 
+                            val viewPagesListInner: ConcurrentHashMap<Int, ConcurrentHashMap<Int, View>> =
+                                    viewToList(listClass.fields, inflater, fieldNameMap, fieldPaterns, listClass, it, pager, true);
 
+
+                            viewPagesListInner[0]!!.forEach {
+                                i, v ->
+                                linearForObjectFields.addView(v)
+                            }
+
+
+                            linearPlace.addView(objectItemView);
 
                         }
 
 
-
                     }
-
+                    StaticData.comboBoxUpdateFunctions.put(updaterUUID, func)
                     func()
 
                     addBtn.setOnClickListener {
                         var joinId = (clazz.getMethod("getId").invoke(myLocalObject) as Long)
                         val ctor = listClass.getConstructor()
                         var objectItemToSave = ctor.newInstance()
-                        val joinClassName:Class<*> = clazz as Class<*>
-                        val joinFieldName:String = joinField
-                        var joinObject = joinClassName.getMethod("getById",Long::class.java).invoke(null,joinId)
-                        listClass.getField(joinFieldName).set(objectItemToSave,joinObject)
+                        val joinClassName: Class<*> = clazz as Class<*>
+                        val joinFieldName: String = joinField
+                        var joinObject = joinClassName.getMethod("getById", Long::class.java).invoke(null, joinId)
+                        listClass.getField(joinFieldName).set(objectItemToSave, joinObject)
                         listClass.getMethod("save").invoke(objectItemToSave)
 
 
@@ -423,9 +441,14 @@ class ViewAnnotationParser {
                     }
 
 
-
-
-
+                    var viewFieldHolder = ViewFieldHolder();
+                    viewFieldHolder.bindObject = myLocalObject;
+                    viewFieldHolder.field = field;
+                    viewFieldHolder.view = view
+                    viewFieldHolder.paterns = annotation.visibilityPatern
+                    fieldPaterns.add(viewFieldHolder)
+                    viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
+                    viewPagesList.get(annotation.page)!!.put(annotation.position, view);
 
 
                 }
@@ -457,7 +480,7 @@ class ViewAnnotationParser {
                     fieldValue.setCustomTextFont("fonts/font1.ttf")
 
 
-                    var list : ListView? = null
+                    var list: ListView? = null
 
                     val updaterUUID = UUID.randomUUID().toString()
 
@@ -484,7 +507,7 @@ class ViewAnnotationParser {
                                  v.onTouchEvent(event)
                              }*/
 
-                        if(list != null){
+                        if (list != null) {
                             list!!.adapter = listAdapter
                         }
                         fieldValue.setText("${dataToLoad.size}")
@@ -498,7 +521,7 @@ class ViewAnnotationParser {
                         var dialogBody = inflater.inflate(R.layout.multifieldviewandadd, null);
 
                         val builder = AlertDialog.Builder(pager.context).setTitle(annotation.name).setView(dialogBody).create()
-                        val addToListButton =dialogBody.findViewById(R.id.addBtn) as FancyButton
+                        val addToListButton = dialogBody.findViewById(R.id.addBtn) as FancyButton
                         list = dialogBody.findViewById(R.id.listView) as ListView
                         list!!.adapter = listAdapter
 
@@ -561,9 +584,6 @@ class ViewAnnotationParser {
                     StaticData.comboBoxUpdateFunctions.put(updaterUUID, func)
 
 
-
-
-
                     var viewFieldHolder = ViewFieldHolder();
                     viewFieldHolder.bindObject = myLocalObject;
                     viewFieldHolder.field = field;
@@ -614,6 +634,9 @@ class ViewAnnotationParser {
 
                     label.text = annotation.name
 
+
+                    label.typeface = font1
+
                     val viewPagesListInner: ConcurrentHashMap<Int, ConcurrentHashMap<Int, View>> =
                             viewToList(field.type.fields, inflater, fieldNameMap, fieldPaterns, field.type, field.get(myLocalObject), pager, true);
 
@@ -630,12 +653,9 @@ class ViewAnnotationParser {
 
 
                 }
-                if (field.isAnnotationPresent(DataGroupContainerTypeViewAnotation::class.java)){
+                if (field.isAnnotationPresent(DataGroupContainerTypeViewAnotation::class.java)) {
                     val annotation = field.getAnnotation<DataGroupContainerTypeViewAnotation>(DataGroupContainerTypeViewAnotation::class.java)
                     val name = annotation.name
-
-
-
 
 
                     val view = inflater.inflate(R.layout.multi_value_field_layout, null)
@@ -649,12 +669,16 @@ class ViewAnnotationParser {
                     fieldValue.setCustomTextFont("fonts/font1.ttf")
 
 
-
-
                     val updaterUUID = UUID.randomUUID().toString()
 
-                    var func = fun(){
-                        var countNumber = field.type.getMethod("getCount").invoke(field.get(myLocalObject)) as Int
+                    val func = fun() {
+
+                        val updateObj = field.type.getMethod("getById",Long::class.java).invoke(null,field.type.getMethod("getId").invoke(field.get(myLocalObject)) as Long)
+
+                        field.set(myLocalObject,updateObj)
+
+                        val countNumber = field.type.getMethod("getCount").invoke(field.get(myLocalObject)) as Int
+
                         fieldValue.setText("${countNumber}")
                     }
                     func()
@@ -664,7 +688,7 @@ class ViewAnnotationParser {
                         val intent = Intent(pager.context, DataFillActivity::class.java)
                         intent.putExtra("class", field.type)
                         intent.putExtra("updaterUUID", updaterUUID)
-                        var currentId = field.type.getMethod("getId").invoke(field.get(myLocalObject)) as Long
+                        val currentId = field.type.getMethod("getId").invoke(field.get(myLocalObject)) as Long
                         intent.putExtra("id", currentId)
                         pager.context.startActivity(intent)
                     }

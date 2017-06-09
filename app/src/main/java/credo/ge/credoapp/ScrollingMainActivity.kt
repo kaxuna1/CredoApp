@@ -26,7 +26,7 @@ import rx.functions.Action1
 import android.content.Context.LOCATION_SERVICE
 import android.location.Location
 import android.location.LocationManager
-
+import credo.ge.credoapp.models.ViewModels.LoansViewer
 
 
 class ScrollingMainActivity : CredoExtendActivity() {
@@ -149,8 +149,13 @@ class ScrollingMainActivity : CredoExtendActivity() {
 
         }
         loansComplete!!.setOnClickListener {
-            Snackbar.make(buttonAutoCheck, "კოორდინატები ${location.longitude}:${location.latitude}", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+           /* Snackbar.make(buttonAutoCheck, "კოორდინატები ${location.longitude}:${location.latitude}", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()*/
+            val intent = Intent(this, DataFillActivity::class.java)
+            intent.putExtra("class", LoansViewer::class.java)
+            intent.putExtra("autosave", false)
+            startActivity(intent)
+
 
         }
 

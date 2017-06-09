@@ -18,6 +18,8 @@ import credo.ge.credoapp.models.analysis.BusinessBalance;
 import credo.ge.credoapp.models.analysis.FamilyExpanse;
 import credo.ge.credoapp.models.analysis.OtherExpanse;
 import credo.ge.credoapp.models.analysis.OtherIncomeType;
+import credo.ge.credoapp.models.analysis.PersonalBalance;
+import credo.ge.credoapp.models.analysis.ReadyProduct;
 import credo.ge.credoapp.models.analysis.TourismProductType;
 import credo.ge.credoapp.models.analysis.UrbaProductType;
 
@@ -139,7 +141,7 @@ public class Loan extends SugarRecord<Loan> {
             canAddToDb = false,
             joinField = "loan", position = 22,page = 2)
     public ArrayList<FamilyExpanse> familyExpanses;
-    @TextFieldTypeViewAnotation(name = "ოჯახის წევრების რაოდენობა", defaultValue = "1",type = "int",page = 5,position = 23)
+    @TextFieldTypeViewAnotation(name = "ოჯახის წევრების რაოდენობა", defaultValue = "1",type = "int",page = 2,position = 23)
     public int familyQuantity;
 
     @ObjectFieldTypeViewAnotation(name = "დასახლების ტიპი",
@@ -155,6 +157,8 @@ public class Loan extends SugarRecord<Loan> {
 
     @DataGroupContainerTypeViewAnotation(name = "ბიზნეს ბალანსი",page = 3,position = 25)
     public BusinessBalance businessBalance = new BusinessBalance();
+    @DataGroupContainerTypeViewAnotation(name = "პირადი ბალანსი",page = 3,position = 26)
+    public PersonalBalance personalBalance = new PersonalBalance();
 
 
 
@@ -170,6 +174,7 @@ public class Loan extends SugarRecord<Loan> {
     public Loan() {
         try{
             businessBalance.save();
+            personalBalance.save();
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -20,8 +20,8 @@ public class ObligationsToReceive extends SugarRecord<ObligationsToReceive> {
     @TextFieldTypeViewAnotation(name = "დამ. ინფორმაცია", defaultValue = "",type = "text", position = 3)
     public String otherInfo="";
 
-    public static List<FamilyPerson> findbybusinessbalance(long id) {
-        return FamilyPerson.find(FamilyPerson.class, "businessbalance = ?", id + "");
+    public static List<ObligationsToReceive> findbybusinessbalance(long id) {
+        return ObligationsToReceive.find(ObligationsToReceive.class, "businessbalance = ?", id + "");
     }
     public static List<ObligationsToReceive> getData() {
         return ObligationsToReceive.listAll(ObligationsToReceive.class);
@@ -31,4 +31,8 @@ public class ObligationsToReceive extends SugarRecord<ObligationsToReceive> {
     }
 
     public BusinessBalance businessbalance;
+    public PersonalBalance personalbalance;
+    public static List<ObligationsToReceive> findbypersonalbalance(long id) {
+        return ObligationsToReceive.find(ObligationsToReceive.class, "personalbalance = ?", id + "");
+    }
 }

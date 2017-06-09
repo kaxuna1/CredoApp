@@ -2,7 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fancy="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:layout_margin="5dp"
     android:layout_width="match_parent"
+    android:background="@drawable/border"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -12,6 +18,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginBottom="5dp"
         android:orientation="vertical">
 
     </LinearLayout>
@@ -31,9 +38,12 @@
         fancy:fb_iconPosition="left"
         fancy:fb_radius="30dp"
         android:padding="4dp"
+        android:layout_marginEnd="15dp"
         fancy:fb_text=""
         fancy:fb_textColor="#FFFFFF"
         android:layout_below="@+id/linearForObjects"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="15dp" />
 </RelativeLayout>
