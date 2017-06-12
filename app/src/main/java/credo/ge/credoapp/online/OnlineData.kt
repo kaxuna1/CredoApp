@@ -33,11 +33,11 @@ object OnlineData {
             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .client( OkHttpClient.Builder().readTimeout(5, TimeUnit.MINUTES).build())
-            .baseUrl("http://109.238.225.188:8081/")
+            .baseUrl("http://10.195.9.121:8087/")
 
             .build()
     var retrofit1Url2 = Retrofit.Builder()
-            .baseUrl("http://109.238.225.188:8081/")
+            .baseUrl("http://10.195.9.121:8087/")
             .client( OkHttpClient.Builder().readTimeout(5, TimeUnit.MINUTES).build())
             .addConverterFactory(GsonConverterFactory.create())
             .build()

@@ -143,7 +143,6 @@ public class Loan extends SugarRecord<Loan> {
     public ArrayList<FamilyExpanse> familyExpanses;
     @TextFieldTypeViewAnotation(name = "ოჯახის წევრების რაოდენობა", defaultValue = "1",type = "int",page = 2,position = 23)
     public int familyQuantity;
-
     @ObjectFieldTypeViewAnotation(name = "დასახლების ტიპი",
             displayField = "getName",
             isMethod = true,
@@ -152,16 +151,11 @@ public class Loan extends SugarRecord<Loan> {
             canAddToDb = false, position = 24,
             page = 2,
             filterWith ="1087")
-    public Dictionary expanseType;
-
-
+    public Dictionary livigType;
     @DataGroupContainerTypeViewAnotation(name = "ბიზნეს ბალანსი",page = 3,position = 25)
     public BusinessBalance businessBalance = new BusinessBalance();
     @DataGroupContainerTypeViewAnotation(name = "პირადი ბალანსი",page = 3,position = 26)
     public PersonalBalance personalBalance = new PersonalBalance();
-
-
-
 
     public static List<Loan> getData() {
         return Loan.listAll(Loan.class);
@@ -187,4 +181,54 @@ public class Loan extends SugarRecord<Loan> {
     public void save() {
         super.save();
     }
+
+
+    public long getBranchId(){
+        return this.branch.serverId;
+    }
+    public long getOfficerId(){
+        return this.loanOficer.serverId;
+    }
+    public long getVillage(){
+        return this.vilage.serverId;
+    }
+    public long getConsul(){
+        return this.vilageCounsel.serverId;
+    }
+
+    public long getProductId(){
+        return this.product.serverId;
+    }
+    public long getPurposeId(){
+        return this.purpose.serverId;
+    }
+    public int getExperience(){
+        return this.gamocdileba;
+    }
+    public int getAmount(){
+        return this.loanSum;
+    }
+    public String getComment(){
+        return this.comment;
+    }
+    public long getCurrencyId(){
+        return this.currency.serverId;
+    }
+    public int getPeriod(){
+        return this.loanDuration;
+    }
+    public int getLand(){
+        return this.mitsa;
+    }
+    public int getAnimal(){
+        return this.numberOfAnimals;
+    }
+    public int getLivingTypeID(){
+        return this.livigType.serverId;
+    }
+    public int getFamilyPersonsNum(){
+        return this.familyQuantity;
+    }
+
+
 }
