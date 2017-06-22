@@ -4,8 +4,8 @@ import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 
 /**
- * Created by vakhtanggelashvili on 4/25/17.
+ * Created by kaxge on 6/15/2017.
  */
 @Target(AnnotationTarget.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-annotation class DateFieldTypeViewAnotation (val name:String, val page:Int=0,val position:Int)
+annotation class ListViewFieldTypeViewAnnotation (val name:String,val position:Int, val page:Int=0)

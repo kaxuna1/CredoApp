@@ -32,7 +32,7 @@ public class TourismProductType extends SugarRecord<TourismProductType>{
             type = "comboBox",
             sqlData = true,
             canAddToDb = false, position = 2,
-            filterWith ="33")
+            filterWith ="68")
     public Dictionary tourismZone;
     @ObjectFieldTypeViewAnotation(name = "პროდუქტი",
             displayField = "getName",
@@ -40,7 +40,7 @@ public class TourismProductType extends SugarRecord<TourismProductType>{
             type = "comboBox",
             sqlData = true,
             canAddToDb = false, position = 3,
-            filterWith ="33")
+            filterWith ="35")
     public Dictionary product;
 
     @TextFieldTypeViewAnotation(name = "რაოდენობა", defaultValue = "1",type = "int", position = 4)
@@ -52,7 +52,7 @@ public class TourismProductType extends SugarRecord<TourismProductType>{
             type = "comboBox",
             sqlData = true,
             canAddToDb = false, position = 5,
-            filterWith ="67")
+            filterWith ="69")
     public Dictionary location;
 
     @ObjectFieldTypeViewAnotation(name = "მომსახურება",
@@ -61,7 +61,7 @@ public class TourismProductType extends SugarRecord<TourismProductType>{
             type = "comboBox",
             sqlData = true,
             canAddToDb = false, position = 6,
-            filterWith ="67")
+            filterWith ="36")
     public Dictionary service;
     @ObjectFieldTypeViewAnotation(name = "მომსახურების ხარისხი",
             displayField = "getName",
@@ -69,7 +69,7 @@ public class TourismProductType extends SugarRecord<TourismProductType>{
             type = "comboBox",
             sqlData = true,
             canAddToDb = false, position = 7,
-            filterWith ="67")
+            filterWith ="37")
     public Dictionary serviceQuality;
 
 

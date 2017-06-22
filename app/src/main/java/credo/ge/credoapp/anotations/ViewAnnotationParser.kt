@@ -34,7 +34,10 @@ import java.util.concurrent.ConcurrentHashMap
 import android.graphics.Color.parseColor
 import android.graphics.Typeface
 import android.support.v7.widget.LinearLayoutCompat
+import com.github.jhonnyx2012.horizontalpicker.HorizontalPicker
+import credo.ge.credoapp.models.Loan
 import kotlinx.android.synthetic.main.activity_data_fill.*
+import java.text.SimpleDateFormat
 
 
 /**
@@ -115,18 +118,14 @@ class ViewAnnotationParser {
                             }
                         }
                     })
-
                     var viewFieldHolder = ViewFieldHolder();
                     viewFieldHolder.bindObject = myLocalObject;
                     viewFieldHolder.field = field;
                     viewFieldHolder.view = view
                     viewFieldHolder.paterns = visibilityPater
                     fieldPaterns.add(viewFieldHolder)
-
-
                     viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
                     viewPagesList.get(annotation.page)!!.put(annotation.position, view);
-
                 }
                 if (field.isAnnotationPresent(LabelFieldTypeViewAnotaion::class.java)) {
                     val annotation = field.getAnnotation<LabelFieldTypeViewAnotaion>(LabelFieldTypeViewAnotaion::class.java)
@@ -137,13 +136,79 @@ class ViewAnnotationParser {
 
                     viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
                     viewPagesList.get(annotation.page)!!.put(annotation.position, view);
+
                 }
                 if (field.isAnnotationPresent(DateFieldTypeViewAnotation::class.java)) {
-                    val annotation = field.getAnnotation<TextFieldTypeViewAnotation>(TextFieldTypeViewAnotation::class.java)
+                    val annotation = field.getAnnotation<DateFieldTypeViewAnotation>(DateFieldTypeViewAnotation::class.java)
                     val name = annotation.name
-                    var datePicker = DatePicker(pager.context)
+
+
+                    val view = inflater.inflate(R.layout.date_field_view, null)
+
+
+                    val label = view.findViewById(R.id.label) as TextView
+
+                    label.text = name
+
+
+
+                    val button = view.findViewById(R.id.button) as FancyButton
+
+
+                    var current = field.get(myLocalObject) as Date
+
+                    val sdf = SimpleDateFormat("yyyy/MM/dd")
+
+                    button.setText( sdf.format(current))
+
+                    button.setOnClickListener {
+
+                        val dialogBody = inflater.inflate(R.layout.datepickerview, null);
+
+                        val picker = dialogBody.findViewById(R.id.datePicker) as DatePicker
+
+                        val builder = AlertDialog.Builder(pager.context).setTitle(annotation.name).setView(dialogBody).create()
+
+                        val save = dialogBody.findViewById(R.id.save) as Button
+                        val cancel = dialogBody.findViewById(R.id.cancel) as Button
+
+
+
+
+
+                        cancel.setOnClickListener {
+                            builder.hide();
+                        }
+                        save.setOnClickListener {
+
+                            val date = Date()
+
+                            date.date = picker.dayOfMonth
+                            date.month = picker.month
+                            date.year = picker.year - 1900
+
+
+                            field.set(myLocalObject,date)
+
+                            clazz.getMethod("save").invoke(myLocalObject)
+
+                            button.setText( sdf.format(date))
+
+                            builder.hide()
+                        }
+
+                        builder.show()
+                    }
+
+
+
+                    //var datePicker = view.findViewById(R.id.dateField)
+
+
+
+
                     viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
-                    viewPagesList.get(annotation.page)!!.put(annotation.position, datePicker);
+                    viewPagesList.get(annotation.page)!!.put(annotation.position, view);
                 }
                 if (field.isAnnotationPresent(ObjectFieldTypeViewAnotation::class.java)) {
                     val annotation = field.getAnnotation<ObjectFieldTypeViewAnotation>(ObjectFieldTypeViewAnotation::class.java)
@@ -363,7 +428,6 @@ class ViewAnnotationParser {
 
 
                 }
-
                 if (field.isAnnotationPresent(InlineObjectsListFieldTypeViewAnotation::class.java)) {
                     val annotation = field.getAnnotation<InlineObjectsListFieldTypeViewAnotation>(InlineObjectsListFieldTypeViewAnotation::class.java)
                     val name = annotation.name
@@ -402,7 +466,7 @@ class ViewAnnotationParser {
                             val deleteItemBtn = objectItemView.findViewById(R.id.removeObjectButton)
                             deleteItemBtn.setOnClickListener {
                                 listClass.getMethod("delete").invoke(it)
-                                val func1=StaticData.comboBoxUpdateFunctions.get(updaterUUID) as ()->Unit
+                                val func1 = StaticData.comboBoxUpdateFunctions.get(updaterUUID) as () -> Unit
                                 func1()
                             }
 
@@ -452,7 +516,6 @@ class ViewAnnotationParser {
 
 
                 }
-
                 if (field.isAnnotationPresent(ObjectsListFieldTypeViewAnottion::class.java)) {
 
                     val annotation = field.getAnnotation<ObjectsListFieldTypeViewAnottion>(ObjectsListFieldTypeViewAnottion::class.java)
@@ -465,112 +528,184 @@ class ViewAnnotationParser {
                     val joinField = annotation.joinField
 
 
-                    //ArrayList<Person>().getData()
-                    val listType = field.genericType as ParameterizedType
-                    val listClass = listType.actualTypeArguments[0] as Class<*>
 
-                    val view = inflater.inflate(R.layout.multi_value_field_layout, null)
-                    val addBtn = view.findViewById(R.id.fieldName) as FancyButton
-                    val fieldValue = view.findViewById(R.id.fieldValue) as FancyButton
+                    if (type == "comboBox") {
+                        //ArrayList<Person>().getData()
+                        val listType = field.genericType as ParameterizedType
+                        val listClass = listType.actualTypeArguments[0] as Class<*>
 
-
-
-                    addBtn.setText(annotation.name)
-                    addBtn.setCustomTextFont("fonts/font1.ttf")
-                    fieldValue.setCustomTextFont("fonts/font1.ttf")
+                        val view = inflater.inflate(R.layout.multi_value_field_layout, null)
+                        val addBtn = view.findViewById(R.id.fieldName) as FancyButton
+                        val fieldValue = view.findViewById(R.id.fieldValue) as FancyButton
 
 
-                    var list: ListView? = null
 
-                    val updaterUUID = UUID.randomUUID().toString()
+                        addBtn.setText(annotation.name)
+                        addBtn.setCustomTextFont("fonts/font1.ttf")
+                        fieldValue.setCustomTextFont("fonts/font1.ttf")
 
-                    var listAdapter: ReflectionAdapterAdapter? = null
-                    val func = fun() {
-                        val method = listClass.getMethod("findby" + joinField, Long::class.java)
-                        val dataToLoad = method.invoke(null, (clazz.getMethod("getId").invoke(bindObject) as Long)) as ArrayList<Any>
-                        //dataOfField.addAll(dataToLoad)
-                        listAdapter = ReflectionAdapterAdapter(dataToLoad, pager.context, displayField, isMethod, listClass, 20f)
-                        /*     listView.adapter = listAdapter
-                             listView.setOnTouchListener { v, event ->
-                                 val action = event.action
-                                 when (action) {
-                                     MotionEvent.ACTION_DOWN ->
-                                         // Disallow ScrollView to intercept touch events.
-                                         v.parent.requestDisallowInterceptTouchEvent(true)
 
-                                     MotionEvent.ACTION_UP ->
-                                         // Allow ScrollView to intercept touch events.
-                                         v.parent.requestDisallowInterceptTouchEvent(false)
-                                 }
+                        var list: ListView? = null
 
-                                 // Handle ListView touch events.
-                                 v.onTouchEvent(event)
-                             }*/
+                        val updaterUUID = UUID.randomUUID().toString()
 
-                        if (list != null) {
+                        var listAdapter: ReflectionAdapterAdapter? = null
+                        val func = fun() {
+                            val method = listClass.getMethod("findby" + joinField, Long::class.java)
+                            val dataToLoad = method.invoke(null, (clazz.getMethod("getId").invoke(bindObject) as Long)) as ArrayList<Any>
+                            //dataOfField.addAll(dataToLoad)
+                            listAdapter = ReflectionAdapterAdapter(dataToLoad, pager.context, displayField, isMethod, listClass, 20f)
+                            /*     listView.adapter = listAdapter
+                                 listView.setOnTouchListener { v, event ->
+                                     val action = event.action
+                                     when (action) {
+                                         MotionEvent.ACTION_DOWN ->
+                                             // Disallow ScrollView to intercept touch events.
+                                             v.parent.requestDisallowInterceptTouchEvent(true)
+
+                                         MotionEvent.ACTION_UP ->
+                                             // Allow ScrollView to intercept touch events.
+                                             v.parent.requestDisallowInterceptTouchEvent(false)
+                                     }
+
+                                     // Handle ListView touch events.
+                                     v.onTouchEvent(event)
+                                 }*/
+
+                            if (list != null) {
+                                list!!.adapter = listAdapter
+                            }
+                            fieldValue.setText("${dataToLoad.size}")
+
+                        }
+
+
+                        func()
+
+                        addBtn.setOnClickListener {
+                            var dialogBody = inflater.inflate(R.layout.multifieldviewandadd, null);
+
+                            val builder = AlertDialog.Builder(pager.context).setTitle(annotation.name).setView(dialogBody).create()
+                            val addToListButton = dialogBody.findViewById(R.id.addBtn) as FancyButton
+                            list = dialogBody.findViewById(R.id.listView) as ListView
                             list!!.adapter = listAdapter
-                        }
-                        fieldValue.setText("${dataToLoad.size}")
 
-                    }
-
-
-                    func()
-
-                    addBtn.setOnClickListener {
-                        var dialogBody = inflater.inflate(R.layout.multifieldviewandadd, null);
-
-                        val builder = AlertDialog.Builder(pager.context).setTitle(annotation.name).setView(dialogBody).create()
-                        val addToListButton = dialogBody.findViewById(R.id.addBtn) as FancyButton
-                        list = dialogBody.findViewById(R.id.listView) as ListView
-                        list!!.adapter = listAdapter
-
-                        addToListButton.setCustomTextFont("fonts/font1.ttf")
-                        addToListButton.setOnClickListener {
-                            val intent = Intent(pager.context, DataFillActivity::class.java)
-
-                            intent.putExtra("updaterUUID", updaterUUID)
-
-                            var joinId = (clazz.getMethod("getId").invoke(myLocalObject) as Long)
-                            intent.putExtra("class", listClass)
-                            intent.putExtra("joinClass", clazz)
-
-                            intent.putExtra("autosave", false)
-                            intent.putExtra("joinId", joinId)
-                            intent.putExtra("joinField", joinField)
-
-                            pager.context.startActivity(intent)
-                        }
-                        list!!.setOnItemClickListener { parent, view, position, id ->
-
-                            var dialogBody2 = inflater.inflate(R.layout.sub_list_prompt_layout, null);
-
-                            val builder2 = AlertDialog.Builder(pager.context).setTitle("მოქმედება").setView(dialogBody2).create()
-
-                            (dialogBody2.findViewById(R.id.cancelButton) as Button).setOnClickListener {
-                                builder2.hide()
-                            }
-                            (dialogBody2.findViewById(R.id.deleteButton) as Button).setOnClickListener {
-                                var item = listAdapter!!.dataList.get(position)
-                                listClass.getMethod("delete").invoke(item)
-                                func();
-                                builder2.hide()
-                            }
-                            (dialogBody2.findViewById(R.id.editButton) as Button).setOnClickListener {
-                                val item = listAdapter!!.dataList.get(position)
-
-                                val currentId = listClass.getMethod("getId").invoke(item) as Long
+                            addToListButton.setCustomTextFont("fonts/font1.ttf")
+                            addToListButton.setOnClickListener {
                                 val intent = Intent(pager.context, DataFillActivity::class.java)
-                                intent.putExtra("class", listClass)
 
                                 intent.putExtra("updaterUUID", updaterUUID)
-                                intent.putExtra("id", currentId)
+
+                                var joinId = (clazz.getMethod("getId").invoke(myLocalObject) as Long)
+                                intent.putExtra("class", listClass)
+                                intent.putExtra("joinClass", clazz)
+
+                                intent.putExtra("autosave", false)
+                                intent.putExtra("joinId", joinId)
+                                intent.putExtra("joinField", joinField)
+
                                 pager.context.startActivity(intent)
-                                builder2.hide()
+                            }
+                            list!!.setOnItemClickListener { parent, view, position, id ->
+
+                                var dialogBody2 = inflater.inflate(R.layout.sub_list_prompt_layout, null);
+
+                                val builder2 = AlertDialog.Builder(pager.context).setTitle("მოქმედება").setView(dialogBody2).create()
+
+                                (dialogBody2.findViewById(R.id.cancelButton) as Button).setOnClickListener {
+                                    builder2.hide()
+                                }
+                                (dialogBody2.findViewById(R.id.deleteButton) as Button).setOnClickListener {
+                                    var item = listAdapter!!.dataList.get(position)
+                                    listClass.getMethod("delete").invoke(item)
+                                    func();
+                                    builder2.hide()
+                                }
+                                (dialogBody2.findViewById(R.id.editButton) as Button).setOnClickListener {
+                                    val item = listAdapter!!.dataList.get(position)
+
+                                    val currentId = listClass.getMethod("getId").invoke(item) as Long
+                                    val intent = Intent(pager.context, DataFillActivity::class.java)
+                                    intent.putExtra("class", listClass)
+
+                                    intent.putExtra("updaterUUID", updaterUUID)
+                                    intent.putExtra("id", currentId)
+                                    pager.context.startActivity(intent)
+                                    builder2.hide()
+
+                                }
+                                builder2.show()
 
                             }
-                            builder2.show()
 
+
+
+
+
+
+                            builder.show();
+                        }
+                        //
+                        StaticData.comboBoxUpdateFunctions.put(updaterUUID, func)
+
+
+                        var viewFieldHolder = ViewFieldHolder();
+                        viewFieldHolder.bindObject = myLocalObject;
+                        viewFieldHolder.field = field;
+                        viewFieldHolder.view = view
+                        viewFieldHolder.paterns = annotation.visibilityPatern
+                        fieldPaterns.add(viewFieldHolder)
+                        viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
+                        viewPagesList.get(annotation.page)!!.put(annotation.position, view);
+                    }
+                    if (type == "list") {
+                        var view = inflater.inflate(R.layout.object_list_view, null) as LinearLayout
+
+                        val listType = field.genericType as ParameterizedType
+                        val listClass = listType.actualTypeArguments[0] as Class<*>
+
+                        val method = listClass.getMethod("getData")
+                        val inflater = LayoutInflater.from(pager.context)
+
+                        if(annotation.objectType == "loan"){
+                            var dataToLoad = method.invoke(null) as List<Loan>
+                            dataToLoad.forEach {
+
+
+
+
+                                val globalIt = it;
+
+                                var  item = inflater.inflate(R.layout.loan_item_view, null, false)
+
+
+
+                                var user = item.findViewById(R.id.nameSurname) as FancyButton
+                                var status = item.findViewById(R.id.status) as FancyButton
+                                var product = item.findViewById(R.id.productSum) as FancyButton
+
+                                user.setOnClickListener {
+                                    val intent = Intent(pager.context, DataFillActivity::class.java)
+                                    intent.putExtra("class", Loan::class.java)
+
+                                    //intent.putExtra("updaterUUID", uuid)
+                                    intent.putExtra("id", globalIt.id)
+                                    pager.context.startActivity(intent)
+                                }
+
+                                if(it.person!= null)
+                                    user.setText( it.person.fullName()+" "+(if(it.person.personalNumber!=null)it.person.personalNumber else ""))
+                                status.setText(it.status)
+                                var pString = "";
+                                if(it.product!=null){
+                                    pString+=it.product.product+" "
+                                }
+                                pString+=it.loanSum;
+
+                                product.setText(pString)
+
+                                view.addView(item)
+                            }
                         }
 
 
@@ -578,20 +713,21 @@ class ViewAnnotationParser {
 
 
 
-                        builder.show();
+
+
+
+
+                        var viewFieldHolder = ViewFieldHolder();
+                        viewFieldHolder.bindObject = myLocalObject;
+                        viewFieldHolder.field = field;
+                        viewFieldHolder.view = view
+                        viewFieldHolder.paterns = annotation.visibilityPatern
+                        fieldPaterns.add(viewFieldHolder)
+                        viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
+                        viewPagesList.get(annotation.page)!!.put(annotation.position, view);
                     }
-                    //
-                    StaticData.comboBoxUpdateFunctions.put(updaterUUID, func)
 
 
-                    var viewFieldHolder = ViewFieldHolder();
-                    viewFieldHolder.bindObject = myLocalObject;
-                    viewFieldHolder.field = field;
-                    viewFieldHolder.view = view
-                    viewFieldHolder.paterns = annotation.visibilityPatern
-                    fieldPaterns.add(viewFieldHolder)
-                    viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
-                    viewPagesList.get(annotation.page)!!.put(annotation.position, view);
                 }
                 if (field.isAnnotationPresent(BooleanFieldTypeViewAnotation::class.java)) {
                     val annotation = field.getAnnotation<BooleanFieldTypeViewAnotation>(BooleanFieldTypeViewAnotation::class.java)
@@ -673,9 +809,9 @@ class ViewAnnotationParser {
 
                     val func = fun() {
 
-                        val updateObj = field.type.getMethod("getById",Long::class.java).invoke(null,field.type.getMethod("getId").invoke(field.get(myLocalObject)) as Long)
+                        val updateObj = field.type.getMethod("getById", Long::class.java).invoke(null, field.type.getMethod("getId").invoke(field.get(myLocalObject)) as Long)
 
-                        field.set(myLocalObject,updateObj)
+                        field.set(myLocalObject, updateObj)
 
                         val countNumber = field.type.getMethod("getCount").invoke(field.get(myLocalObject)) as Int
 
@@ -700,6 +836,22 @@ class ViewAnnotationParser {
                     viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
                     viewPagesList.get(annotation.page)!!.put(annotation.position, view)
                 }
+                if (field.isAnnotationPresent(ButtonFieldTypeViewAnnotation::class.java)) {
+                    val annotation = field.getAnnotation<ButtonFieldTypeViewAnnotation>(ButtonFieldTypeViewAnnotation::class.java)
+                    val name = annotation.name
+
+
+                    val view = inflater.inflate(R.layout.button_layout_field, null)
+                    val btn = view.findViewById(R.id.button) as FancyButton
+                    btn.setText(name);
+                    btn.setCustomTextFont("fonts/font1.ttf")
+                    btn.setOnClickListener(field.get(bindObject) as View.OnClickListener)
+
+
+                    viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
+                    viewPagesList.get(annotation.page)!!.put(annotation.position, view)
+
+                }
 
             }
 
@@ -712,7 +864,7 @@ class ViewAnnotationParser {
 
 
     fun parse(clazz: Class<*>, bindObject: Any, onSave: View.OnClickListener?,
-              saveText: String, autoSave: Boolean, fragmentManager: FragmentManager, pager: ViewPager, tabs: PagerSlidingTabStrip) {
+              saveText: String, autoSave: Boolean, fragmentManager: FragmentManager, pager: ViewPager, tabs: PagerSlidingTabStrip,saveVisible:Boolean = true) {
 
 
         var inflater = LayoutInflater.from(pager.context)
@@ -754,7 +906,7 @@ class ViewAnnotationParser {
         pager.currentItem = 0
 
 
-        if (onSave != null) {
+        if (onSave != null&&saveVisible) {
 
 
             val saveButton = FancyButton(pager.context)

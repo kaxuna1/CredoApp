@@ -18,18 +18,34 @@ public class FamilyPerson extends SugarRecord<FamilyPerson> {
             isMethod = true,
             type = "comboBox",
             sqlData = true,
-            canAddToDb = false, position = 1,
+            canAddToDb = false, position = 0,
             filterWith ="56")
     public Dictionary memberType;
 
+    @TextFieldTypeViewAnotation(name = "პირადი ნომერი", defaultValue = "", type = "text", mask = "###########", position = 1)
+    public String personalNumber;
 
-    @ObjectFieldTypeViewAnotation(name = "ოჯახის წევრი",
-            displayField = "fullName",
-            isMethod = true,
-            type = "comboBox",
-            sqlData = true,
-            canAddToDb = true, position = 2)
-    public Person joinperson;
+    @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "",type = "text", position = 2)
+    public String name = "";
+
+    @TextFieldTypeViewAnotation(name = "გვარი", defaultValue = "",type = "text", position = 3)
+    public String surname = "";
+
+    @TextFieldTypeViewAnotation(name = "დაბადების თარიღი", defaultValue = "",type = "text",mask = "##/##/####", position = 4)
+    public String birthDate;
+
+
+    @TextFieldTypeViewAnotation(name = "ფაქტობრივი მისამართი", defaultValue = "",type = "text", position = 5)
+    public String address;
+
+    @TextFieldTypeViewAnotation(name = "მობილური", defaultValue = "",type = "number",mask = "(5##)-###-###", position = 7)
+    public String mobile;
+
+    @TextFieldTypeViewAnotation(name = "ტელეფონი", defaultValue = "",type = "text", position = 8)
+    public String phone;
+    @ObjectFieldTypeViewAnotation(name = "სქესი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 10, filterWith = "3")
+    public Dictionary sexType;
+
 
 
     public Person person;
@@ -52,7 +68,7 @@ public class FamilyPerson extends SugarRecord<FamilyPerson> {
 
 
     public String getName() {
-        return joinperson.name + " " + joinperson.surname+" "+memberType.getName();
+        return name + " " + surname+" "+memberType.getName();
     }
 
     public static List<Person> getData() {
@@ -68,16 +84,7 @@ public class FamilyPerson extends SugarRecord<FamilyPerson> {
     }
 
     public String getSurname() {
-        return joinperson.surname;
+        return surname;
     }
-
-    public Person getJoinPerson() {
-        return joinperson;
-    }
-
-    public void setJoinPerson(Person joinPerson) {
-        this.joinperson = joinPerson;
-    }
-
 
 }

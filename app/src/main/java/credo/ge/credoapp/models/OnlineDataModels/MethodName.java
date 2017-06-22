@@ -1,5 +1,7 @@
 package credo.ge.credoapp.models.OnlineDataModels;
 
+import credo.ge.credoapp.models.Loan;
+
 /**
  * Created by kaxge on 5/10/2017.
  */
@@ -7,6 +9,8 @@ package credo.ge.credoapp.models.OnlineDataModels;
 public class MethodName {
 
     private String method;
+
+    private Loan loan;
 
     public String getMethod() {
         return method;
@@ -22,5 +26,9 @@ public class MethodName {
 
     public MethodName(String method) {
         this.method = method;
+    }
+    public MethodName(String method,Loan loan) {
+        this.method = method;
+        this.loan = loan;
     }
 }

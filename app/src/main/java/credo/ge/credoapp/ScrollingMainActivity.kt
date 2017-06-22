@@ -151,11 +151,19 @@ class ScrollingMainActivity : CredoExtendActivity() {
         loansComplete!!.setOnClickListener {
            /* Snackbar.make(buttonAutoCheck, "კოორდინატები ${location.longitude}:${location.latitude}", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()*/
+
+
+
+ /*           val intent = Intent(this, DataFillActivity::class.java)
+            intent.putExtra("class", LoansViewer::class.java)
+            intent.putExtra("autosave", false)
+            startActivity(intent)*/
+
             val intent = Intent(this, DataFillActivity::class.java)
             intent.putExtra("class", LoansViewer::class.java)
             intent.putExtra("autosave", false)
+            intent.putExtra("hideSave",true)
             startActivity(intent)
-
 
         }
 

@@ -18,4 +18,6 @@ annotation class ObjectsListFieldTypeViewAnottion (val name:String,
                                                    val canAddToDb:Boolean,
                                                    val joinField:String,
                                                    val visibilityPatern:Array<String> = arrayOf(),
-                                                   val position:Int)
+                                                   val position:Int,
+                                                   val objectType:String = "",
+                                                   val filter:String = "")

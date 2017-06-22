@@ -25,17 +25,17 @@ public class OtherIncomeType extends SugarRecord<OtherIncomeType> {
         return OtherIncomeType.findById(OtherIncomeType.class,id);
     }
 
-    @ObjectFieldTypeViewAnotation(name = "შემოსავლის წიპი",
+    @ObjectFieldTypeViewAnotation(name = "შემოსავლის ტიპი",
             displayField = "getName",
             isMethod = true,
             type = "comboBox",
             sqlData = true,
             canAddToDb = false, position = 2,
-            filterWith ="31")
+            filterWith ="41")
     public Dictionary incomeType;
 
-    @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "1",type = "int", position = 3)
-    public int comment;
+    @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "1",type = "text", position = 3)
+    public String comment;
 
 
 

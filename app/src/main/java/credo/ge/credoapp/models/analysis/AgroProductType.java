@@ -44,7 +44,7 @@ public class AgroProductType extends SugarRecord<AgroProductType>{
             type = "comboBox",
             sqlData = true,
             canAddToDb = false, position = 4,
-            filterWith ="80")
+            filterWith ="2")
     public Dictionary unit;
 
     @TextFieldTypeViewAnotation(name = "რაოდენობა", defaultValue = "1",type = "int", position = 5)

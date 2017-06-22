@@ -48,6 +48,8 @@ class DataFillActivity : CredoExtendActivity() {
 
         val autoSave = extras.getBoolean("autosave")
 
+        val hideSave = extras.getBoolean("hideSave")
+
 
         val ctor = classname.getConstructor()
 
@@ -80,7 +82,7 @@ class DataFillActivity : CredoExtendActivity() {
                 func()
             }
             finish()
-        }, "შენახვა", true, supportFragmentManager, pager, tabs);
+        }, "შენახვა", true, supportFragmentManager, pager, tabs,!hideSave);
 
 
         backBtn.setOnClickListener {

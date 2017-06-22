@@ -33,6 +33,14 @@ public class UrbaProductType extends SugarRecord<UrbaProductType> {
             canAddToDb = false, position = 2,
             filterWith ="33")
     public Dictionary service;
+    @ObjectFieldTypeViewAnotation(name = "ტიპი",
+            displayField = "getName",
+            isMethod = true,
+            type = "comboBox",
+            sqlData = true,
+            canAddToDb = false, position = 2,
+            filterWith ="1099")
+    public Dictionary service2;
     @ObjectFieldTypeViewAnotation(name = "პროდუქტი",
             displayField = "getName",
             isMethod = true,
@@ -42,7 +50,7 @@ public class UrbaProductType extends SugarRecord<UrbaProductType> {
             filterWith ="67")
     public Dictionary product;
 
-    @TextFieldTypeViewAnotation(name = "გამოცდილება", defaultValue = "1",type = "text", position = 5)
+    @TextFieldTypeViewAnotation(name = "გამოცდილება", defaultValue = "1",type = "text", position = 4)
     public String comment;
 
     public String getName() {

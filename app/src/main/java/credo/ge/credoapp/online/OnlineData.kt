@@ -2,10 +2,9 @@ package credo.ge.credoapp.online
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import credo.ge.credoapp.models.OnlineDataModels.AutoCheckMethod
-import credo.ge.credoapp.models.OnlineDataModels.LoginReturn
-import credo.ge.credoapp.models.OnlineDataModels.MethodName
-import credo.ge.credoapp.models.OnlineDataModels.SyncResult
+import credo.ge.credoapp.StaticData
+import credo.ge.credoapp.models.Loan
+import credo.ge.credoapp.models.OnlineDataModels.*
 import okhttp3.*
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
@@ -76,6 +75,25 @@ object OnlineData {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun syncLoan(loan: Loan, onSync: Action1<SyncLoanResult>){
+
+        val headers = mapOf<String, String>("Authorization" to "Bearer ${StaticData.loginData!!.access_token}")
+
+        val syncLoanObservable = retrofit1Url.create<SyncDataServices>(SyncDataServices::class.java!!)
+                .syncLoan(headers, Gson().toJsonTree(MethodName("GetProductFullList",loan)).asJsonObject)
+
+        try {
+            syncLoanObservable
+                    .subscribeOn(Schedulers.newThread())
+                    .doOnError { throwable -> throwable.printStackTrace() }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { syncData -> onSync.call(syncData) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
     }
 
     fun autoCheck(token: String, pn: String, branchId: String, byUserID: String, onSync: Action1<ResponseBody>) {

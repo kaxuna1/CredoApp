@@ -26,7 +26,7 @@ public class LoanObligation extends SugarRecord<LoanObligation> {
             sqlData = true,
             canAddToDb = false, position = 4,
             filterWith ="40")
-    public Dictionary buildingType;
+    public Dictionary type;
 
     public static List<LoanObligation> findbybusinessbalance(long id) {
         return LoanObligation.find(LoanObligation.class, "businessbalance = ?", id + "");

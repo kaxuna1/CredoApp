@@ -83,6 +83,8 @@ dependencies {
     compile 'com.sromku:simple-storage:1.2.0'
     compile 'com.jpardogo.materialtabstrip:library:1.1.1'
     compile 'com.google.android.gms:play-services:10.2.6'
+    compile 'com.github.jhonnyx2012:horizontal-picker:1.0.5'
+
 
 
 }

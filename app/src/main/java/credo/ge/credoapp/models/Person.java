@@ -3,8 +3,10 @@ package credo.ge.credoapp.models;
 import com.orm.SugarRecord;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import credo.ge.credoapp.anotations.DateFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.ObjectFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.ObjectsListFieldTypeViewAnottion;
 import credo.ge.credoapp.anotations.ParserClassAnnotation;
@@ -24,8 +26,8 @@ public class Person extends SugarRecord<Person> {
     @TextFieldTypeViewAnotation(name = "გვარი", defaultValue = "",type = "text", position = 3)
     public String surname = "";
 
-    @TextFieldTypeViewAnotation(name = "დაბადების თარიღი", defaultValue = "",type = "text",mask = "##/##/####", position = 4)
-    public String birthDate;
+    @DateFieldTypeViewAnotation(name = "დაბადების თარიღი",  position = 4)
+    public Date birthDate = new Date();
 
 
     @TextFieldTypeViewAnotation(name = "ფაქტობრივი მისამართი", defaultValue = "",type = "text", position = 5)
@@ -54,10 +56,10 @@ public class Person extends SugarRecord<Person> {
     public Dictionary ojaxuriMdgomareoba;
 
 
-    @ObjectFieldTypeViewAnotation(name = "სექტორი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 12,filterWith = "1100")
+    @ObjectFieldTypeViewAnotation(name = "სექტორი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 12,filterWith = "44")
     public Dictionary sector;
 
-    @ObjectFieldTypeViewAnotation(name = "ინდუსტრია", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 13,filterWith = "1101")
+    @ObjectFieldTypeViewAnotation(name = "ინდუსტრია", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 13,filterWith = "44")
     public Dictionary industry;
 
 
@@ -75,7 +77,7 @@ public class Person extends SugarRecord<Person> {
             sqlData = true,
             canAddToDb = false,
             joinField = "person", position = 14,page = 1)
-    public ArrayList<FamilyPerson> family;
+    public List<FamilyPerson> family;
 
     public String fullName() {
         return (name==""?"სახელი":name) + " " + (surname==""?"გვარი":surname);
@@ -91,5 +93,13 @@ public class Person extends SugarRecord<Person> {
 
     public Person(){
         family=new ArrayList<>();
+    }
+
+    public List<FamilyPerson> getFamily() {
+        return FamilyPerson.findbyperson(this.id);
+    }
+
+    public void setFamily(ArrayList<FamilyPerson> family) {
+        this.family = family;
     }
 }

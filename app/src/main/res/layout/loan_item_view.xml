@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto">
+
+
+    <mehdi.sakout.fancybuttons.FancyButton
+        android:id="@+id/nameSurname"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView4"
+        android:layout_margin="12dp"
+        android:layout_marginTop="1dp"
+        android:layout_weight="0.07"
+        android:padding="10dp"
+        fancy:fb_defaultColor="@color/colorAccent"
+        fancy:fb_focusColor="@color/colorPrimary"
+        fancy:fb_radius="5dp"
+        fancy:fb_text=""
+        fancy:fb_textSize="15sp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_margin="15dp"
+        android:textColor="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="სახელი/გვარი/პნ" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="პროდუქტი/თანხა"
+        android:textColor="@color/colorPrimary"
+        android:layout_below="@+id/nameSurname"
+        android:layout_alignLeft="@+id/nameSurname"
+        android:layout_alignStart="@+id/nameSurname" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:text="სტატუსი"
+        android:textColor="@color/colorPrimary"
+        android:layout_below="@+id/nameSurname"
+        android:layout_toRightOf="@+id/productSum"
+        android:layout_toEndOf="@+id/productSum" />
+
+    <mehdi.sakout.fancybuttons.FancyButton
+        android:id="@+id/productSum"
+        android:layout_width="120dp"
+
+        android:layout_height="50dp"
+        android:layout_weight="0.07"
+        android:padding="10dp"
+        fancy:fb_defaultColor="#fff"
+        fancy:fb_borderColor="@color/colorAccent"
+        fancy:fb_borderWidth="2dp"
+        fancy:fb_textSize="15sp"
+        fancy:fb_focusColor="@color/colorPrimary"
+        fancy:fb_radius="5dp"
+        fancy:fb_textColor="#000"
+        android:layout_marginTop="10dp"
+        fancy:fb_text=""
+        android:layout_below="@+id/textView5"
+        android:layout_alignLeft="@+id/textView5"
+        android:layout_alignStart="@+id/textView5"
+        android:layout_alignRight="@+id/textView4"
+        android:layout_alignEnd="@+id/textView4" />
+
+    <mehdi.sakout.fancybuttons.FancyButton
+        android:id="@+id/status"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_weight="0.07"
+        android:padding="10dp"
+        android:layout_marginLeft="15dp"
+        fancy:fb_textColor="#000"
+        fancy:fb_defaultColor="#fff"
+        fancy:fb_focusColor="@color/colorPrimary"
+        android:layout_marginTop="10dp"
+        fancy:fb_radius="5dp"
+        fancy:fb_text="ველი"
+        fancy:fb_borderColor="@color/colorAccent"
+        fancy:fb_borderWidth="2dp"
+        fancy:fb_textSize="9sp"
+        android:layout_below="@+id/textView6"
+        android:layout_alignRight="@+id/nameSurname"
+        android:layout_alignEnd="@+id/nameSurname"
+        android:layout_toRightOf="@+id/productSum"
+        android:layout_toEndOf="@+id/productSum" />
+</RelativeLayout>

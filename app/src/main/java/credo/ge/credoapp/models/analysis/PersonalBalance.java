@@ -2,7 +2,7 @@ package credo.ge.credoapp.models.analysis;
 
 import com.orm.SugarRecord;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import credo.ge.credoapp.anotations.DataGroupFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.InlineObjectsListFieldTypeViewAnotation;
@@ -27,7 +27,7 @@ public class PersonalBalance extends SugarRecord<PersonalBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "personalbalance", position = 10)
-    public ArrayList<Obligation> shortObligations;
+    public List<Obligation> shortObligations;
     @InlineObjectsListFieldTypeViewAnotation(name = "გრძელვადიანი ვალდებულება",
             displayField = "getName",
             isMethod = true,
@@ -35,7 +35,7 @@ public class PersonalBalance extends SugarRecord<PersonalBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "personalbalance", position = 11)
-    public ArrayList<LongObligation> longTermObligation;
+    public List<LongObligation> longTermObligation;
     @InlineObjectsListFieldTypeViewAnotation(name = "სასესხო ვალდებულება",
             displayField = "getName",
             isMethod = true,
@@ -43,7 +43,7 @@ public class PersonalBalance extends SugarRecord<PersonalBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "personalbalance", position = 12)
-    public ArrayList<LoanObligation> loanObligation;
+    public List<LoanObligation> loanObligation;
     @InlineObjectsListFieldTypeViewAnotation(name = "გრძელვადიანი სასესხო ვალდებულება",
             displayField = "getName",
             isMethod = true,
@@ -51,7 +51,7 @@ public class PersonalBalance extends SugarRecord<PersonalBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "personalbalance", position = 13)
-    public ArrayList<LongLoanObligation> longTermLoanObligation;
+    public List<LongLoanObligation> longTermLoanObligation;
     @InlineObjectsListFieldTypeViewAnotation(name = "სხვა ვალდებულება",
             displayField = "getName",
             isMethod = true,
@@ -59,7 +59,7 @@ public class PersonalBalance extends SugarRecord<PersonalBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "personalbalance", position = 14)
-    public ArrayList<OtherObligation> otherObligation;
+    public List<OtherObligation> otherObligation;
 
     @InlineObjectsListFieldTypeViewAnotation(name = "სესხი კრედოში",
             displayField = "getName",
@@ -68,7 +68,7 @@ public class PersonalBalance extends SugarRecord<PersonalBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "personalbalance", position = 15)
-    public ArrayList<CredoObligation> credoObligations;
+    public List<CredoObligation> credoObligations;
 
 
 
@@ -107,4 +107,13 @@ public class PersonalBalance extends SugarRecord<PersonalBalance> {
     }
 
 
+    public void initData() {
+     
+        shortObligations = Obligation.findbybusinessbalance(id);
+        longTermObligation = LongObligation.findbybusinessbalance(id);
+        loanObligation = LoanObligation.findbybusinessbalance(id);
+        longTermLoanObligation = LongLoanObligation.findbybusinessbalance(id);
+        otherObligation = OtherObligation.findbybusinessbalance(id);
+        credoObligations = CredoObligation.findbybusinessbalance(id);
+    }
 }

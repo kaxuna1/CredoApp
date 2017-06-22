@@ -3,6 +3,7 @@ package credo.ge.credoapp.models.analysis;
 import com.orm.SugarRecord;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import credo.ge.credoapp.anotations.DataGroupFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.InlineObjectsListFieldTypeViewAnotation;
@@ -27,7 +28,7 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 3)
-    public ArrayList<ObligationsToReceive> obligationsToReceives;
+    public List<ObligationsToReceive> obligationsToReceives;
 
     @InlineObjectsListFieldTypeViewAnotation(name = "მზა პროდუქტი",
             displayField = "getName",
@@ -36,7 +37,7 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 4)
-    public ArrayList<ReadyProduct> readyProduct;
+    public List<ReadyProduct> readyProduct;
     @InlineObjectsListFieldTypeViewAnotation(name = "ნედლეული/მარაგები",
             displayField = "getName",
             isMethod = true,
@@ -44,7 +45,7 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 5)
-    public ArrayList<Materials> materialses;
+    public List<Materials> materialses;
     @InlineObjectsListFieldTypeViewAnotation(name = "პირუტყვი",
             displayField = "getName",
             isMethod = true,
@@ -52,7 +53,7 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 6)
-    public ArrayList<Cattle> cattle;
+    public List<Cattle> cattle;
     @InlineObjectsListFieldTypeViewAnotation(name = "მანქანა/დანადგარები",
             displayField = "getName",
             isMethod = true,
@@ -60,7 +61,7 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 7)
-    public ArrayList<Machines> machines;
+    public List<Machines> machines;
     @InlineObjectsListFieldTypeViewAnotation(name = "შენობა/ნაგებობა",
             displayField = "getName",
             isMethod = true,
@@ -68,7 +69,7 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 8)
-    public ArrayList<Building> buildings;
+    public List<Building> buildings;
     @InlineObjectsListFieldTypeViewAnotation(name = "მიწა",
             displayField = "getName",
             isMethod = true,
@@ -76,7 +77,7 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 9)
-    public ArrayList<Land> lands;
+    public List<Land> lands;
     @InlineObjectsListFieldTypeViewAnotation(name = "მოკლევადიანი ვალდებულება",
             displayField = "getName",
             isMethod = true,
@@ -84,7 +85,7 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 10)
-    public ArrayList<Obligation> shortObligations;
+    public List<Obligation> shortObligations;
     @InlineObjectsListFieldTypeViewAnotation(name = "გრძელვადიანი ვალდებულება",
             displayField = "getName",
             isMethod = true,
@@ -92,7 +93,7 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 11)
-    public ArrayList<LongObligation> longTermObligation;
+    public List<LongObligation> longTermObligation;
     @InlineObjectsListFieldTypeViewAnotation(name = "სასესხო ვალდებულება",
             displayField = "getName",
             isMethod = true,
@@ -100,7 +101,7 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 12)
-    public ArrayList<LoanObligation> loanObligation;
+    public List<LoanObligation> loanObligation;
     @InlineObjectsListFieldTypeViewAnotation(name = "გრძელვადიანი სასესხო ვალდებულება",
             displayField = "getName",
             isMethod = true,
@@ -108,7 +109,7 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 13)
-    public ArrayList<LongLoanObligation> longTermLoanObligation;
+    public List<LongLoanObligation> longTermLoanObligation;
     @InlineObjectsListFieldTypeViewAnotation(name = "სხვა ვალდებულება",
             displayField = "getName",
             isMethod = true,
@@ -116,7 +117,7 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 14)
-    public ArrayList<OtherObligation> otherObligation;
+    public List<OtherObligation> otherObligation;
     @InlineObjectsListFieldTypeViewAnotation(name = "სესხი კრედოში",
             displayField = "getName",
             isMethod = true,
@@ -124,10 +125,7 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 15)
-    public ArrayList<CredoObligation> credoObligations;
-
-
-
+    public List<CredoObligation> credoObligations;
 
 
     public BusinessBalance() {
@@ -147,20 +145,20 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
             count++;
         if (balance.sum > 0)
             count++;
-        if(id!=null){
-            count+=ObligationsToReceive.findbybusinessbalance(id).size();
-            count+=ReadyProduct.findbybusinessbalance(id).size();
-            count+=Materials.findbybusinessbalance(id).size();
-            count+=Cattle.findbybusinessbalance(id).size();
-            count+=Machines.findbybusinessbalance(id).size();
-            count+=Building.findbybusinessbalance(id).size();
-            count+=Land.findbybusinessbalance(id).size();
-            count+=Obligation.findbybusinessbalance(id).size();
-            count+=LongObligation.findbybusinessbalance(id).size();
-            count+=LoanObligation.findbybusinessbalance(id).size();
-            count+=LongLoanObligation.findbybusinessbalance(id).size();
-            count+=OtherObligation.findbybusinessbalance(id).size();
-            count+=CredoObligation.findbybusinessbalance(id).size();
+        if (id != null) {
+            count += ObligationsToReceive.findbybusinessbalance(id).size();
+            count += ReadyProduct.findbybusinessbalance(id).size();
+            count += Materials.findbybusinessbalance(id).size();
+            count += Cattle.findbybusinessbalance(id).size();
+            count += Machines.findbybusinessbalance(id).size();
+            count += Building.findbybusinessbalance(id).size();
+            count += Land.findbybusinessbalance(id).size();
+            count += Obligation.findbybusinessbalance(id).size();
+            count += LongObligation.findbybusinessbalance(id).size();
+            count += LoanObligation.findbybusinessbalance(id).size();
+            count += LongLoanObligation.findbybusinessbalance(id).size();
+            count += OtherObligation.findbybusinessbalance(id).size();
+            count += CredoObligation.findbybusinessbalance(id).size();
 
         }
         return count;
@@ -172,4 +170,19 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
     }
 
 
+    public void initData() {
+        obligationsToReceives = ObligationsToReceive.findbybusinessbalance(id);
+        readyProduct = ReadyProduct.findbybusinessbalance(id);
+        materialses = Materials.findbybusinessbalance(id);
+        cattle = Cattle.findbybusinessbalance(id);
+        machines = Machines.findbybusinessbalance(id);
+        buildings = Building.findbybusinessbalance(id);
+        lands = Land.findbybusinessbalance(id);
+        shortObligations = Obligation.findbybusinessbalance(id);
+        longTermObligation = LongObligation.findbybusinessbalance(id);
+        loanObligation = LoanObligation.findbybusinessbalance(id);
+        longTermLoanObligation = LongLoanObligation.findbybusinessbalance(id);
+        otherObligation = OtherObligation.findbybusinessbalance(id);
+        credoObligations = CredoObligation.findbybusinessbalance(id);
+    }
 }

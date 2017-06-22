@@ -83,10 +83,11 @@
             fancy:fb_focusColor="@color/colorPrimary"
             fancy:fb_iconPosition="left"
             fancy:fb_radius="5dp"
-            fancy:fb_text="შევსებული განაცხადები"
+            fancy:fb_text="შევსებული   სესხები"
             fancy:fb_textColor="@color/colorPrimary" />
         <mehdi.sakout.fancybuttons.FancyButton
             android:id="@+id/loans"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="50px"

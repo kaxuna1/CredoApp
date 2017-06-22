@@ -27,7 +27,7 @@ public class CredoObligation extends SugarRecord<CredoObligation> {
             sqlData = true,
             canAddToDb = false, position = 4,
             filterWith ="40")
-    public Dictionary buildingType;
+    public Dictionary type;
 
     public static List<CredoObligation> findbybusinessbalance(long id) {
         return CredoObligation.find(CredoObligation.class, "businessbalance = ?", id + "");

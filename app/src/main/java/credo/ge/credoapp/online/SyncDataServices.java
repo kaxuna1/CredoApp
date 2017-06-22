@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 
 import java.util.Map;
 
+import credo.ge.credoapp.models.OnlineDataModels.SyncLoanResult;
 import credo.ge.credoapp.models.OnlineDataModels.SyncResult;
 import retrofit2.http.Body;
 import retrofit2.http.FormUrlEncoded;
@@ -20,4 +21,8 @@ public interface SyncDataServices {
 
     @POST("api/CallServiceMethod")
     Observable<SyncResult> syncData( @HeaderMap Map<String, String> headers,@Body JsonObject body);
+
+    @POST("api/CallServiceMethod")
+    Observable<SyncLoanResult> syncLoan(@HeaderMap Map<String, String> headers, @Body JsonObject body);
+
 }
