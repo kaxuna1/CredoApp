@@ -14,17 +14,17 @@
         android:id="@+id/save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/datePicker"
-        android:layout_alignStart="@+id/datePicker"
+        android:text="შენახვა"
         android:layout_below="@+id/datePicker"
-        android:text="შენახვა" />
+        android:layout_alignRight="@+id/datePicker"
+        android:layout_alignEnd="@+id/datePicker" />
 
     <Button
         android:id="@+id/cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/datePicker"
-        android:layout_alignRight="@+id/datePicker"
+        android:text="დახურვა"
         android:layout_below="@+id/datePicker"
-        android:text="დახურვა" />
+        android:layout_alignLeft="@+id/datePicker"
+        android:layout_alignStart="@+id/datePicker" />
 </RelativeLayout>

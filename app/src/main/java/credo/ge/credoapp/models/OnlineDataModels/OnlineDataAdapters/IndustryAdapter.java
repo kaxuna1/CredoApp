@@ -7,4 +7,5 @@ package credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters;
 public class IndustryAdapter {
     public String industry;
     public int id;
+    public int sectorId;
 }

@@ -57,4 +57,9 @@ public class Vilage extends SugarRecord {
     public void setBranchId(int branchId) {
         this.branchId = branchId;
     }
+
+    @Override
+    public String toString() {
+        return village==null?"":village;
+    }
 }

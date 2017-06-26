@@ -1,137 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fancy="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
+
     android:background="#00000000"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
+    xmlns:mask="http://schemas.android.com/apk/res-auto"
     android:paddingTop="10dp"
     android:layout_height="match_parent">
 
+<android.support.v7.widget.CardView
+    android:background="#00000000"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/cardView">
 
-
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <RelativeLayout
         android:background="#00000000"
-        android:layout_alignParentStart="true"
-        android:id="@+id/cardView"
-        android:layout_alignParentLeft="true">
+        android:layout_width="match_parent"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_height="match_parent">
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/buttonActions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:layout_alignParentEnd="true"
+            fancy:fb_borderColor="#FFFFFF"
+            fancy:fb_borderWidth="1dp"
+            fancy:fb_defaultColor="@color/colorPrimary"
+            fancy:fb_focusColor="#9bd823"
+            fancy:fb_fontIconResource="&#xf039;"
+            fancy:fb_iconPosition="left"
+            fancy:fb_radius="30dp"
+            android:padding="4dp"
+            fancy:fb_text=""
+            fancy:fb_textColor="#FFFFFF"
+            android:layout_alignParentRight="true"
+            android:layout_above="@+id/editor2" />
 
-        <RelativeLayout
-            android:background="#00000000"
-            android:paddingLeft="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-
-
-            <TextView
-                android:id="@+id/label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:text="TextView"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18sp"
-                android:layout_alignStart="@+id/spinner"
-                android:layout_alignLeft="@+id/spinner" />
-
-
-            <ImageView
-                android:id="@+id/imageView6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/star"
-                android:layout_alignParentTop="true"
-                android:padding="4dp"
-                android:layout_toEndOf="@+id/label"
-                android:layout_above="@+id/relativeLayout2"
-                android:layout_toRightOf="@+id/label" />
-
-            <Spinner
-                android:id="@+id/spinner"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/label"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/border"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentLeft="true" />
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
 
 
 
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:id="@+id/buttonActions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="10dp"
-                android:layout_alignParentEnd="true"
-                fancy:fb_borderColor="#FFFFFF"
-                fancy:fb_borderWidth="1dp"
-                fancy:fb_defaultColor="@color/colorPrimary"
-                fancy:fb_focusColor="#9bd823"
-                fancy:fb_fontIconResource="&#xf039;"
-                fancy:fb_iconPosition="left"
-                fancy:fb_radius="30dp"
-                android:padding="4dp"
-                fancy:fb_text=""
-                fancy:fb_textColor="#FFFFFF"
-                android:layout_alignParentRight="true" />
-            <RelativeLayout
+        <EditText
+            android:id="@+id/editBtn"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dp"
+            android:ems="10"
+            android:focusable="false"
+            android:typeface="monospace"
+            android:inputType="text"
+            android:text="აირჩიეთ სიიდან"
+            android:layout_below="@+id/label"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/imageView4"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
 
-                android:layout_width="match_parent"
-                android:layout_below="@+id/label"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/border"
-                android:id="@+id/relativeLayout2"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true">
-
-                <TextView
-                    android:id="@+id/chooseDialogBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-
-                    android:padding="5dp"
-                    android:text="აირჩიეთ სიიდან"
-                    android:textColor="#000000"
-                    android:textSize="19sp" />
-                <mehdi.sakout.fancybuttons.FancyButton
-                    android:id="@+id/chooserOpen"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginRight="10dp"
-                    android:padding="10dp"
-                    fancy:fb_defaultColor="@color/white"
-                    fancy:fb_iconPaddingLeft="0dp"
-                    fancy:fb_fontIconResource="&#xf0ab;"
-                    fancy:fb_iconPaddingRight="0dp"
-                    fancy:fb_textColor="@color/colorAccent"
-                    fancy:fb_focusColor="#313131"
-                    fancy:fb_textSize="20sp"
-                    fancy:fb_radius="64dp"
-                    fancy:fb_text=""
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true">
-                </mehdi.sakout.fancybuttons.FancyButton>
-
-            </RelativeLayout>
-
-
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
 
 </RelativeLayout>

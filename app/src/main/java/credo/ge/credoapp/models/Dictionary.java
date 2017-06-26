@@ -43,4 +43,9 @@ public class Dictionary extends SugarRecord<Dictionary> {
     public static Dictionary getById(long id){
         return Dictionary.findById(Dictionary.class,id);
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

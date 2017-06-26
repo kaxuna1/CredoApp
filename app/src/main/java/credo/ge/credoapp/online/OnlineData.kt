@@ -95,6 +95,42 @@ object OnlineData {
         }
 
     }
+    fun syncLoanScoring(loan: Loan, onSync: Action1<SyncLoanResult>){
+
+        val headers = mapOf<String, String>("Authorization" to "Bearer ${StaticData.loginData!!.access_token}")
+
+        val syncLoanObservable = retrofit1Url.create<SyncDataServices>(SyncDataServices::class.java!!)
+                .syncLoan(headers, Gson().toJsonTree(MethodName("GetPurposeList",loan)).asJsonObject)
+
+        try {
+            syncLoanObservable
+                    .subscribeOn(Schedulers.newThread())
+                    .doOnError { throwable -> throwable.printStackTrace() }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { syncData -> onSync.call(syncData) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+    fun syncLoanStatus(loan: Loan, onSync: Action1<SyncLoanResult>){
+
+        val headers = mapOf<String, String>("Authorization" to "Bearer ${StaticData.loginData!!.access_token}")
+
+        val syncLoanObservable = retrofit1Url.create<SyncDataServices>(SyncDataServices::class.java!!)
+                .syncLoan(headers, Gson().toJsonTree(MethodName("GetConsulList",loan)).asJsonObject)
+
+        try {
+            syncLoanObservable
+                    .subscribeOn(Schedulers.newThread())
+                    .doOnError { throwable -> throwable.printStackTrace() }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { syncData -> onSync.call(syncData) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
 
     fun autoCheck(token: String, pn: String, branchId: String, byUserID: String, onSync: Action1<ResponseBody>) {
 

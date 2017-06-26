@@ -13,4 +13,5 @@ class ViewFieldHolder {
     var view: View? = null
     var bindObject:Any? = null
     var paterns:Array<String>? = null
+    var requiredForSave:Boolean = false;
 }

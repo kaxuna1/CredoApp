@@ -44,4 +44,9 @@ public class LoanOficer extends SugarRecord<LoanOficer> {
     public void setBranchId(int branchId) {
         this.branchId = branchId;
     }
+
+    @Override
+    public String toString() {
+        return loanOfficer==null?"":loanOfficer;
+    }
 }

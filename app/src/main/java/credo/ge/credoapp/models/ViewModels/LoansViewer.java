@@ -22,7 +22,7 @@ public class LoansViewer {
             sqlData = true,
             canAddToDb = false,
             objectType = "loan",
-            joinField = "loan", position = 1,page = 0,filter = "sent=true")
+            joinField = "loan", position = 1,page = 0,filter = "1")
     public List<Loan> loen;
     @ObjectsListFieldTypeViewAnottion(name = "სესხები",
             displayField = "getName",
@@ -31,7 +31,7 @@ public class LoansViewer {
             sqlData = true,
             canAddToDb = false,
             objectType = "loan",
-            joinField = "loan", position = 2,page = 1,filter = "sent=false")
+            joinField = "loan", position = 2,page = 1,filter = "2")
     public List<Loan> loanList;
 
 

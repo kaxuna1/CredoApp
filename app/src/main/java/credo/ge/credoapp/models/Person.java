@@ -17,26 +17,26 @@ import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
  */
 @ParserClassAnnotation(cols = {"მომხმარებელი","ოჯახის წევრები"})
 public class Person extends SugarRecord<Person> {
-    @TextFieldTypeViewAnotation(name = "პირადი ნომერი", defaultValue = "", type = "text", mask = "###########", position = 1)
+    @TextFieldTypeViewAnotation(name = "პირადი ნომერი",required=true,requiredForSave=true, defaultValue = "", type = "text", mask = "###########", position = 1)
     public String personalNumber;
 
-    @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "",type = "text", position = 2)
+    @TextFieldTypeViewAnotation(name = "სახელი",required=true,requiredForSave=true, defaultValue = "",type = "text", position = 2)
     public String name = "";
 
-    @TextFieldTypeViewAnotation(name = "გვარი", defaultValue = "",type = "text", position = 3)
+    @TextFieldTypeViewAnotation(name = "გვარი",required=true,requiredForSave=true, defaultValue = "",type = "text", position = 3)
     public String surname = "";
 
-    @DateFieldTypeViewAnotation(name = "დაბადების თარიღი",  position = 4)
+    @DateFieldTypeViewAnotation(name = "დაბადების თარიღი",requiredForSave=true,  position = 4)
     public Date birthDate = new Date();
 
 
-    @TextFieldTypeViewAnotation(name = "ფაქტობრივი მისამართი", defaultValue = "",type = "text", position = 5)
+    @TextFieldTypeViewAnotation(name = "ფაქტობრივი მისამართი",requiredForSave=true, defaultValue = "",type = "text", position = 5)
     public String address;
 
-    @ObjectFieldTypeViewAnotation(name = "ტიპი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 6,filterWith = "13")
+    @ObjectFieldTypeViewAnotation(name = "ტიპი", displayField = "getName",requiredForSave=true, isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 6,filterWith = "13")
     public Dictionary personType;
 
-    @TextFieldTypeViewAnotation(name = "მობილური", defaultValue = "",type = "number",mask = "(5##)-###-###", position = 7)
+    @TextFieldTypeViewAnotation(name = "მობილური", defaultValue = "",requiredForSave=true,type = "number",mask = "(5##)-###-###", position = 7)
     public String mobile;
 
     @TextFieldTypeViewAnotation(name = "ტელეფონი", defaultValue = "",type = "text", position = 8)
@@ -45,22 +45,23 @@ public class Person extends SugarRecord<Person> {
     public String connectedPersonsNumber;
 
 
-    @ObjectFieldTypeViewAnotation(name = "სქესი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 10, filterWith = "3")
+    @ObjectFieldTypeViewAnotation(name = "სქესი", displayField = "getName",requiredForSave=true, isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 10, filterWith = "3")
     public Dictionary sexType;
 
     @ObjectFieldTypeViewAnotation(name = "ოჯახური მდგომარეობა",
             displayField = "getName", isMethod = true,
             type = "comboBox", sqlData = true,
             canAddToDb = false, position = 11,
-            filterWith = "44")
+            filterWith = "100")
     public Dictionary ojaxuriMdgomareoba;
 
 
-    @ObjectFieldTypeViewAnotation(name = "სექტორი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 12,filterWith = "44")
+    @ObjectFieldTypeViewAnotation(name = "სექტორი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 12,filterWith = "101")
     public Dictionary sector;
 
-    @ObjectFieldTypeViewAnotation(name = "ინდუსტრია", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 13,filterWith = "44")
-    public Dictionary industry;
+    @ObjectFieldTypeViewAnotation(name = "ინდუსტრია", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false,
+            position = 13)
+    public Industry industry;
 
 
 
@@ -101,5 +102,10 @@ public class Person extends SugarRecord<Person> {
 
     public void setFamily(ArrayList<FamilyPerson> family) {
         this.family = family;
+    }
+
+    @Override
+    public String toString() {
+        return personalNumber == null? "":personalNumber;
     }
 }

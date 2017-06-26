@@ -45,6 +45,7 @@
             fancy:fb_textSize="20sp"
             fancy:fb_focusColor="@color/colorPrimary"
             fancy:fb_radius="5dp"
+            fancy:fb_text="0"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true" />

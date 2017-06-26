@@ -4,21 +4,21 @@ import com.orm.SugarRecord;
 
 import java.util.List;
 
-import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.PurposeAdapter;
 
 /**
- * Created by vakhtanggelashvili on 5/3/17.
+ * Created by kaxge on 6/26/2017.
  */
 
-public class Purpose extends SugarRecord<Purpose> {
+
+public class PurposeType extends SugarRecord<PurposeType> {
     public String purpose;
 
     public int serverId;
     public int type;
 
-    public Purpose(){}
-    public Purpose(PurposeAdapter adapter){
+    public PurposeType(){}
+    public PurposeType(PurposeAdapter adapter){
         this.serverId = adapter.id;
         this.purpose = adapter.purpose;
         this.type  = adapter.type;
@@ -29,11 +29,11 @@ public class Purpose extends SugarRecord<Purpose> {
     }
 
 
-    public static List<Purpose> getData(){
-        return Purpose.listAll(Purpose.class);
+    public static List<PurposeType> getData(){
+        return PurposeType.listAll(PurposeType.class);
     }
-    public static Purpose getById(long id){
-        return Purpose.findById(Purpose.class,id);
+    public static PurposeType getById(long id){
+        return PurposeType.findById(PurposeType.class,id);
     }
 
     @Override

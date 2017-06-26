@@ -12,9 +12,11 @@ annotation class ObjectFieldTypeViewAnotation(val name:String,
                                               val displayField:String,
                                               val isMethod:Boolean,
                                               val type:String,
+                                              val requiredForSave: Boolean = false,
                                               val sqlData:Boolean,
                                               val canAddToDb:Boolean,
                                               val visibilityPatern:Array<String> = arrayOf(""),
                                               val position:Int,
                                               val page:Int=0,
-                                              val filterWith:String = "")
+                                              val filterWith:String = "",
+                                              val filterWithField:String = "")

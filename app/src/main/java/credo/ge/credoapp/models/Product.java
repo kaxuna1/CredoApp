@@ -35,6 +35,6 @@ public class Product extends SugarRecord<Product> {
 
     @Override
     public String toString() {
-        return product;
+        return product==null?"":product;
     }
 }

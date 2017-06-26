@@ -7,4 +7,5 @@ package credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters;
 public class PurposeAdapter {
     public String purpose;
     public int id;
+    public int type;
 }

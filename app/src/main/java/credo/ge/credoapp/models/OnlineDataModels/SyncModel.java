@@ -26,6 +26,7 @@ public class SyncModel {
     private ArrayList<LoanOficerAdapter> loanOfficers;
     private ArrayList<VilageAdapter> villages;
     private ArrayList<VilageCounselAdapter> consuls;
+    private ArrayList<PurposeAdapter> purposesTypes;
     private ArrayList<PurposeAdapter> purposes;
     private ArrayList<ProductAdapter> products;
     private ArrayList<IndustryAdapter> industries;
@@ -93,5 +94,13 @@ public class SyncModel {
 
     public void setDictionaries(ArrayList<DictionaryAdapter> dictionaries) {
         this.dictionaries = dictionaries;
+    }
+
+    public ArrayList<PurposeAdapter> getPurposesTypes() {
+        return purposesTypes;
+    }
+
+    public void setPurposesTypes(ArrayList<PurposeAdapter> purposesTypes) {
+        this.purposesTypes = purposesTypes;
     }
 }

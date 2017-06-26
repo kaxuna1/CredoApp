@@ -2,8 +2,10 @@ package credo.ge.credoapp.models;
 
 import com.orm.SugarRecord;
 
+import java.util.Date;
 import java.util.List;
 
+import credo.ge.credoapp.anotations.DateFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.ObjectFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.ParserClassAnnotation;
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
@@ -31,8 +33,8 @@ public class FamilyPerson extends SugarRecord<FamilyPerson> {
     @TextFieldTypeViewAnotation(name = "გვარი", defaultValue = "",type = "text", position = 3)
     public String surname = "";
 
-    @TextFieldTypeViewAnotation(name = "დაბადების თარიღი", defaultValue = "",type = "text",mask = "##/##/####", position = 4)
-    public String birthDate;
+    @DateFieldTypeViewAnotation(name = "დაბადების თარიღი",  position = 4)
+    public Date birthDate = new Date();
 
 
     @TextFieldTypeViewAnotation(name = "ფაქტობრივი მისამართი", defaultValue = "",type = "text", position = 5)

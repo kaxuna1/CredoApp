@@ -5,5 +5,5 @@ package credo.ge.credoapp.models.OnlineDataModels;
  */
 
 public class SyncLoanResult {
-    SyncLoanDataModel data;
+   public SyncLoanDataModel data;
 }

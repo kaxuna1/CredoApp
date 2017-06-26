@@ -47,4 +47,9 @@ public class Branch extends DBAdapter<Branch> {
     public void setCity(String city) {
         this.city = city;
     }
+
+    @Override
+    public String toString() {
+        return branch==null?"":branch;
+    }
 }

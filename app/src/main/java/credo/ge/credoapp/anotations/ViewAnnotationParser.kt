@@ -21,7 +21,6 @@ import credo.ge.credoapp.DataFillActivity
 import credo.ge.credoapp.StaticData
 import java.util.*
 import kotlin.collections.ArrayList
-import android.view.MotionEvent
 import br.com.sapereaude.maskedEditText.MaskedEditText
 import credo.ge.credoapp.views.CredoPageAdapter
 import credo.ge.credoapp.views.ViewFieldHolder
@@ -31,12 +30,16 @@ import android.text.InputType
 import com.astuetz.PagerSlidingTabStrip
 import mehdi.sakout.fancybuttons.FancyButton
 import java.util.concurrent.ConcurrentHashMap
-import android.graphics.Color.parseColor
 import android.graphics.Typeface
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutCompat
-import com.github.jhonnyx2012.horizontalpicker.HorizontalPicker
+import android.util.Log
+import cc.cloudist.acplibrary.ACProgressConstant
+import cc.cloudist.acplibrary.ACProgressFlower
 import credo.ge.credoapp.models.Loan
-import kotlinx.android.synthetic.main.activity_data_fill.*
+import credo.ge.credoapp.online.OnlineData
+import credo.ge.credoapp.sent_loan_page
+import rx.functions.Action1
 import java.text.SimpleDateFormat
 
 
@@ -45,6 +48,9 @@ import java.text.SimpleDateFormat
  */
 
 class ViewAnnotationParser {
+
+
+
     companion object {
         fun viewToList(fields: Array<Field>,
                        inflater: LayoutInflater,
@@ -62,6 +68,36 @@ class ViewAnnotationParser {
 
             val font1 = Typeface.createFromAsset(pager.context.getAssets(), "fonts/font1.ttf");
 
+
+            var listForDataLoad = ArrayList<()->Unit>()
+            var checkRequaredFieldsForSave = fun():Boolean{
+                var validForSave = true;
+
+                fieldPaterns.forEach {
+                    if(it.requiredForSave){
+                        if(it.field!!.get(it.bindObject) != null){
+                            var value = it.field!!.get(it.bindObject).toString()
+
+                            if(value.isNullOrEmpty()){
+                                validForSave = false;
+                            }
+                            Log.d("",value)
+                        }else{
+                            validForSave = false;
+                        }
+
+                    }
+                }
+                return validForSave;
+            }
+
+            var saveFun = fun(){
+                if(checkRequaredFieldsForSave()){
+                    clazz.getMethod("save").invoke(myLocalObject)
+                }
+            }
+
+
             val viewPagesList: ConcurrentHashMap<Int, ConcurrentHashMap<Int, View>> = ConcurrentHashMap();
             for (field in fields) {
                 fieldNameMap.put(field.name, field);
@@ -70,59 +106,127 @@ class ViewAnnotationParser {
                     val annotation = field.getAnnotation<TextFieldTypeViewAnotation>(TextFieldTypeViewAnotation::class.java)
                     val name = annotation.name
                     val type = annotation.type
+                    val hint = annotation.hint
                     val deffaultValue = annotation.defaultValue
                     val mask = annotation.mask
                     val allowedChars = annotation.allowed_chars
                     val visibilityPater = annotation.visibilityPatern
-                    val view = inflater.inflate(R.layout.text_field, null)
-                    val editText = view.findViewById(R.id.editor) as MaskedEditText
-                    val label = view.findViewById(R.id.label) as TextView
-                    label.text = name
-                    label.typeface = font1
-                    if (!mask.isBlank())
-                        editText.mask = mask
-                    val fieldValue = field.get(myLocalObject)
-                    var valueToSet = deffaultValue;
-                    if (fieldValue != null) {
-                        if (type == "text")
-                            valueToSet = fieldValue as String
-                        if (type == "int")
-                            valueToSet = (fieldValue as Int).toString()
-                    }
-                    editText.setText(valueToSet)
-                    if (type == "int") {
-                        editText.inputType = TYPE_CLASS_NUMBER;
-                    } else {
-                        if (type == "number") {
-                            editText.inputType = InputType.TYPE_CLASS_PHONE
+                    val view: View?
+                    if(hint.isNullOrEmpty()){
+                        view = inflater.inflate(R.layout.text_field, null)
+                        val editText = view.findViewById(R.id.editor) as MaskedEditText
+                        val label = view.findViewById(R.id.label) as TextView
+                        label.text = name
+                        label.typeface = font1
+                        if (!mask.isBlank())
+                            editText.mask = mask
+                        val fieldValue = field.get(myLocalObject)
+                        var valueToSet = deffaultValue;
+                        if (fieldValue != null) {
+                            if (type == "text")
+                                valueToSet = fieldValue as String
+                            if (type == "int"){
+                                var value = fieldValue as Int
+                                if(value!=0){
+                                    valueToSet = (value).toString()
+                                }else{
+                                    valueToSet = ""
+                                }
+
+
+                            }
+
                         }
-                    }
-                    editText.addTextChangedListener(object : TextWatcher {
-
-                        override fun afterTextChanged(s: Editable) {}
-
-                        override fun beforeTextChanged(s: CharSequence, start: Int,
-                                                       count: Int, after: Int) {
-                        }
-
-                        override fun onTextChanged(s: CharSequence, start: Int,
-                                                   before: Int, count: Int) {
-
-
-                            if (type == "text" || type == "number")
-                                field.set(myLocalObject, editText.rawText.toString())
-                            if (type == "int" && !s.isEmpty())
-                                field.set(myLocalObject, editText.rawText.toString().toInt())
-                            if (autoSave) {
-                                clazz.getMethod("save").invoke(myLocalObject)
+                        editText.setText(valueToSet)
+                        if (type == "int") {
+                            editText.inputType = TYPE_CLASS_NUMBER;
+                        } else {
+                            if (type == "number") {
+                                editText.inputType = InputType.TYPE_CLASS_PHONE
                             }
                         }
-                    })
+                        editText.addTextChangedListener(object : TextWatcher {
+
+                            override fun afterTextChanged(s: Editable) {}
+
+                            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                                           count: Int, after: Int) {
+                            }
+
+                            override fun onTextChanged(s: CharSequence, start: Int,
+                                                       before: Int, count: Int) {
+
+
+                                if (type == "text" || type == "number")
+                                    field.set(myLocalObject, editText.rawText.toString())
+                                if (type == "int" && !s.isEmpty())
+                                    field.set(myLocalObject, editText.rawText.toString().toInt())
+                                if (autoSave) {
+                                    saveFun()
+                                }
+                            }
+                        })
+                    }else{
+                        view = inflater.inflate(R.layout.text_field_hint, null)
+                        val editText = view.findViewById(R.id.editor2) as EditText
+                        val label = view.findViewById(R.id.label) as TextView
+                        editText.setHint(hint)
+                        label.text = name
+                        label.typeface = font1
+                        val fieldValue = field.get(myLocalObject)
+                        var valueToSet = deffaultValue;
+                        if (fieldValue != null) {
+                            if (type == "text")
+                                valueToSet = fieldValue as String
+                            if (type == "int"){
+                                var value = fieldValue as Int
+                                if(value!=0){
+                                    valueToSet = (value).toString()
+                                }else{
+                                    valueToSet = ""
+                                }
+
+
+                            }
+
+                        }
+                        editText.setText(valueToSet)
+                        if (type == "int") {
+                            editText.inputType = TYPE_CLASS_NUMBER;
+                        } else {
+                            if (type == "number") {
+                                editText.inputType = InputType.TYPE_CLASS_PHONE
+                            }
+                        }
+                        editText.addTextChangedListener(object : TextWatcher {
+
+                            override fun afterTextChanged(s: Editable) {}
+
+                            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                                           count: Int, after: Int) {
+                            }
+
+                            override fun onTextChanged(s: CharSequence, start: Int,
+                                                       before: Int, count: Int) {
+
+
+                                if (type == "text" || type == "number")
+                                    field.set(myLocalObject, editText.text.toString())
+                                if (type == "int" && !s.isEmpty())
+                                    field.set(myLocalObject, editText.text.toString().toInt())
+                                if (autoSave) {
+                                    saveFun()
+                                }
+                            }
+                        })
+                    }
+
                     var viewFieldHolder = ViewFieldHolder();
                     viewFieldHolder.bindObject = myLocalObject;
                     viewFieldHolder.field = field;
                     viewFieldHolder.view = view
                     viewFieldHolder.paterns = visibilityPater
+                    viewFieldHolder.requiredForSave = annotation.requiredForSave
                     fieldPaterns.add(viewFieldHolder)
                     viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
                     viewPagesList.get(annotation.page)!!.put(annotation.position, view);
@@ -190,7 +294,7 @@ class ViewAnnotationParser {
 
                             field.set(myLocalObject,date)
 
-                            clazz.getMethod("save").invoke(myLocalObject)
+                            saveFun()
 
                             button.setText( sdf.format(date))
 
@@ -217,20 +321,37 @@ class ViewAnnotationParser {
                     val isMethod = annotation.isMethod
                     val type = annotation.type
                     val filter = annotation.filterWith;
+                    val filterWithField = annotation.filterWithField.split(":")
+
+                    var filterObject: String = ""
+
+                    var filterField: String = ""
+
+                    var filterFieldMy: String = ""
+
+                    if(filterWithField.size == 3){
+                        filterObject = filterWithField[0]
+                        filterField = filterWithField[1]
+                        filterFieldMy = filterWithField[2]
+                    }
+
+
 
                     val sqlData = annotation.sqlData
                     val canAddToDb = annotation.canAddToDb
-                    if (type == "comboBox") {
+                    if (type == "comboBox")  {
                         var view = inflater.inflate(R.layout.combobox_with_button, null)
                         //
                         // val spinner = view.findViewById(R.id.spinner) as Spinner
                         //val spinner2 = view.findViewById(R.id.spinner2) as SearchableSpinner
 
-                        val choose = view.findViewById(R.id.chooseDialogBtn) as TextView
+                        val btn = view.findViewById(R.id.editBtn) as EditText
 
-                        choose.typeface = font1
+                       // val choose = view.findViewById(R.id.chooseDialogBtn) as TextView
 
-                        val dropdown = view.findViewById(R.id.chooserOpen) as FancyButton
+                        //choose.typeface = font1
+
+                        //val dropdown = view.findViewById(R.id.chooserOpen) as FancyButton
 
                         val updaterUUID = UUID.randomUUID().toString()
                         var adapter: ReflectionAdapterAdapter? = null
@@ -266,6 +387,10 @@ class ViewAnnotationParser {
 
                                 val filterText = dialogBody.findViewById(R.id.filterField) as EditText
 
+                                if(dataToLoad!!.size<5){
+                                    filterText.visibility = View.GONE
+                                }
+
 
                                 var filterString = "";
                                 val builder = AlertDialog.Builder(pager.context).setTitle(annotation.name).setView(dialogBody).create()
@@ -273,11 +398,23 @@ class ViewAnnotationParser {
                                 val fillList = fun() {
 
 
-                                    val filteredList = dataToLoad!!.filter {
-
+                                    var filteredList = dataToLoad!!.filter {
                                         (field.type.getMethod(displayField).invoke(it) as String).contains(filterString)
+                                    }
+                                    if(filterWithField.size == 3){
+
+                                        try{
+                                            filteredList = filteredList.filter {
+                                                val val1 = field.type.getField(filterField).get((it)).toString();
+                                                val val2 = clazz.getField(filterObject).type.getField(filterField).get(clazz.getField(filterObject).get(bindObject)).toString()
+                                                val1 == val2
+                                            }
+                                        }catch (e:Exception){
+                                            e.printStackTrace()
+                                        }
 
                                     }
+
 
                                     adapter = ReflectionAdapterAdapter(filteredList, pager.context, displayField, isMethod, field.type, 20f)
 
@@ -290,12 +427,12 @@ class ViewAnnotationParser {
 
                                         val value = field.type.getMethod(displayField).invoke(dataToLoad!!.get(position)) as String
 
-                                        choose.text = value
+                                        btn.setText(value)
 
                                         visibilityCheck(fieldPaterns, fieldNameMap, bindObject)
 
                                         if (autoSave) {
-                                            clazz.getMethod("save").invoke(bindObject)
+                                            saveFun()
                                         }
                                         builder.hide()
                                     }
@@ -324,13 +461,11 @@ class ViewAnnotationParser {
                                 builder.show();
                             }
 
-                            choose.setOnClickListener {
+                            btn.setOnClickListener {
 
                                 chooserFunction();
                             }
-                            dropdown.setOnClickListener {
-                                chooserFunction();
-                            }
+
 
 
                             //   val kadapter = ArrayAdapter<String>(pager.context,android.R.layout.simple_list_item_1,list)
@@ -350,7 +485,7 @@ class ViewAnnotationParser {
                                 if (indexOfObject >= 0) {
                                     try {
                                         var value = field.type.getMethod(displayField).invoke(dataToLoad!!.get(indexOfObject)) as String
-                                        choose.text = value
+                                        btn.setText(value)
 
                                     } catch (e: Exception) {
                                         e.printStackTrace()
@@ -420,6 +555,7 @@ class ViewAnnotationParser {
                         viewFieldHolder.bindObject = myLocalObject;
                         viewFieldHolder.field = field;
                         viewFieldHolder.view = view
+                        //viewFieldHolder.requiredForSave = annotation.requiredForSave
                         viewFieldHolder.paterns = annotation.visibilityPatern
                         fieldPaterns.add(viewFieldHolder)
                         viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
@@ -488,17 +624,29 @@ class ViewAnnotationParser {
 
                     }
                     StaticData.comboBoxUpdateFunctions.put(updaterUUID, func)
-                    func()
+
+                    listForDataLoad.add(func)
+
+
 
                     addBtn.setOnClickListener {
-                        var joinId = (clazz.getMethod("getId").invoke(myLocalObject) as Long)
-                        val ctor = listClass.getConstructor()
-                        var objectItemToSave = ctor.newInstance()
-                        val joinClassName: Class<*> = clazz as Class<*>
-                        val joinFieldName: String = joinField
-                        var joinObject = joinClassName.getMethod("getById", Long::class.java).invoke(null, joinId)
-                        listClass.getField(joinFieldName).set(objectItemToSave, joinObject)
-                        listClass.getMethod("save").invoke(objectItemToSave)
+
+                        if(checkRequaredFieldsForSave()){
+                            saveFun()
+                            var joinId = (clazz.getMethod("getId").invoke(myLocalObject) as Long)
+                            val ctor = listClass.getConstructor()
+                            var objectItemToSave = ctor.newInstance()
+                            val joinClassName: Class<*> = clazz as Class<*>
+                            val joinFieldName: String = joinField
+                            var joinObject = joinClassName.getMethod("getById", Long::class.java).invoke(null, joinId)
+                            listClass.getField(joinFieldName).set(objectItemToSave, joinObject)
+                            listClass.getMethod("save").invoke(objectItemToSave)
+                        }else{
+                            Snackbar.make(pager, "შეავსეთ სავალდებულო ველები!", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show()
+                        }
+
+
 
 
                         func();
@@ -551,99 +699,112 @@ class ViewAnnotationParser {
 
                         var listAdapter: ReflectionAdapterAdapter? = null
                         val func = fun() {
-                            val method = listClass.getMethod("findby" + joinField, Long::class.java)
-                            val dataToLoad = method.invoke(null, (clazz.getMethod("getId").invoke(bindObject) as Long)) as ArrayList<Any>
-                            //dataOfField.addAll(dataToLoad)
-                            listAdapter = ReflectionAdapterAdapter(dataToLoad, pager.context, displayField, isMethod, listClass, 20f)
-                            /*     listView.adapter = listAdapter
-                                 listView.setOnTouchListener { v, event ->
-                                     val action = event.action
-                                     when (action) {
-                                         MotionEvent.ACTION_DOWN ->
-                                             // Disallow ScrollView to intercept touch events.
-                                             v.parent.requestDisallowInterceptTouchEvent(true)
+                            if(checkRequaredFieldsForSave()){
+                                saveFun()
+                                val method = listClass.getMethod("findby" + joinField, Long::class.java)
+                                val dataToLoad = method.invoke(null, (clazz.getMethod("getId").invoke(bindObject) as Long)) as ArrayList<Any>
+                                //dataOfField.addAll(dataToLoad)
+                                listAdapter = ReflectionAdapterAdapter(dataToLoad, pager.context, displayField, isMethod, listClass, 20f)
+                                /*     listView.adapter = listAdapter
+                                     listView.setOnTouchListener { v, event ->
+                                         val action = event.action
+                                         when (action) {
+                                             MotionEvent.ACTION_DOWN ->
+                                                 // Disallow ScrollView to intercept touch events.
+                                                 v.parent.requestDisallowInterceptTouchEvent(true)
 
-                                         MotionEvent.ACTION_UP ->
-                                             // Allow ScrollView to intercept touch events.
-                                             v.parent.requestDisallowInterceptTouchEvent(false)
-                                     }
+                                             MotionEvent.ACTION_UP ->
+                                                 // Allow ScrollView to intercept touch events.
+                                                 v.parent.requestDisallowInterceptTouchEvent(false)
+                                         }
 
-                                     // Handle ListView touch events.
-                                     v.onTouchEvent(event)
-                                 }*/
+                                         // Handle ListView touch events.
+                                         v.onTouchEvent(event)
+                                     }*/
 
-                            if (list != null) {
-                                list!!.adapter = listAdapter
+                                if (list != null) {
+                                    list!!.adapter = listAdapter
+                                }
+                                fieldValue.setText("${dataToLoad.size}")
                             }
-                            fieldValue.setText("${dataToLoad.size}")
-
                         }
 
+                        listForDataLoad.add (func)
 
-                        func()
+
+
 
                         addBtn.setOnClickListener {
-                            var dialogBody = inflater.inflate(R.layout.multifieldviewandadd, null);
 
-                            val builder = AlertDialog.Builder(pager.context).setTitle(annotation.name).setView(dialogBody).create()
-                            val addToListButton = dialogBody.findViewById(R.id.addBtn) as FancyButton
-                            list = dialogBody.findViewById(R.id.listView) as ListView
-                            list!!.adapter = listAdapter
+                            if(checkRequaredFieldsForSave()){
+                                saveFun()
+                                var dialogBody = inflater.inflate(R.layout.multifieldviewandadd, null);
 
-                            addToListButton.setCustomTextFont("fonts/font1.ttf")
-                            addToListButton.setOnClickListener {
-                                val intent = Intent(pager.context, DataFillActivity::class.java)
+                                val builder = AlertDialog.Builder(pager.context).setTitle(annotation.name).setView(dialogBody).create()
+                                val addToListButton = dialogBody.findViewById(R.id.addBtn) as FancyButton
+                                list = dialogBody.findViewById(R.id.listView) as ListView
+                                list!!.adapter = listAdapter
 
-                                intent.putExtra("updaterUUID", updaterUUID)
-
-                                var joinId = (clazz.getMethod("getId").invoke(myLocalObject) as Long)
-                                intent.putExtra("class", listClass)
-                                intent.putExtra("joinClass", clazz)
-
-                                intent.putExtra("autosave", false)
-                                intent.putExtra("joinId", joinId)
-                                intent.putExtra("joinField", joinField)
-
-                                pager.context.startActivity(intent)
-                            }
-                            list!!.setOnItemClickListener { parent, view, position, id ->
-
-                                var dialogBody2 = inflater.inflate(R.layout.sub_list_prompt_layout, null);
-
-                                val builder2 = AlertDialog.Builder(pager.context).setTitle("მოქმედება").setView(dialogBody2).create()
-
-                                (dialogBody2.findViewById(R.id.cancelButton) as Button).setOnClickListener {
-                                    builder2.hide()
-                                }
-                                (dialogBody2.findViewById(R.id.deleteButton) as Button).setOnClickListener {
-                                    var item = listAdapter!!.dataList.get(position)
-                                    listClass.getMethod("delete").invoke(item)
-                                    func();
-                                    builder2.hide()
-                                }
-                                (dialogBody2.findViewById(R.id.editButton) as Button).setOnClickListener {
-                                    val item = listAdapter!!.dataList.get(position)
-
-                                    val currentId = listClass.getMethod("getId").invoke(item) as Long
+                                addToListButton.setCustomTextFont("fonts/font1.ttf")
+                                addToListButton.setOnClickListener {
                                     val intent = Intent(pager.context, DataFillActivity::class.java)
-                                    intent.putExtra("class", listClass)
 
                                     intent.putExtra("updaterUUID", updaterUUID)
-                                    intent.putExtra("id", currentId)
+
+                                    var joinId = (clazz.getMethod("getId").invoke(myLocalObject) as Long)
+                                    intent.putExtra("class", listClass)
+                                    intent.putExtra("joinClass", clazz)
+
+                                    intent.putExtra("autosave", false)
+                                    intent.putExtra("joinId", joinId)
+                                    intent.putExtra("joinField", joinField)
+
                                     pager.context.startActivity(intent)
-                                    builder2.hide()
+                                }
+                                list!!.setOnItemClickListener { parent, view, position, id ->
+
+                                    var dialogBody2 = inflater.inflate(R.layout.sub_list_prompt_layout, null);
+
+                                    val builder2 = AlertDialog.Builder(pager.context).setTitle("მოქმედება").setView(dialogBody2).create()
+
+                                    (dialogBody2.findViewById(R.id.cancelButton) as Button).setOnClickListener {
+                                        builder2.hide()
+                                    }
+                                    (dialogBody2.findViewById(R.id.deleteButton) as Button).setOnClickListener {
+                                        var item = listAdapter!!.dataList.get(position)
+                                        listClass.getMethod("delete").invoke(item)
+                                        func();
+                                        builder2.hide()
+                                    }
+                                    (dialogBody2.findViewById(R.id.editButton) as Button).setOnClickListener {
+                                        val item = listAdapter!!.dataList.get(position)
+
+                                        val currentId = listClass.getMethod("getId").invoke(item) as Long
+                                        val intent = Intent(pager.context, DataFillActivity::class.java)
+                                        intent.putExtra("class", listClass)
+
+                                        intent.putExtra("updaterUUID", updaterUUID)
+                                        intent.putExtra("id", currentId)
+                                        pager.context.startActivity(intent)
+                                        builder2.hide()
+
+                                    }
+                                    builder2.show()
 
                                 }
-                                builder2.show()
 
+
+
+
+
+
+                                builder.show();
+                            }else{
+                                Snackbar.make(pager, "შეავსეთ სავალდებულო ველები!", Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null).show()
                             }
 
 
-
-
-
-
-                            builder.show();
                         }
                         //
                         StaticData.comboBoxUpdateFunctions.put(updaterUUID, func)
@@ -669,42 +830,96 @@ class ViewAnnotationParser {
 
                         if(annotation.objectType == "loan"){
                             var dataToLoad = method.invoke(null) as List<Loan>
-                            dataToLoad.forEach {
+
+                            if(annotation.filter.equals("1")){
+                                dataToLoad.filter { loan -> loan.sent }.forEach {
+
+                                    val globalIt = it;
+
+                                    var  item = inflater.inflate(R.layout.loan_item_view, null, false)
 
 
 
+                                    var user = item.findViewById(R.id.nameSurname) as FancyButton
+                                    var status = item.findViewById(R.id.status) as FancyButton
+                                    var product = item.findViewById(R.id.productSum) as FancyButton
 
-                                val globalIt = it;
-
-                                var  item = inflater.inflate(R.layout.loan_item_view, null, false)
-
+                                    user.setOnClickListener {
+                                        val intent = Intent(pager.context, sent_loan_page::class.java)
 
 
-                                var user = item.findViewById(R.id.nameSurname) as FancyButton
-                                var status = item.findViewById(R.id.status) as FancyButton
-                                var product = item.findViewById(R.id.productSum) as FancyButton
+                                        //intent.putExtra("updaterUUID", uuid)
+                                        intent.putExtra("id", globalIt.id)
+                                        pager.context.startActivity(intent)
+                                    }
 
-                                user.setOnClickListener {
-                                    val intent = Intent(pager.context, DataFillActivity::class.java)
-                                    intent.putExtra("class", Loan::class.java)
+                                    if(it.person!= null)
+                                        user.setText( it.person.fullName()+" "+(if(it.person.personalNumber!=null)it.person.personalNumber else ""))
+                                    status.setText(it.getStatus())
+                                    status.setOnClickListener {
+                                        val dialog = ACProgressFlower.Builder(pager.getContext())
+                                                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                                                .themeColor(Color.WHITE)
+                                                .text("გადამოწმება")
+                                                .fadeColor(Color.DKGRAY).build()
+                                        dialog.show()
+                                        OnlineData.syncLoanStatus(globalIt, Action1 {
+                                            val loanStatus = it.data.errorMessage
+                                            globalIt.status = loanStatus
+                                            globalIt.save()
+                                            status.setText(globalIt.getStatus())
+                                            dialog.hide()
+                                        })
+                                    }
+                                    var pString = "";
+                                    if(it.product!=null){
+                                        pString+=it.product.product+" "
+                                    }
+                                    pString+=it.loanSum;
 
-                                    //intent.putExtra("updaterUUID", uuid)
-                                    intent.putExtra("id", globalIt.id)
-                                    pager.context.startActivity(intent)
+                                    product.setText(pString)
+
+                                    view.addView(item)
                                 }
+                            }
+                            if(annotation.filter.equals("2")){
+                                dataToLoad.filter { loan -> !loan.sent }.forEach {
 
-                                if(it.person!= null)
-                                    user.setText( it.person.fullName()+" "+(if(it.person.personalNumber!=null)it.person.personalNumber else ""))
-                                status.setText(it.status)
-                                var pString = "";
-                                if(it.product!=null){
-                                    pString+=it.product.product+" "
+                                    val globalIt = it;
+
+                                    var  item = inflater.inflate(R.layout.loan_item_view, null, false)
+
+
+
+                                    var user = item.findViewById(R.id.nameSurname) as FancyButton
+                                    var status = item.findViewById(R.id.status) as FancyButton
+                                    var product = item.findViewById(R.id.productSum) as FancyButton
+
+                                    user.setOnClickListener {
+                                        val intent = Intent(pager.context, DataFillActivity::class.java)
+                                        intent.putExtra("class", Loan::class.java)
+
+                                        //intent.putExtra("updaterUUID", uuid)
+                                        intent.putExtra("id", globalIt.id)
+                                        pager.context.startActivity(intent)
+                                    }
+
+                                    if(it.person!= null)
+                                        user.setText( it.person.fullName()+" "+(if(it.person.personalNumber!=null)it.person.personalNumber else ""))
+                                    status.setText(it.getStatus())
+                                    status.setOnClickListener {
+
+                                    }
+                                    var pString = "";
+                                    if(it.product!=null){
+                                        pString+=it.product.product+" "
+                                    }
+                                    pString+=it.loanSum;
+
+                                    product.setText(pString)
+
+                                    view.addView(item)
                                 }
-                                pString+=it.loanSum;
-
-                                product.setText(pString)
-
-                                view.addView(item)
                             }
                         }
 
@@ -750,7 +965,7 @@ class ViewAnnotationParser {
                         field.set(myLocalObject, isChecked)
                         visibilityCheck(fieldPaterns, fieldNameMap, myLocalObject)
                         if (autoSave) {
-                            clazz.getMethod("save").invoke(myLocalObject)
+                            saveFun()
                         }
                     })
                     viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
@@ -855,22 +1070,25 @@ class ViewAnnotationParser {
 
             }
 
+            listForDataLoad.forEach {
+                it()
+            }
 
             return viewPagesList
         }
 
 
     }
-
+    public val fieldPaterns = ArrayList<ViewFieldHolder>()
 
     fun parse(clazz: Class<*>, bindObject: Any, onSave: View.OnClickListener?,
-              saveText: String, autoSave: Boolean, fragmentManager: FragmentManager, pager: ViewPager, tabs: PagerSlidingTabStrip,saveVisible:Boolean = true) {
+              saveText: String, autoSave: Boolean, fragmentManager: FragmentManager, pager: ViewPager, tabs: PagerSlidingTabStrip, saveVisible: Boolean = true) {
 
 
         var inflater = LayoutInflater.from(pager.context)
         val fields = clazz.fields
         val annotation = clazz.getAnnotation<ParserClassAnnotation>(ParserClassAnnotation::class.java)
-        val fieldPaterns = ArrayList<ViewFieldHolder>()
+
         val fieldNameMap = HashMap<String, Field>()
         var titles = arrayOf("მთავარი")
         if (annotation.cols.isNotEmpty()) {
@@ -906,7 +1124,7 @@ class ViewAnnotationParser {
         pager.currentItem = 0
 
 
-        if (onSave != null&&saveVisible) {
+        if (onSave != null&&saveVisible&&!autoSave) {
 
 
             val saveButton = FancyButton(pager.context)

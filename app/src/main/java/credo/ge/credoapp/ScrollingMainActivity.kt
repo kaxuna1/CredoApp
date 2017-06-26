@@ -84,13 +84,13 @@ class ScrollingMainActivity : CredoExtendActivity() {
         fab.setOnClickListener { view ->
             syncData(view)
         }
-        layout = findViewById(R.id.mainlinear) as LinearLayout
+        //layout = findViewById(R.id.mainlinear) as LinearLayout
         progressDialog = ProgressDialog(this)
         var activity = this
 
-        addLoanBtn!!.setOnClickListener {
+        addloan!!.setOnClickListener {
             if (checkSync()) {
-                Snackbar.make(buttonAutoCheck, "სინქრონიზაცია აუცილებელია", Snackbar.LENGTH_LONG)
+                Snackbar.make(buttonAutoCheck2, "სინქრონიზაცია აუცილებელია", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show()
                 return@setOnClickListener
             }
@@ -101,7 +101,7 @@ class ScrollingMainActivity : CredoExtendActivity() {
         }
         loans!!.setOnClickListener {
             if (checkSync()) {
-                Snackbar.make(buttonAutoCheck, "სინქრონიზაცია აუცილებელია", Snackbar.LENGTH_LONG)
+                Snackbar.make(buttonAutoCheck2, "სინქრონიზაცია აუცილებელია", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show()
                 return@setOnClickListener
             }
@@ -110,9 +110,9 @@ class ScrollingMainActivity : CredoExtendActivity() {
             intent.putExtra("nameFieldMethodName", "getName")
             startActivity(intent)
         }
-        persons!!.setOnClickListener {
+        clients2!!.setOnClickListener {
             if(checkSync()){
-                Snackbar.make(buttonAutoCheck, "სინქრონიზაცია აუცილებელია", Snackbar.LENGTH_LONG)
+                Snackbar.make(buttonAutoCheck2, "სინქრონიზაცია აუცილებელია", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show()
                 return@setOnClickListener
             }
@@ -121,9 +121,9 @@ class ScrollingMainActivity : CredoExtendActivity() {
             intent.putExtra("nameFieldMethodName", "fullName")
             startActivity(intent)
         }
-        buttonAddPerson.setOnClickListener {
+        addClient.setOnClickListener {
             if (checkSync()) {
-                Snackbar.make(buttonAutoCheck, "სინქრონიზაცია აუცილებელია", Snackbar.LENGTH_LONG)
+                Snackbar.make(buttonAutoCheck2, "სინქრონიზაცია აუცილებელია", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show()
                 return@setOnClickListener
             }
@@ -133,11 +133,11 @@ class ScrollingMainActivity : CredoExtendActivity() {
             startActivity(intent)
         }
 
-        buttonAutoCheck.setOnClickListener {
+        buttonAutoCheck2.setOnClickListener {
 
 
             if (checkSync()) {
-                Snackbar.make(buttonAutoCheck, "სინქრონიზაცია აუცილებელია", Snackbar.LENGTH_LONG)
+                Snackbar.make(buttonAutoCheck2, "სინქრონიზაცია აუცილებელია", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show()
                 return@setOnClickListener
             }
@@ -148,7 +148,7 @@ class ScrollingMainActivity : CredoExtendActivity() {
                     R.anim.trans_left_out)
 
         }
-        loansComplete!!.setOnClickListener {
+        loans!!.setOnClickListener {
            /* Snackbar.make(buttonAutoCheck, "კოორდინატები ${location.longitude}:${location.latitude}", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()*/
 
@@ -188,8 +188,14 @@ class ScrollingMainActivity : CredoExtendActivity() {
             LoanOficer.deleteAll(LoanOficer::class.java)
             Product.deleteAll(Product::class.java)
             Purpose.deleteAll(Purpose::class.java)
+            PurposeType.deleteAll(Purpose::class.java)
             Vilage.deleteAll(Vilage::class.java)
             Dictionary.deleteAll(Dictionary::class.java)
+            Loan.deleteAll(Loan::class.java)
+            Person.deleteAll(Person::class.java)
+            FamilyPerson.deleteAll(FamilyPerson::class.java)
+
+
             var k = it
             var branches = ArrayList<Branch>();
             val consuls = ArrayList<VilageCounsel>();
@@ -197,6 +203,7 @@ class ScrollingMainActivity : CredoExtendActivity() {
             val oficers = ArrayList<LoanOficer>();
             val products = ArrayList<Product>();
             val purposes = ArrayList<Purpose>();
+            val purposesTypes = ArrayList<PurposeType>();
             val vilages = ArrayList<Vilage>();
             val dictionaries = ArrayList<Dictionary>();
 
@@ -218,6 +225,9 @@ class ScrollingMainActivity : CredoExtendActivity() {
             it.data.syncModel.purposes.forEach {
                 purposes.add(Purpose(it))//.save()
             }
+            it.data.syncModel.purposesTypes.forEach {
+                purposesTypes.add(PurposeType(it))//.save()
+            }
             it.data.syncModel.villages.forEach {
                 vilages.add(Vilage(it))//.save()
             }
@@ -232,6 +242,7 @@ class ScrollingMainActivity : CredoExtendActivity() {
             SugarRecord.saveInTx(oficers)
             SugarRecord.saveInTx(products)
             SugarRecord.saveInTx(purposes)
+            SugarRecord.saveInTx(purposesTypes)
             SugarRecord.saveInTx(vilages)
             SugarRecord.saveInTx(dictionaries)
 

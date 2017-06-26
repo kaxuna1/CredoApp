@@ -1,18 +1,13 @@
 package credo.ge.credoapp
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import credo.ge.credoapp.anotations.ViewAnnotationParser
 import credo.ge.credoapp.views.CredoExtendActivity
 import kotlinx.android.synthetic.main.activity_data_fill.*
-import android.content.Context.LOCATION_SERVICE
-import android.location.LocationManager
-import android.location.LocationListener
+import android.support.design.widget.Snackbar
 import android.util.Log
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.location.LocationServices
 
 
 class DataFillActivity : CredoExtendActivity() {
@@ -27,17 +22,18 @@ class DataFillActivity : CredoExtendActivity() {
             }
         }
     }
-
+    var parser: ViewAnnotationParser?=null
     var updaterUUID: String? = ""
+
+    var autoSave: Boolean = false
+    var savedNotification:Snackbar? = null;
 
     internal var layout: LinearLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_data_fill)
-
-
-//        layout = findViewById(R.id.linearFormPlace) as LinearLayout
+        //layout = findViewById(R.id.linearFormPlace) as LinearLayout
         val extras = intent.extras
         val classname: Class<*> = extras.getSerializable("class") as Class<*>
 
@@ -46,7 +42,8 @@ class DataFillActivity : CredoExtendActivity() {
 
         updaterUUID = extras.getString("updaterUUID")
 
-        val autoSave = extras.getBoolean("autosave")
+
+        autoSave = extras.getBoolean("autosave")
 
         val hideSave = extras.getBoolean("hideSave")
 
@@ -64,8 +61,9 @@ class DataFillActivity : CredoExtendActivity() {
             var joinObject = joinClassName.getMethod("getById", Long::class.java).invoke(null, joinId)
             classname.getField(joinFieldName).set(bindObject, joinObject)
         }
-        if (autoSave)
-            classname.getMethod("save").invoke(bindObject)
+        /*    if (autoSave)
+                classname.getMethod("save").invoke(bindObject)*/
+
 
 
         tabs.setBackgroundColor(resources.getColor(R.color.colorPrimary));
@@ -73,7 +71,9 @@ class DataFillActivity : CredoExtendActivity() {
         tabs.setUnderlineColor(getResources().getColor(R.color.white));
         tabs.setIndicatorColor(getResources().getColor(R.color.white));
 
-        ViewAnnotationParser().parse(classname, bindObject, View.OnClickListener {
+
+        parser = ViewAnnotationParser()
+        parser!!.parse(classname, bindObject, View.OnClickListener {
 
 
             classname.getMethod("save").invoke(bindObject)
@@ -82,12 +82,49 @@ class DataFillActivity : CredoExtendActivity() {
                 func()
             }
             finish()
-        }, "შენახვა", true, supportFragmentManager, pager, tabs,!hideSave);
+        }, "შენახვა", autoSave, supportFragmentManager, pager, tabs, !hideSave)
 
 
         backBtn.setOnClickListener {
             finish()
         }
+
+
+    }
+
+    override fun onBackPressed() {
+        var validForSave = true;
+        if(parser!=null){
+            parser!!.fieldPaterns.forEach {
+                if(it.requiredForSave){
+                    if(it.field!!.get(it.bindObject) != null){
+                        var value = it.field!!.get(it.bindObject).toString()
+
+                        if(value.isNullOrEmpty()){
+                            validForSave = false;
+                        }
+                        Log.d("",value)
+                    }else{
+                        validForSave = false;
+                    }
+
+                }
+            }
+        }
+        if(validForSave&&autoSave){
+
+        Snackbar.make(pager, "მიმდინარეობს ცვლილებების შენახვა", Snackbar.LENGTH_LONG)
+                .setAction("Action", null)
+            android.os.Handler().postDelayed(
+                    {
+                        super.onBackPressed()
+                    },
+                    1000)
+        }else{
+            super.onBackPressed()
+        }
+
+
 
 
     }

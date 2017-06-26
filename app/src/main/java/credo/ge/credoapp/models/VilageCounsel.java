@@ -46,4 +46,9 @@ public class VilageCounsel extends SugarRecord<VilageCounsel> {
     public void setVillageId(int villageId) {
         this.villageId = villageId;
     }
+
+    @Override
+    public String toString() {
+        return consul;
+    }
 }

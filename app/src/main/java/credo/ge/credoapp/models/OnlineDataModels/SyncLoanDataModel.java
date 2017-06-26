@@ -5,8 +5,8 @@ package credo.ge.credoapp.models.OnlineDataModels;
  */
 
 public class SyncLoanDataModel {
-    boolean success;
-    String errorMessage;
-    String LoanID;
-    String PersonID;
+    public boolean success;
+    public String errorMessage;
+    public int loanID;
+    public int personID;
 }

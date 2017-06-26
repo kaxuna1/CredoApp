@@ -109,6 +109,7 @@ class AutoCheckActivity : AppCompatActivity() {
                         Toast.makeText(me, "Orientation Change End", Toast.LENGTH_SHORT).show();
                     }
                 });
+
                 //
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if(Settings.canDrawOverlays(this)){

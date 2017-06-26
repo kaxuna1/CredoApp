@@ -70,7 +70,7 @@ class data_list_activity : CredoExtendActivity() {
                 val currentId = classname.getMethod("getId").invoke(item) as Long
                 val intent = Intent(applicationContext, DataFillActivity::class.java)
                 intent.putExtra("class", classname)
-
+                intent.putExtra("autosave",true)
                 intent.putExtra("updaterUUID", uuid)
                 intent.putExtra("id", currentId)
                 applicationContext.startActivity(intent)

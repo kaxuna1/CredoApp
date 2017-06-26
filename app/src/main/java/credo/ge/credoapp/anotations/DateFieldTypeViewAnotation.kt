@@ -8,4 +8,4 @@ import java.lang.annotation.RetentionPolicy
  */
 @Target(AnnotationTarget.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-annotation class DateFieldTypeViewAnotation (val name:String, val page:Int=0,val position:Int)
+annotation class DateFieldTypeViewAnotation (val name:String, val requiredForSave: Boolean = false, val page:Int=0,val position:Int)

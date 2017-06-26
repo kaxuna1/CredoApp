@@ -43,6 +43,7 @@ public class StaticJava {
         AutoCheckService downloadService = createService(AutoCheckService.class, "http://109.238.225.188:8081/");
 
 
+
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + token);
 

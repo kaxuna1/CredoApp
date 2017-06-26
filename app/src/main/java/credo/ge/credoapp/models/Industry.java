@@ -16,6 +16,8 @@ public class Industry extends SugarRecord<Industry>{
 
     public int serverId;
 
+    public int sectorId;
+
     public String getName() {
         return industry;
     }
@@ -24,6 +26,7 @@ public class Industry extends SugarRecord<Industry>{
     public Industry(IndustryAdapter adapterItem){
         this.industry=adapterItem.industry;
         this.serverId=adapterItem.id;
+        this.sectorId=adapterItem.sectorId;
     }
 
 
