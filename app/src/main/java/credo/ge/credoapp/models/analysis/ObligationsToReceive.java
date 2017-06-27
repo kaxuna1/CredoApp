@@ -12,7 +12,7 @@ import credo.ge.credoapp.models.Person;
  * Created by kaxge on 6/8/2017.
  */
 
-public class ObligationsToReceive extends SugarRecord<ObligationsToReceive> {
+public class ObligationsToReceive extends SugarRecord {
     @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "",type = "text", position = 1)
     public String comment="";
     @TextFieldTypeViewAnotation(name = "თანხა", defaultValue = "1",type = "int", position = 2)

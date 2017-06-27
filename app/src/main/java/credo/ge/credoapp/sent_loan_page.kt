@@ -9,6 +9,9 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import credo.ge.credoapp.models.Loan
+import android.content.Intent
+
+
 
 class sent_loan_page : AppCompatActivity() {
 
@@ -39,20 +42,21 @@ class sent_loan_page : AppCompatActivity() {
         linear.addView(txt3)
 
         val txt4 = TextView(applicationContext)
-        txt4.text = loan.person.fullName()
+        txt4.text = "სესხის თანხა: ${loan.amount}"
         linear.addView(txt4)
 
         val txt5 = TextView(applicationContext)
-        txt5.text = loan.person.fullName()
+        txt5.text = "სესხის ვალუტა: ${loan.currency.name}"
         linear.addView(txt5)
 
         val txt6 = TextView(applicationContext)
-        txt6.text = loan.person.fullName()
+        txt6.text = "სესხის ვადა: ${loan.loanDuration}"
         linear.addView(txt6)
 
         val txt7 = TextView(applicationContext)
-        txt7.text = loan.person.fullName()
+        txt7.text = "სესხის თანხა: ${loan.amount}"
         linear.addView(txt7)
+/*
 
         val txt8 = TextView(applicationContext)
         txt8.text = loan.person.fullName()
@@ -61,6 +65,7 @@ class sent_loan_page : AppCompatActivity() {
         val txt9 = TextView(applicationContext)
         txt9.text = loan.person.fullName()
         linear.addView(txt9)
+*/
 
 
 
@@ -73,6 +78,16 @@ class sent_loan_page : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
+    }
+
+    override fun onBackPressed() {
+        val startMain = Intent(this,ScrollingMainActivity::class.java)
+        startMain.addCategory(Intent.CATEGORY_HOME)
+        startMain.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startMain.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        startMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+        startActivity(startMain)
     }
 
 }

@@ -12,7 +12,7 @@ import credo.ge.credoapp.models.Dictionary;
  * Created by kaxge on 6/9/2017.
  */
 
-public class LongObligation extends SugarRecord<LongObligation> {
+public class LongObligation extends SugarRecord {
     @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "",type = "text", position = 1)
     public String comment="";
     @TextFieldTypeViewAnotation(name = "თანხა", defaultValue = "1",type = "int", position = 2)

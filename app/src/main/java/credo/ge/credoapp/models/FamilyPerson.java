@@ -14,7 +14,7 @@ import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
  * Created by vakhtanggelashvili on 5/1/17.
  */
 @ParserClassAnnotation
-public class FamilyPerson extends SugarRecord<FamilyPerson> {
+public class FamilyPerson extends SugarRecord {
     @ObjectFieldTypeViewAnotation(name = "კავშირი",
             displayField = "getName",
             isMethod = true,

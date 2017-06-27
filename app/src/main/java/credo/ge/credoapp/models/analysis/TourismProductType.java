@@ -15,7 +15,7 @@ import credo.ge.credoapp.models.Loan;
  * Created by kaxge on 5/23/2017.
  */
 @ParserClassAnnotation
-public class TourismProductType extends SugarRecord<TourismProductType>{
+public class TourismProductType extends SugarRecord{
     @LabelFieldTypeViewAnotaion(label = "ტურისტული პროდუქტი",position = 1)
     public String label0;
 

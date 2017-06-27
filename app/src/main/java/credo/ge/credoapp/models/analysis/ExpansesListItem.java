@@ -15,7 +15,7 @@ import credo.ge.credoapp.models.Loan;
  * Created by kaxge on 6/14/2017.
  */
 @ParserClassAnnotation
-public class ExpansesListItem extends SugarRecord<ExpansesListItem> {
+public class ExpansesListItem extends SugarRecord {
 
 
 

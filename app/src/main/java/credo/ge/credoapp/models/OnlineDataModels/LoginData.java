@@ -6,7 +6,7 @@ import com.orm.SugarRecord;
  * Created by vakhtanggelashvili on 5/4/17.
  */
 
-public class LoginData extends SugarRecord<LoginData>{
+public class LoginData extends SugarRecord{
 
 
     private String pin;

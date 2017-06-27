@@ -13,7 +13,7 @@ import credo.ge.credoapp.models.Cash;
  * Created by kaxge on 6/9/2017.
  */
 @ParserClassAnnotation
-public class PersonalBalance extends SugarRecord<PersonalBalance> {
+public class PersonalBalance extends SugarRecord {
     @DataGroupFieldTypeViewAnotation(name = "მოძრავი აქტივი", position = 1)
     public Asset mobileAsset = new Asset();
 
@@ -90,13 +90,13 @@ public class PersonalBalance extends SugarRecord<PersonalBalance> {
             count++;
         if (stillAsset.sum > 0)
             count++;
-        if(id!=null){
-            count+=Obligation.findbybusinessbalance(id).size();
-            count+=LongObligation.findbybusinessbalance(id).size();
-            count+=LoanObligation.findbybusinessbalance(id).size();
-            count+=LongLoanObligation.findbybusinessbalance(id).size();
-            count+=OtherObligation.findbybusinessbalance(id).size();
-            count+=CredoObligation.findbybusinessbalance(id).size();
+        if(getId()!=null){
+            count+=Obligation.findbybusinessbalance(getId()).size();
+            count+=LongObligation.findbybusinessbalance(getId()).size();
+            count+=LoanObligation.findbybusinessbalance(getId()).size();
+            count+=LongLoanObligation.findbybusinessbalance(getId()).size();
+            count+=OtherObligation.findbybusinessbalance(getId()).size();
+            count+=CredoObligation.findbybusinessbalance(getId()).size();
         }
         return count;
     }
@@ -109,11 +109,11 @@ public class PersonalBalance extends SugarRecord<PersonalBalance> {
 
     public void initData() {
      
-        shortObligations = Obligation.findbybusinessbalance(id);
-        longTermObligation = LongObligation.findbybusinessbalance(id);
-        loanObligation = LoanObligation.findbybusinessbalance(id);
-        longTermLoanObligation = LongLoanObligation.findbybusinessbalance(id);
-        otherObligation = OtherObligation.findbybusinessbalance(id);
-        credoObligations = CredoObligation.findbybusinessbalance(id);
+        shortObligations = Obligation.findbybusinessbalance(getId());
+        longTermObligation = LongObligation.findbybusinessbalance(getId());
+        loanObligation = LoanObligation.findbybusinessbalance(getId());
+        longTermLoanObligation = LongLoanObligation.findbybusinessbalance(getId());
+        otherObligation = OtherObligation.findbybusinessbalance(getId());
+        credoObligations = CredoObligation.findbybusinessbalance(getId());
     }
 }

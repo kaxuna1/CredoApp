@@ -18,18 +18,14 @@ import java.util.List;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressFlower;
-import credo.ge.credoapp.StaticData;
-import credo.ge.credoapp.StaticObjects;
 import credo.ge.credoapp.anotations.ButtonFieldTypeViewAnnotation;
 import credo.ge.credoapp.anotations.DataGroupContainerTypeViewAnotation;
-import credo.ge.credoapp.anotations.DataGroupFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.ObjectFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.ObjectsListFieldTypeViewAnottion;
 import credo.ge.credoapp.anotations.ParserClassAnnotation;
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
 import credo.ge.credoapp.models.OnlineDataModels.SyncLoanResult;
 import credo.ge.credoapp.models.analysis.AgroProductType;
-import credo.ge.credoapp.models.analysis.Balance;
 import credo.ge.credoapp.models.analysis.BusinesExpanse;
 import credo.ge.credoapp.models.analysis.BusinessBalance;
 import credo.ge.credoapp.models.analysis.ExpansesListItem;
@@ -37,7 +33,6 @@ import credo.ge.credoapp.models.analysis.FamilyExpanse;
 import credo.ge.credoapp.models.analysis.OtherExpanse;
 import credo.ge.credoapp.models.analysis.OtherIncomeType;
 import credo.ge.credoapp.models.analysis.PersonalBalance;
-import credo.ge.credoapp.models.analysis.ReadyProduct;
 import credo.ge.credoapp.models.analysis.TourismProductType;
 import credo.ge.credoapp.models.analysis.UrbaProductType;
 import credo.ge.credoapp.online.OnlineData;
@@ -50,7 +45,7 @@ import rx.functions.Action1;
 
 
 @ParserClassAnnotation(cols = {"მთავარი", "შემოსავალები", "ხარჯები", "ბალანსი"})
-public class Loan extends SugarRecord<Loan> {
+public class Loan extends SugarRecord {
     public String getName() {
         return person != null ? (person.fullName() + (product != null ? "" : "")) : "დაუსრულებელი სესხი";
     }
@@ -81,7 +76,7 @@ public class Loan extends SugarRecord<Loan> {
             requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 4)
     public Vilage vilage;
     @ObjectFieldTypeViewAnotation(name = "სოფლის კონსული",
-            requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 5)
+            requiredForSave = true, displayField = "getName",filterWithField = "vilage:serverId:villageId", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 5)
     public VilageCounsel vilageCounsel;
     @ObjectFieldTypeViewAnotation(name = "მიზნობრიობის ტიპი",
             requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 6)
@@ -374,14 +369,14 @@ public class Loan extends SugarRecord<Loan> {
 
             if (isValid(v.getContext(), v)) {
 
-                agroProductTypes = AgroProductType.findbyloan(id);
-                urbaProductTypes = UrbaProductType.findbyloan(id);
-                tourismProductTypes = TourismProductType.findbyloan(id);
-                otherIncomeTypes = OtherIncomeType.findbyloan(id);
-                businesExpanses = BusinesExpanse.findbyloan(id);
-                otherExpanses = OtherExpanse.findbyloan(id);
-                familyExpanses = FamilyExpanse.findbyloan(id);
-                expansesListItems = ExpansesListItem.findbyloan(id);
+                agroProductTypes = AgroProductType.findbyloan(getId());
+                urbaProductTypes = UrbaProductType.findbyloan(getId());
+                tourismProductTypes = TourismProductType.findbyloan(getId());
+                otherIncomeTypes = OtherIncomeType.findbyloan(getId());
+                businesExpanses = BusinesExpanse.findbyloan(getId());
+                otherExpanses = OtherExpanse.findbyloan(getId());
+                familyExpanses = FamilyExpanse.findbyloan(getId());
+                expansesListItems = ExpansesListItem.findbyloan(getId());
                 person.family = FamilyPerson.findbyperson(person.getId());
                 businessBalance.initData();
                 personalBalance.initData();
@@ -399,40 +394,46 @@ public class Loan extends SugarRecord<Loan> {
                         .text("რეგისტრაცია")
                         .fadeColor(Color.DKGRAY).build();
                 dialog.show();
-                OnlineData.INSTANCE.syncLoan(getThis(), new Action1<SyncLoanResult>() {
-                    @Override
-                    public void call(SyncLoanResult syncLoanResult) {
-                        SyncLoanResult k = syncLoanResult;
-                        boolean f = true;
-                        if (syncLoanResult.data != null) {
-                            if (syncLoanResult.data.loanID > 0) {
-                                getThis().serverId = syncLoanResult.data.loanID;
-                                getThis().sent = true;
-                                getThis().status = syncLoanResult.data.errorMessage;
-                                getThis().save();
-                                dialog.hide();
-                                final ACProgressFlower dialog2 = new ACProgressFlower.Builder(v.getContext())
-                                        .direction(ACProgressConstant.DIRECT_CLOCKWISE)
-                                        .themeColor(Color.WHITE)
-                                        .text("სქორინგი")
-                                        .fadeColor(Color.DKGRAY).build();
-                                dialog2.show();
-                                OnlineData.INSTANCE.syncLoanScoring(getThis(), new Action1<SyncLoanResult>() {
-                                    @Override
-                                    public void call(SyncLoanResult syncLoanResult) {
-                                        dialog2.hide();
-                                        Intent intent = new Intent(v.getContext(), sent_loan_page.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                        intent.putExtra("id", getThis().id);
-                                        v.getContext().startActivity(intent);
+                try{
+                    OnlineData.INSTANCE.syncLoan(getThis(), new Action1<SyncLoanResult>() {
+                        @Override
+                        public void call(SyncLoanResult syncLoanResult) {
+                            SyncLoanResult k = syncLoanResult;
+                            boolean f = true;
+                            if (syncLoanResult.data != null) {
+                                if (syncLoanResult.data.loanID > 0) {
+                                    getThis().serverId = syncLoanResult.data.loanID;
+                                    getThis().sent = true;
+                                    getThis().status = syncLoanResult.data.errorMessage;
+                                    getThis().save();
+                                    dialog.hide();
+                                    final ACProgressFlower dialog2 = new ACProgressFlower.Builder(v.getContext())
+                                            .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                                            .themeColor(Color.WHITE)
+                                            .text("სქორინგი")
+                                            .fadeColor(Color.DKGRAY).build();
+                                    dialog2.show();
+                                    OnlineData.INSTANCE.syncLoanScoring(getThis(), new Action1<SyncLoanResult>() {
+                                        @Override
+                                        public void call(SyncLoanResult syncLoanResult) {
+                                            dialog2.hide();
+                                            Intent intent = new Intent(v.getContext(), sent_loan_page.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                            intent.putExtra("id", getThis().getId());
+                                            v.getContext().startActivity(intent);
 
-                                    }
-                                });
 
+                                        }
+                                    });
+
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }catch (Exception e){
+                    dialog.hide();
+                }
+
             } else {
 
             }
@@ -462,12 +463,6 @@ public class Loan extends SugarRecord<Loan> {
     public Loan(boolean save) {
 
     }
-
-    @Override
-    public void save() {
-        super.save();
-    }
-
 
     public long getBranchId() {
         return this.branch.serverId;
@@ -531,7 +526,7 @@ public class Loan extends SugarRecord<Loan> {
 
 
     public List<AgroProductType> getAgroProductTypes() {
-        return AgroProductType.findbyloan(this.id);
+        return AgroProductType.findbyloan(this.getId());
     }
 
     public void setAgroProductTypes(ArrayList<AgroProductType> agroProductTypes) {
@@ -539,7 +534,7 @@ public class Loan extends SugarRecord<Loan> {
     }
 
     public List<UrbaProductType> getUrbaProductTypes() {
-        return UrbaProductType.findbyloan(id);
+        return UrbaProductType.findbyloan(getId());
     }
 
     public void setUrbaProductTypes(ArrayList<UrbaProductType> urbaProductTypes) {
@@ -547,7 +542,7 @@ public class Loan extends SugarRecord<Loan> {
     }
 
     public List<TourismProductType> getTourismProductTypes() {
-        return TourismProductType.findbyloan(this.id);
+        return TourismProductType.findbyloan(this.getId());
     }
 
     public void setTourismProductTypes(ArrayList<TourismProductType> tourismProductTypes) {
@@ -555,7 +550,7 @@ public class Loan extends SugarRecord<Loan> {
     }
 
     public List<OtherIncomeType> getOtherIncomeTypes() {
-        return OtherIncomeType.findbyloan(this.id);
+        return OtherIncomeType.findbyloan(this.getId());
     }
 
     public void setOtherIncomeTypes(ArrayList<OtherIncomeType> otherIncomeTypes) {
@@ -563,7 +558,7 @@ public class Loan extends SugarRecord<Loan> {
     }
 
     public List<BusinesExpanse> getBusinesExpanses() {
-        return BusinesExpanse.findbyloan(this.id);
+        return BusinesExpanse.findbyloan(this.getId());
     }
 
     public void setBusinesExpanses(ArrayList<BusinesExpanse> businesExpanses) {
@@ -571,7 +566,7 @@ public class Loan extends SugarRecord<Loan> {
     }
 
     public List<OtherExpanse> getOtherExpanses() {
-        return OtherExpanse.findbyloan(this.id);
+        return OtherExpanse.findbyloan(this.getId());
     }
 
     public void setOtherExpanses(ArrayList<OtherExpanse> otherExpanses) {
@@ -579,7 +574,7 @@ public class Loan extends SugarRecord<Loan> {
     }
 
     public List<FamilyExpanse> getFamilyExpanses() {
-        return FamilyExpanse.findbyloan(this.id);
+        return FamilyExpanse.findbyloan(this.getId());
     }
 
     public void setFamilyExpanses(ArrayList<FamilyExpanse> familyExpanses) {

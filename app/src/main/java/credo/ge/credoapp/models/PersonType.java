@@ -10,7 +10,7 @@ import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
  * Created by vakhtanggelashvili on 5/3/17.
  */
 
-public class PersonType extends SugarRecord<PersonType> {
+public class PersonType extends SugarRecord {
     public String name;
 
 

@@ -6,7 +6,7 @@ import com.orm.SugarRecord;
  * Created by kaxge on 5/18/2017.
  */
 
-public class PdfFile extends SugarRecord<PdfFile> {
+public class PdfFile extends SugarRecord {
     public String pId;
 
     public byte[] pdf;

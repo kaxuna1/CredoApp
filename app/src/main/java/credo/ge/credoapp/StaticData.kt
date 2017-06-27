@@ -1,8 +1,9 @@
 package credo.ge.credoapp
 
+import android.app.Activity
 import com.orm.SugarRecord
 import credo.ge.credoapp.models.OnlineDataModels.LoginData
-
+import org.jetbrains.anko.intentFor
 import java.util.HashMap
 
 import credo.ge.credoapp.models.Person
@@ -12,7 +13,6 @@ import credo.ge.credoapp.models.Person
  */
 
 object StaticData {
-    internal var classHashMap = HashMap<String, Class<SugarRecord<*>>>()
     internal var data = HashMap<String,List<Any>>()
     internal var comboBoxUpdateFunctions = HashMap<String,()->Unit>()
     internal var loggedIn = false;

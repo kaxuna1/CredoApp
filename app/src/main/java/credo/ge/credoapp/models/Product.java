@@ -11,7 +11,7 @@ import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.ProductAdapt
  * Created by vakhtanggelashvili on 4/27/17.
  */
 
-public class Product extends SugarRecord<Product> {
+public class Product extends SugarRecord {
     public String getName() {
         return product;
     }

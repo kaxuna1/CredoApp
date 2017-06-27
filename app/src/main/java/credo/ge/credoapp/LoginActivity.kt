@@ -1,11 +1,14 @@
 package credo.ge.credoapp
 
+import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
 import android.app.Activity
 import android.support.v7.app.AppCompatActivity
 import android.app.LoaderManager.LoaderCallbacks
+import android.app.ProgressDialog
+import android.content.Context
 
 import android.content.CursorLoader
 import android.content.Loader
@@ -18,18 +21,19 @@ import android.provider.ContactsContract
 import android.text.TextUtils
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 
 import java.util.ArrayList
 
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.hardware.fingerprint.FingerprintManager
+import android.os.AsyncTask
 import android.preference.PreferenceManager
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
 import com.andrognito.pinlockview.IndicatorDots
 import com.andrognito.pinlockview.PinLockListener
 import com.andrognito.pinlockview.PinLockView
@@ -37,9 +41,14 @@ import com.mattprecious.swirl.SwirlView
 import com.multidots.fingerprintauth.AuthErrorCodes
 import com.multidots.fingerprintauth.FingerPrintAuthCallback
 import com.multidots.fingerprintauth.FingerPrintAuthHelper
+import com.orm.SugarApp
+import com.orm.SugarContext
 import credo.ge.credoapp.models.OnlineDataModels.LoginData
+import credo.ge.credoapp.models.Person
 import credo.ge.credoapp.online.OnlineData
 import kotlinx.android.synthetic.main.pin_layout.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.intentFor
 import rx.functions.Action1
 
 /**
@@ -72,7 +81,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-
+    private var progressDialog: ProgressDialog? = null
     // UI references.
     private var mEmailView: AutoCompleteTextView? = null
     private var mPasswordView: EditText? = null
@@ -88,20 +97,28 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     var sessionId = 0L
 
     private var loginData: LoginData? = null
-
+    val WRITE_EXST = 0x3
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
+        super.onCreate(savedInstanceState)
         var fingerCallback: FingerPrintAuthCallbackCredo? = null
 
+        progressDialog = ProgressDialog(this)
+        progressDialog!!.setMessage("მიმდინარეობს განახლება!")
+        progressDialog!!.setCancelable(false)
+        progressDialog!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
 
+        SugarContext.init(applicationContext)
 
+        Person.listAll(Person::class.java)
+
+        askPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_EXST)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             fingerCallback = FingerPrintAuthCallbackCredo()
-            mFingerPrintAuthHelper = FingerPrintAuthHelper.getHelper(this, fingerCallback);
+            mFingerPrintAuthHelper = FingerPrintAuthHelper.getHelper(this, fingerCallback!!);
         }
 
-        super.onCreate(savedInstanceState)
+
 
         // Set up the login form.
         pref = this.applicationContext.getSharedPreferences(StaticData.preferencesName, StaticData.preferencesMode)
@@ -132,7 +149,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
 
                 fingerCallback!!.activity = this
-                fingerCallback.loginData = loginData
+                fingerCallback!!.loginData = loginData
 
             }
             //swirlView = findViewById(R.id.swirlView) as SwirlView;
@@ -203,6 +220,13 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
      * errors are presented and no actual login attempt is made.
      */
     private fun attemptLogin() {
+
+        var view = this.getCurrentFocus();
+        if (view != null) {
+            var imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager;
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
 
         // Reset errors.
         mEmailView!!.error = null
@@ -454,6 +478,16 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     }
 
 
+    fun askPermission(permission: String, requestCode: Int) {
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf<String>(permission), requestCode);
+
+        } else {
+            Toast.makeText(this, "" + permission + " is already granted.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
     /*@SuppressLint("NewApi") fun testFingerPrintSettings(): Boolean {
         print("Testing Fingerprint Settings");
 
@@ -506,6 +540,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         public fun authenticationSucceeded( result:FingerprintManager.AuthenticationResult);
 
     }*/
+
 
 }
 

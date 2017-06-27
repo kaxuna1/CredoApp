@@ -15,7 +15,7 @@ import credo.ge.credoapp.models.Loan;
  * Created by kaxge on 5/24/2017.
  */
 @ParserClassAnnotation
-public class BusinesExpanse extends SugarRecord<BusinesExpanse> {
+public class BusinesExpanse extends SugarRecord {
     @LabelFieldTypeViewAnotaion(label = "ბიზნეს ხარჯები",position = 1)
     public String label0;
 

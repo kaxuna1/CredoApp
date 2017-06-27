@@ -11,7 +11,7 @@ import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.IndustryAdap
  * Created by vakhtanggelashvili on 5/3/17.
  */
 
-public class Industry extends SugarRecord<Industry>{
+public class Industry extends SugarRecord{
     public String industry;
 
     public int serverId;

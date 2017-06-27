@@ -14,7 +14,7 @@ import credo.ge.credoapp.models.Cash;
  * Created by kaxge on 6/8/2017.
  */
 @ParserClassAnnotation
-public class BusinessBalance extends SugarRecord<BusinessBalance> {
+public class BusinessBalance extends SugarRecord {
     @DataGroupFieldTypeViewAnotation(name = "ნაღდი ფული", position = 1)
     public Cash cash = new Cash();
 
@@ -145,20 +145,20 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
             count++;
         if (balance.sum > 0)
             count++;
-        if (id != null) {
-            count += ObligationsToReceive.findbybusinessbalance(id).size();
-            count += ReadyProduct.findbybusinessbalance(id).size();
-            count += Materials.findbybusinessbalance(id).size();
-            count += Cattle.findbybusinessbalance(id).size();
-            count += Machines.findbybusinessbalance(id).size();
-            count += Building.findbybusinessbalance(id).size();
-            count += Land.findbybusinessbalance(id).size();
-            count += Obligation.findbybusinessbalance(id).size();
-            count += LongObligation.findbybusinessbalance(id).size();
-            count += LoanObligation.findbybusinessbalance(id).size();
-            count += LongLoanObligation.findbybusinessbalance(id).size();
-            count += OtherObligation.findbybusinessbalance(id).size();
-            count += CredoObligation.findbybusinessbalance(id).size();
+        if (getId() != null) {
+            count += ObligationsToReceive.findbybusinessbalance(getId()).size();
+            count += ReadyProduct.findbybusinessbalance(getId()).size();
+            count += Materials.findbybusinessbalance(getId()).size();
+            count += Cattle.findbybusinessbalance(getId()).size();
+            count += Machines.findbybusinessbalance(getId()).size();
+            count += Building.findbybusinessbalance(getId()).size();
+            count += Land.findbybusinessbalance(getId()).size();
+            count += Obligation.findbybusinessbalance(getId()).size();
+            count += LongObligation.findbybusinessbalance(getId()).size();
+            count += LoanObligation.findbybusinessbalance(getId()).size();
+            count += LongLoanObligation.findbybusinessbalance(getId()).size();
+            count += OtherObligation.findbybusinessbalance(getId()).size();
+            count += CredoObligation.findbybusinessbalance(getId()).size();
 
         }
         return count;
@@ -171,18 +171,18 @@ public class BusinessBalance extends SugarRecord<BusinessBalance> {
 
 
     public void initData() {
-        obligationsToReceives = ObligationsToReceive.findbybusinessbalance(id);
-        readyProduct = ReadyProduct.findbybusinessbalance(id);
-        materialses = Materials.findbybusinessbalance(id);
-        cattle = Cattle.findbybusinessbalance(id);
-        machines = Machines.findbybusinessbalance(id);
-        buildings = Building.findbybusinessbalance(id);
-        lands = Land.findbybusinessbalance(id);
-        shortObligations = Obligation.findbybusinessbalance(id);
-        longTermObligation = LongObligation.findbybusinessbalance(id);
-        loanObligation = LoanObligation.findbybusinessbalance(id);
-        longTermLoanObligation = LongLoanObligation.findbybusinessbalance(id);
-        otherObligation = OtherObligation.findbybusinessbalance(id);
-        credoObligations = CredoObligation.findbybusinessbalance(id);
+        obligationsToReceives = ObligationsToReceive.findbybusinessbalance(getId());
+        readyProduct = ReadyProduct.findbybusinessbalance(getId());
+        materialses = Materials.findbybusinessbalance(getId());
+        cattle = Cattle.findbybusinessbalance(getId());
+        machines = Machines.findbybusinessbalance(getId());
+        buildings = Building.findbybusinessbalance(getId());
+        lands = Land.findbybusinessbalance(getId());
+        shortObligations = Obligation.findbybusinessbalance(getId());
+        longTermObligation = LongObligation.findbybusinessbalance(getId());
+        loanObligation = LoanObligation.findbybusinessbalance(getId());
+        longTermLoanObligation = LongLoanObligation.findbybusinessbalance(getId());
+        otherObligation = OtherObligation.findbybusinessbalance(getId());
+        credoObligations = CredoObligation.findbybusinessbalance(getId());
     }
 }

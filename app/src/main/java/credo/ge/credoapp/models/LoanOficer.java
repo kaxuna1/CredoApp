@@ -11,7 +11,7 @@ import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.LoanOficerAd
  * Created by vakhtanggelashvili on 5/3/17.
  */
 
-public class LoanOficer extends SugarRecord<LoanOficer> {
+public class LoanOficer extends SugarRecord {
     public String loanOfficer;
 
     public int branchId;

@@ -43,12 +43,12 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/app_bar"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/refresh" />
+        app:srcCompat="@drawable/refresh"
+        android:layout_below="@+id/app_bar"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -68,20 +68,21 @@
 
 
             <mehdi.sakout.fancybuttons.FancyButton
+                fancy:fb_iconPaddingBottom="3dp"
                 android:id="@+id/addClient"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                fancy:fb_borderColor="#FFFFFF"
+                fancy:fb_borderColor="#898989"
                 fancy:fb_borderWidth="1dp"
                 fancy:fb_textSize="15sp"
-                fancy:fb_defaultColor="@color/colorPrimary"
+                fancy:fb_defaultColor="@color/white"
                 fancy:fb_focusColor="@color/colorPrimaryDark"
-                fancy:fb_fontIconResource="&#xf19c;"
+                fancy:fb_fontIconResource="&#xf1ae;"
                 fancy:fb_iconPosition="top"
-                fancy:fb_radius="3dp"
+                fancy:fb_radius="0dp"
                 fancy:fb_fontIconSize="20dp"
                 fancy:fb_text="კლიენტის დამატება"
-                fancy:fb_textColor="#FFFFFF" />
+                fancy:fb_textColor="#FF898989" />
 
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView
@@ -90,20 +91,21 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
             <mehdi.sakout.fancybuttons.FancyButton
+                fancy:fb_iconPaddingBottom="3dp"
                 android:id="@+id/buttonAutoCheck2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                fancy:fb_borderColor="#FFFFFF"
+                fancy:fb_borderColor="#898989"
                 fancy:fb_borderWidth="1dp"
                 fancy:fb_textSize="15sp"
-                fancy:fb_defaultColor="@color/colorPrimary"
+                fancy:fb_defaultColor="@color/white"
                 fancy:fb_focusColor="@color/colorPrimaryDark"
                 fancy:fb_fontIconResource="&#xf046;"
                 fancy:fb_iconPosition="top"
-                fancy:fb_radius="3dp"
+                fancy:fb_radius="0dp"
                 fancy:fb_fontIconSize="20dp"
                 fancy:fb_text="ავტომატური შემოწმება"
-                fancy:fb_textColor="#FFFFFF" />
+                fancy:fb_textColor="#898989" />
 
         </android.support.v7.widget.CardView>
 
@@ -114,20 +116,21 @@
             android:layout_weight="1">
 
             <mehdi.sakout.fancybuttons.FancyButton
+                fancy:fb_iconPaddingBottom="3dp"
                 android:id="@+id/addloan"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                fancy:fb_borderColor="#FFFFFF"
+                fancy:fb_borderColor="#898989"
                 fancy:fb_borderWidth="1dp"
-                fancy:fb_textSize="15sp"
-                fancy:fb_fontIconSize="20dp"
-                fancy:fb_defaultColor="@color/colorPrimary"
+                fancy:fb_defaultColor="@color/white"
                 fancy:fb_focusColor="@color/colorPrimaryDark"
                 fancy:fb_fontIconResource="&#xf217;"
                 fancy:fb_iconPosition="top"
-                fancy:fb_radius="3dp"
+                fancy:fb_radius="0dp"
+                fancy:fb_fontIconSize="20dp"
                 fancy:fb_text="სესხის დამატება"
-                fancy:fb_textColor="#FFFFFF" />
+                fancy:fb_textColor="#FF898989"
+                fancy:fb_textSize="15sp" />
 
         </android.support.v7.widget.CardView>
     </LinearLayout>
@@ -137,11 +140,11 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:weightSum="3"
+        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:weightSum="3"
-        android:orientation="horizontal">
+        android:layout_alignParentStart="true">
         <android.support.v7.widget.CardView
             
             android:layout_width="0dp"
@@ -150,20 +153,21 @@
 
 
             <mehdi.sakout.fancybuttons.FancyButton
+                fancy:fb_iconPaddingBottom="3dp"
                 android:id="@+id/loans"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                fancy:fb_borderColor="#FFFFFF"
+                fancy:fb_borderColor="#898989"
                 fancy:fb_borderWidth="1dp"
                 fancy:fb_textSize="15sp"
-                fancy:fb_fontIconSize="20dp"
-                fancy:fb_defaultColor="@color/colorPrimary"
+                fancy:fb_defaultColor="@color/white"
                 fancy:fb_focusColor="@color/colorPrimaryDark"
                 fancy:fb_fontIconResource="&#xf19c;"
                 fancy:fb_iconPosition="top"
-                fancy:fb_radius="3dp"
+                fancy:fb_radius="0dp"
+                fancy:fb_fontIconSize="20dp"
                 fancy:fb_text="სესხები"
-                fancy:fb_textColor="#FFFFFF" />
+                fancy:fb_textColor="#FF898989" />
 
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView
@@ -174,20 +178,21 @@
 
 
             <mehdi.sakout.fancybuttons.FancyButton
+                fancy:fb_iconPaddingBottom="3dp"
                 android:id="@+id/clients2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                fancy:fb_borderColor="#FFFFFF"
+                fancy:fb_borderColor="#898989"
                 fancy:fb_borderWidth="1dp"
                 fancy:fb_textSize="15sp"
-                fancy:fb_fontIconSize="20dp"
-                fancy:fb_defaultColor="@color/colorPrimary"
+                fancy:fb_defaultColor="@color/white"
                 fancy:fb_focusColor="@color/colorPrimaryDark"
                 fancy:fb_fontIconResource="&#xf0c0;"
                 fancy:fb_iconPosition="top"
-                fancy:fb_radius="3dp"
+                fancy:fb_radius="0dp"
+                fancy:fb_fontIconSize="20dp"
                 fancy:fb_text="კლიენტები"
-                fancy:fb_textColor="#FFFFFF" />
+                fancy:fb_textColor="#FF898989" />
 
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView
@@ -198,20 +203,21 @@
 
 
             <mehdi.sakout.fancybuttons.FancyButton
+                fancy:fb_iconPaddingBottom="3dp"
                 android:id="@+id/files"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                fancy:fb_borderColor="#FFFFFF"
+                fancy:fb_borderColor="#898989"
                 fancy:fb_borderWidth="1dp"
                 fancy:fb_textSize="15sp"
-                fancy:fb_fontIconSize="20dp"
-                fancy:fb_defaultColor="@color/colorPrimary"
+                fancy:fb_defaultColor="@color/white"
                 fancy:fb_focusColor="@color/colorPrimaryDark"
                 fancy:fb_fontIconResource="&#xf093;"
                 fancy:fb_iconPosition="top"
-                fancy:fb_radius="3dp"
+                fancy:fb_radius="0dp"
+                fancy:fb_fontIconSize="20dp"
                 fancy:fb_text="ფაილების ატვირთვა"
-                fancy:fb_textColor="#FFFFFF" />
+                fancy:fb_textColor="#FF898989" />
 
         </android.support.v7.widget.CardView>
     </LinearLayout>

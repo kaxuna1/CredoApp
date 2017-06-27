@@ -345,7 +345,7 @@ class ViewAnnotationParser {
                         // val spinner = view.findViewById(R.id.spinner) as Spinner
                         //val spinner2 = view.findViewById(R.id.spinner2) as SearchableSpinner
 
-                        val btn = view.findViewById(R.id.editBtn) as EditText
+                        val btn = view.findViewById(R.id.editBtn) as TextView
 
                        // val choose = view.findViewById(R.id.chooseDialogBtn) as TextView
 
@@ -423,9 +423,9 @@ class ViewAnnotationParser {
 
                                     listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
 
-                                        field.set(bindObject, dataToLoad!!.get(position))
+                                        field.set(bindObject, filteredList.get(position))
 
-                                        val value = field.type.getMethod(displayField).invoke(dataToLoad!!.get(position)) as String
+                                        val value = field.type.getMethod(displayField).invoke(filteredList!!.get(position)) as String
 
                                         btn.setText(value)
 
@@ -449,7 +449,7 @@ class ViewAnnotationParser {
 
                                     }
 
-                                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)  {
                                         filterString = s!!.toString()
                                         fillList();
                                     }
@@ -555,7 +555,7 @@ class ViewAnnotationParser {
                         viewFieldHolder.bindObject = myLocalObject;
                         viewFieldHolder.field = field;
                         viewFieldHolder.view = view
-                        //viewFieldHolder.requiredForSave = annotation.requiredForSave
+                        viewFieldHolder.requiredForSave = annotation.requiredForSave
                         viewFieldHolder.paterns = annotation.visibilityPatern
                         fieldPaterns.add(viewFieldHolder)
                         viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())

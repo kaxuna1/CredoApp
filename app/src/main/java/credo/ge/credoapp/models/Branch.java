@@ -1,8 +1,9 @@
 package credo.ge.credoapp.models;
 
+import com.orm.SugarRecord;
+
 import java.util.List;
 
-import credo.ge.credoapp.ExtensionClasses.DBAdapter;
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.BranchAdapterClass;
 
@@ -10,7 +11,7 @@ import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.BranchAdapte
  * Created by vakhtanggelashvili on 5/3/17.
  */
 
-public class Branch extends DBAdapter<Branch> {
+public class Branch extends SugarRecord {
 
 
     public String branch;

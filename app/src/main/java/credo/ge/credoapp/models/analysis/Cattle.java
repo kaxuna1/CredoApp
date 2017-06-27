@@ -11,7 +11,7 @@ import credo.ge.credoapp.models.Cash;
  * Created by kaxge on 6/9/2017.
  */
 
-public class Cattle extends SugarRecord<Cattle> {
+public class Cattle extends SugarRecord {
     @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "",type = "text", position = 1)
     public String comment="";
     @TextFieldTypeViewAnotation(name = "თანხა", defaultValue = "1",type = "int", position = 2)

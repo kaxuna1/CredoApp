@@ -11,7 +11,7 @@ import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.PurposeAdapt
  */
 
 
-public class PurposeType extends SugarRecord<PurposeType> {
+public class PurposeType extends SugarRecord {
     public String purpose;
 
     public int serverId;

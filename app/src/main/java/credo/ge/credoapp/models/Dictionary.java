@@ -10,7 +10,7 @@ import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.DictionaryAd
  * Created by kaxge on 5/15/2017.
  */
 
-public class Dictionary extends SugarRecord<Dictionary> {
+public class Dictionary extends SugarRecord {
 
     public String name;
 

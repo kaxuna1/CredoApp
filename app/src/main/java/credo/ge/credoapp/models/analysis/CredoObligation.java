@@ -13,7 +13,7 @@ import credo.ge.credoapp.models.Product;
  * Created by kaxge on 6/9/2017.
  */
 
-public class CredoObligation extends SugarRecord<CredoObligation> {
+public class CredoObligation extends SugarRecord {
     @ObjectFieldTypeViewAnotation(name = "პროდუქტი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 1)
     public Product product;
     @TextFieldTypeViewAnotation(name = "თანხა", defaultValue = "1",type = "int", position = 2)

@@ -10,7 +10,7 @@ import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
  * Created by kaxge on 6/9/2017.
  */
 
-public class ReadyProduct extends SugarRecord<ReadyProduct> {
+public class ReadyProduct extends SugarRecord {
     @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "",type = "text", position = 1)
     public String comment="";
     @TextFieldTypeViewAnotation(name = "თანხა", defaultValue = "1",type = "int", position = 2)

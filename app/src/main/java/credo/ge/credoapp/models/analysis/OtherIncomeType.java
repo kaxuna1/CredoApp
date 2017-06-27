@@ -17,7 +17,7 @@ import credo.ge.credoapp.models.Loan;
 
 
 @ParserClassAnnotation
-public class OtherIncomeType extends SugarRecord<OtherIncomeType> {
+public class OtherIncomeType extends SugarRecord {
     @LabelFieldTypeViewAnotaion(label = "სხვა შემოსავალი",position = 1)
     public String label0;
 

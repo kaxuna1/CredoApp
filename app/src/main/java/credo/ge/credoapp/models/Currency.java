@@ -11,7 +11,7 @@ import credo.ge.credoapp.models.interfaces.ComboboxBindingInterface;
  * Created by vakhtanggelashvili on 4/26/17.
  */
 
-public class Currency extends SugarRecord<Currency> implements ComboboxBindingInterface{
+public class Currency extends SugarRecord implements ComboboxBindingInterface{
     public String getName() {
         return name;
     }

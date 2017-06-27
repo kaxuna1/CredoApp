@@ -11,7 +11,7 @@ import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.VilageCounse
  * Created by vakhtanggelashvili on 5/3/17.
  */
 
-public class VilageCounsel extends SugarRecord<VilageCounsel> {
+public class VilageCounsel extends SugarRecord {
     public String consul;
 
     public int villageId;
