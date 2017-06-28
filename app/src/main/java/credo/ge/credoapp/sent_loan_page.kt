@@ -53,9 +53,9 @@ class sent_loan_page : AppCompatActivity() {
         txt6.text = "სესხის ვადა: ${loan.loanDuration}"
         linear.addView(txt6)
 
-        val txt7 = TextView(applicationContext)
+    /*    val txt7 = TextView(applicationContext)
         txt7.text = "სესხის თანხა: ${loan.amount}"
-        linear.addView(txt7)
+        linear.addView(txt7)*/
 /*
 
         val txt8 = TextView(applicationContext)

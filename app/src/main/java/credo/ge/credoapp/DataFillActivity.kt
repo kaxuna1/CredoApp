@@ -8,6 +8,10 @@ import credo.ge.credoapp.views.CredoExtendActivity
 import kotlinx.android.synthetic.main.activity_data_fill.*
 import android.support.design.widget.Snackbar
 import android.util.Log
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.noButton
+import org.jetbrains.anko.toast
+import org.jetbrains.anko.yesButton
 
 
 class DataFillActivity : CredoExtendActivity() {
@@ -75,7 +79,6 @@ class DataFillActivity : CredoExtendActivity() {
         parser = ViewAnnotationParser()
         parser!!.parse(classname, bindObject, View.OnClickListener {
 
-
             classname.getMethod("save").invoke(bindObject)
             if (updaterUUID != null) {
                 val func = StaticData.comboBoxUpdateFunctions.get(updaterUUID!!) as () -> Unit
@@ -93,39 +96,30 @@ class DataFillActivity : CredoExtendActivity() {
     }
 
     override fun onBackPressed() {
-        var validForSave = true;
-        if(parser!=null){
-            parser!!.fieldPaterns.forEach {
-                if(it.requiredForSave){
-                    if(it.field!!.get(it.bindObject) != null){
-                        var value = it.field!!.get(it.bindObject).toString()
-
-                        if(value.isNullOrEmpty()){
-                            validForSave = false;
-                        }
-                        Log.d("",value)
-                    }else{
-                        validForSave = false;
+        if(parser!!.dataModel!!){
+            if(parser!!.checkRequaredFieldsForSave()){
+                alert("გსურთ გამოხვიდეთ და შეინახოთ ცვლილებები"){
+                    yesButton {
+                        parser!!.saveFun()
+                        finish()
                     }
+                    noButton {
+                        toast("დახურვის გაუქმება")
+                    }
+                }.show()
+            }else{
+                alert("საველდებულო ველები არაა შევსებული. გამოსვლის შემთხვევაში არ მოხდება ჩანაწერის შენახვა. გსურთ გაგრძელება?"){
+                    yesButton {
+                        finish()
+                    }
+                    noButton {
 
-                }
+                    }
+                }.show()
             }
-        }
-        if(validForSave&&autoSave){
-
-        Snackbar.make(pager, "მიმდინარეობს ცვლილებების შენახვა", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-            android.os.Handler().postDelayed(
-                    {
-                        super.onBackPressed()
-                    },
-                    1000)
         }else{
-            super.onBackPressed()
+            finish()
         }
-
-
-
 
     }
 }

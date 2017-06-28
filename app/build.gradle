@@ -81,8 +81,11 @@ dependencies {
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.karumi:dexter:4.1.0'
     compile "org.jetbrains.anko:anko-commons:$anko_version"
-
     compile "org.jetbrains.anko:anko:$anko_version"
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+    compile 'com.github.rey5137:material:1.2.4'
+    compile 'com.github.lecho:hellocharts-android:v1.5.8'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 
 
 

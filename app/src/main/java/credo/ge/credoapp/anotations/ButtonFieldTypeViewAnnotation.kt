@@ -10,4 +10,5 @@ import java.lang.annotation.RetentionPolicy
 @Retention(RetentionPolicy.RUNTIME)
 annotation class ButtonFieldTypeViewAnnotation(val name: String,
                                                val page: Int = 0,
+                                               val icon: Int = 0,
                                                val position: Int);

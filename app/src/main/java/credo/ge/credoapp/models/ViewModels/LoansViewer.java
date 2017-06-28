@@ -13,7 +13,7 @@ import credo.ge.credoapp.models.analysis.ExpansesListItem;
 /**
  * Created by kaxge on 6/9/2017.
  */
-@ParserClassAnnotation(cols = {"გადაგზავნილი","დაუსრულებელი"})
+@ParserClassAnnotation(cols = {"გადაგზავნილი","დაუსრულებელი"},dataModel = false)
 public class LoansViewer {
     @ObjectsListFieldTypeViewAnottion(name = "სესხები",
             displayField = "getName",

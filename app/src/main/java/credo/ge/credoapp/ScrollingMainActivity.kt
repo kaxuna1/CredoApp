@@ -32,16 +32,31 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.support.v4.app.ActivityCompat
 import android.content.DialogInterface
 import android.R.string.ok
+import android.R.string.yes
 import android.app.AlertDialog
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.Drawable
+import android.media.Image
+import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import com.amulyakhare.textdrawable.TextDrawable
+import com.amulyakhare.textdrawable.util.ColorGenerator
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import lecho.lib.hellocharts.model.Line
+import lecho.lib.hellocharts.model.LineChartData
+import lecho.lib.hellocharts.model.PointValue
+import lecho.lib.hellocharts.view.LineChartView
+import org.jetbrains.anko.*
 
 
 class ScrollingMainActivity : CredoExtendActivity() {
@@ -102,10 +117,6 @@ class ScrollingMainActivity : CredoExtendActivity() {
         }
 
 
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener { view ->
-            syncData(view)
-        }
         //layout = findViewById(R.id.mainlinear) as LinearLayout
         progressDialog = ProgressDialog(this)
         var activity = this
@@ -193,6 +204,36 @@ class ScrollingMainActivity : CredoExtendActivity() {
 
         }
         files.setCustomTextFont("fonts/font1.otf")
+        var refresh = findViewById(R.id.refresh) as ImageView
+
+
+        refresh.setOnClickListener {
+            alert("სინქრონიზაციის შემთხვევაში წაიშლება ძველი ჩანაწერები. გსურთ გაგრძელება? ") {
+
+                yesButton {
+                    syncData(refresh)
+                }
+                noButton {
+
+                }
+            }.show()
+        }
+        nameImage.setOnClickListener {
+            val countries = listOf("გამოსვლა", "დახურვა")
+            selector("აირჩიეთ მოქმედება", countries) { dialogInterface, i ->
+               if(i==0){
+                   var pref = this.applicationContext.getSharedPreferences(StaticData.preferencesName, StaticData.preferencesMode)
+                   val editor = pref!!.edit();
+                   editor!!.putLong("session", 0)
+                   editor!!.commit()
+                   startActivity(intentFor<LoginActivity>().singleTop())
+
+               }
+            }
+        }
+
+
+
 
     }
 
@@ -301,5 +342,141 @@ class ScrollingMainActivity : CredoExtendActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        val font1 = Typeface.createFromAsset(applicationContext.getAssets(), "fonts/font1.ttf");
+        var firstName = "";
+        var lastName = "";
+        if(StaticData.loginData != null){
+            val nameStrings = StaticData.loginData!!.name.split(" ")
+            if(nameStrings.size==2){
+                firstName = nameStrings[0].substring(0,1)
+                lastName = nameStrings[1].substring(0,1)
+            }
+            else{
+                firstName = StaticData.loginData!!.name.substring(0,1)
+            }
+
+
+            updateCurrencies()
+
+        }else{
+
+        }
+        val generator = ColorGenerator.MATERIAL;
+        val color1 = generator.getRandomColor()
+        val drawable = TextDrawable.builder()
+                .beginConfig()
+                .textColor(Color.WHITE)
+                .useFont(font1)
+                .bold()
+                .toUpperCase()
+                .withBorder(12) /* thickness in px */
+                .endConfig()
+                .buildRound("${firstName}${lastName}", resources.getColor(R.color.colorAccent))
+        nameImage.setImageDrawable(drawable)
+
+
+    }
+    fun drawCurrency(){
+        currencyPlace.removeAllViews()
+        var data = CurrencyData.listAll(CurrencyData::class.java)
+        if(data.size>0){
+            arrayOf("USD","EUR","RUB").forEach {
+                var value=it
+                var item = data.first { p->p.code == value }
+                var view = layoutInflater.inflate(R.layout.currencycard, null)
+                var image = view.findViewById(R.id.flag) as ImageView
+                var currencyText = view.findViewById(R.id.currency) as TextView
+
+                var drawable = 0
+                if (value == "USD")
+                    drawable = R.drawable.usa
+                if (value == "EUR")
+                    drawable = R.drawable.euro
+                if (value == "RUB")
+                    drawable = R.drawable.rus
+                image.setImageDrawable(getResources().getDrawable(drawable))
+                currencyText.text = "${item.rate}"
+                var chart = view.findViewById(R.id.chart) as LineChartView
+
+                var values =  ArrayList<PointValue>();
+
+                var i = 0f
+                data.filter { p->p.code==value }.forEach {
+                    values.add(PointValue(i,it.rate))
+                    i++;
+                }
+                val generator = ColorGenerator.MATERIAL;
+                val color1 = generator.getRandomColor()
+
+
+                var line =  Line(values).setColor(color1).setCubic(true).setFilled(true).setHasPoints(false).setHasLabels(true);
+                var lines =  ArrayList<Line>();
+                lines.add(line);
+                var chartData =  LineChartData();
+                chartData.setLines(lines);
+                chart.setLineChartData(chartData);
+
+                currencyPlace.addView(view);
+            }
+        }else{
+            arrayOf("USD","EUR","RUB").forEach {
+                var value=it
+
+                var view = layoutInflater.inflate(R.layout.currencycard, null)
+                var image = view.findViewById(R.id.flag) as ImageView
+                var currencyText = view.findViewById(R.id.currency) as TextView
+
+                var drawable = 0
+                if (value == "USD")
+                    drawable = R.drawable.usa
+                if (value == "EUR")
+                    drawable = R.drawable.euro
+                if (value == "RUB")
+                    drawable = R.drawable.rus
+                image.setImageDrawable(getResources().getDrawable(drawable))
+                currencyText.text = "არ მოიძებნა"
+                var chart = view.findViewById(R.id.chart) as LineChartView
+
+                var values =  ArrayList<PointValue>();
+
+                var i = 0f
+
+                val generator = ColorGenerator.MATERIAL;
+                val color1 = generator.getRandomColor()
+
+
+                var line =  Line(values).setColor(color1).setCubic(true).setFilled(true).setHasPoints(false).setHasLabels(true);
+                var lines =  ArrayList<Line>();
+                lines.add(line);
+                var chartData =  LineChartData();
+                chartData.setLines(lines);
+                chart.setLineChartData(chartData);
+
+                currencyPlace.addView(view);
+            }
+        }
+
+
+
+
+
+
+
+
+    }
+    fun updateCurrencies(){
+        if(StaticData.isInternetAvailable()){
+            OnlineData.syncCurrencies(Action1 {
+                CurrencyData.deleteAll(CurrencyData::class.java)
+                CurrencyData.saveInTx(it.data.currencyData);
+                drawCurrency()
+            })
+        }else{
+            drawCurrency()
+        }
+
+    }
 
 }

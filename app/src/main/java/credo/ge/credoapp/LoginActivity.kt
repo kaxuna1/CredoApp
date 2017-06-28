@@ -8,10 +8,8 @@ import android.app.Activity
 import android.support.v7.app.AppCompatActivity
 import android.app.LoaderManager.LoaderCallbacks
 import android.app.ProgressDialog
-import android.content.Context
+import android.content.*
 
-import android.content.CursorLoader
-import android.content.Loader
 import android.database.Cursor
 import android.net.Uri
 
@@ -24,7 +22,6 @@ import android.view.inputmethod.EditorInfo
 
 import java.util.ArrayList
 
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.hardware.fingerprint.FingerprintManager
 import android.os.AsyncTask
@@ -117,9 +114,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             fingerCallback = FingerPrintAuthCallbackCredo()
             mFingerPrintAuthHelper = FingerPrintAuthHelper.getHelper(this, fingerCallback!!);
         }
-
-
-
         // Set up the login form.
         pref = this.applicationContext.getSharedPreferences(StaticData.preferencesName, StaticData.preferencesMode)
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -272,32 +266,42 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                         if (result.data.expires_in != 0L) {
 
 
-                            setContentView(R.layout.pin_layout)
-                            indicatorDots = findViewById(R.id.indicator_dots) as IndicatorDots
-                            indicatorDots!!.setIndicatorType(IndicatorDots.IndicatorType.FILL_WITH_ANIMATION);
+                            OnlineData.syncUserName(result.data.userId,result.data.access_token, Action1 {
+                                var name = it.data.errorMessage
 
-                            mPinLockView = findViewById(R.id.pin_lock_view) as PinLockView
-                            mPinLockView!!.attachIndicatorDots(indicatorDots);
-                            mPinLockView!!.setPinLockListener(object : PinLockListener {
-                                override fun onComplete(pin: String) {
-                                    Log.d("kkaaxxaa", "Pin complete: " + pin)
-                                    result.data.pin = pin
-                                    result.data.save()
-                                    editor!!.putLong("session", result.data.id)
-                                    editor!!.commit()
-                                    StaticData.loggedIn = true
-                                    StaticData.loginData = result.data
-                                    finish()
-                                }
+                                setContentView(R.layout.pin_layout)
+                                indicatorDots = findViewById(R.id.indicator_dots) as IndicatorDots
+                                indicatorDots!!.setIndicatorType(IndicatorDots.IndicatorType.FILL_WITH_ANIMATION);
 
-                                override fun onEmpty() {
-                                    Log.d("kkaaxxaa", "Pin empty")
-                                }
+                                mPinLockView = findViewById(R.id.pin_lock_view) as PinLockView
+                                mPinLockView!!.attachIndicatorDots(indicatorDots);
+                                mPinLockView!!.setPinLockListener(object : PinLockListener {
+                                    override fun onComplete(pin: String) {
+                                        Log.d("kkaaxxaa", "Pin complete: " + pin)
+                                        result.data.pin = pin
+                                        result.data.name = name
+                                        result.data.save()
+                                        editor!!.putLong("session", result.data.id)
+                                        editor!!.commit()
+                                        StaticData.loggedIn = true
+                                        StaticData.loginData = result.data
+                                        finish()
+                                    }
 
-                                override fun onPinChange(pinLength: Int, intermediatePin: String) {
-                                    Log.d("kkaaxxaa", "Pin changed, new length $pinLength with intermediate pin $intermediatePin")
-                                }
+                                    override fun onEmpty() {
+                                        Log.d("kkaaxxaa", "Pin empty")
+                                    }
+
+                                    override fun onPinChange(pinLength: Int, intermediatePin: String) {
+                                        Log.d("kkaaxxaa", "Pin changed, new length $pinLength with intermediate pin $intermediatePin")
+                                    }
+                                })
+
+
                             })
+
+
+
 
 
                             //finish()
@@ -420,7 +424,13 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     }
 
     override fun onBackPressed() {
-        System.exit(0);
+        val startMain = Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME)
+        startMain.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startMain.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        startMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+        startActivity(startMain)
     }
 
 

@@ -12,6 +12,8 @@ public class MethodName {
 
     private Loan loan;
 
+    private String userId="";
+
     public String getMethod() {
         return method;
     }
@@ -30,5 +32,9 @@ public class MethodName {
     public MethodName(String method,Loan loan) {
         this.method = method;
         this.loan = loan;
+    }
+    public MethodName(String method,String userId) {
+        this.method = method;
+        this.userId = userId;
     }
 }

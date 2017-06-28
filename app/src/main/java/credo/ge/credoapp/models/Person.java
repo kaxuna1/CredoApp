@@ -62,7 +62,7 @@ public class Person extends SugarRecord {
     @TextFieldTypeViewAnotation(name = "მობილური", defaultValue = "", requiredForSave = true, type = "number", mask = "(5##)-###-###", position = 7)
     public String mobile = "";
 
-    @TextFieldTypeViewAnotation(name = "ტელეფონი", defaultValue = "", type = "text", position = 8)
+    @TextFieldTypeViewAnotation(name = "ტელეფონი", defaultValue = "", type = "number", position = 8)
     public String phone = "";
     @TextFieldTypeViewAnotation(name = "დამოკიდებულ პირთა რაოდენობა", defaultValue = "", type = "int", position = 9)
     public int connectedPersonsNumber = 0;

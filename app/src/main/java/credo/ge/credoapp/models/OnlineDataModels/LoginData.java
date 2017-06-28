@@ -12,6 +12,7 @@ public class LoginData extends SugarRecord{
     private String pin;
 
 
+    private String name;
 
     private String access_token;
     private String BranchId;
@@ -83,5 +84,13 @@ public class LoginData extends SugarRecord{
 
     public void setPin(String pin) {
         this.pin = pin;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

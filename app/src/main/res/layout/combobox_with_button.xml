@@ -48,7 +48,16 @@
             android:layout_height="wrap_content"
             android:text="TextView" />
 
-
+        <ImageView
+            android:id="@+id/required"
+            android:paddingBottom="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            mask:srcCompat="@drawable/star"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/label"
+            android:layout_toEndOf="@+id/label"
+            android:layout_above="@+id/editBtn" />
 
         <TextView
             android:id="@+id/editBtn"

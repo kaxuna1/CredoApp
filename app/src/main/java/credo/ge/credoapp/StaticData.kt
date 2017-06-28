@@ -7,6 +7,7 @@ import org.jetbrains.anko.intentFor
 import java.util.HashMap
 
 import credo.ge.credoapp.models.Person
+import java.net.InetAddress
 
 /**
  * Created by vakhtanggelashvili on 4/26/17.
@@ -19,4 +20,14 @@ object StaticData {
     internal var preferencesName = "CredoPreferences"
     internal var preferencesMode = 0
     internal var loginData: LoginData?=null
+    fun isInternetAvailable(): Boolean {
+        try {
+            val ipAddr = InetAddress.getByName("google.com") //You can replace it with your name
+            return ipAddr.equals("")
+
+        } catch (e: Exception) {
+            return false
+        }
+
+    }
 }

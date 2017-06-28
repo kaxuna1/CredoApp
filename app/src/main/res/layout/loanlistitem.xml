@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
+    android:layout_marginTop="10dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignLeft="@+id/loantype"
@@ -8,36 +10,53 @@
     android:layout_below="@+id/loantype">
     <RelativeLayout
     android:layout_width="match_parent" android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="70dp"
+            android:layout_marginLeft="5dp"
+            android:layout_height="70dp" />
 
-    <TextView
-        android:id="@+id/personname"
-        android:textSize="15sp"
-        android:layout_margin="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="TextView" />
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/clientName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/image"
+            android:layout_toRightOf="@+id/image"
+            android:text="clientName" />
 
-    <TextView
-        android:id="@+id/loantype"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/personname"
-        android:layout_alignStart="@+id/personname"
-        android:layout_below="@+id/personname"
-        android:text="TextView" />
+        <TextView
+            android:id="@+id/loanSum"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="loanSum"
+            android:layout_below="@+id/clientName"
+            android:layout_toRightOf="@+id/image"
+            android:layout_toEndOf="@+id/image" />
 
-    <TextView
-        android:id="@+id/status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:layout_marginLeft="10dp"
-        android:layout_below="@+id/personname"
-        android:layout_toRightOf="@+id/loantype"
-        android:layout_toEndOf="@+id/loantype" />
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="status"
+            android:layout_below="@+id/loanSum"
+            android:layout_toRightOf="@+id/image"
+            android:layout_toEndOf="@+id/image" />
+
+        <ImageView
+
+            android:id="@+id/reloadStatus"
+            android:layout_marginRight="5dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            app:srcCompat="@drawable/refreshblack"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
 
-</RelativeLayout></android.support.v7.widget.CardView>
+    </RelativeLayout></android.support.v7.widget.CardView>
