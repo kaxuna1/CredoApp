@@ -60,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="ძებნა"
-            android:text="01017023512"
+            android:text="01005022890"
             android:textColor="#333"
             android:id="@+id/idNumber"
             android:textColorHint="#666"

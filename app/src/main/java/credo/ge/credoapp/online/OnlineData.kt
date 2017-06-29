@@ -17,6 +17,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import rx.Observable
+import rx.Subscriber
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -31,17 +32,16 @@ object OnlineData {
     var retrofit1Url = Retrofit.Builder()
             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
-            .client( OkHttpClient.Builder().readTimeout(5, TimeUnit.MINUTES).build())
+            .client( OkHttpClient.Builder().readTimeout(15, TimeUnit.MINUTES).build())
             .baseUrl("http://10.195.9.121:8087/")
-
             .build()
     var retrofit1Url2 = Retrofit.Builder()
             .baseUrl("http://10.195.9.121:8087/")
-            .client( OkHttpClient.Builder().readTimeout(5, TimeUnit.MINUTES).build())
+            .client( OkHttpClient.Builder().readTimeout(15, TimeUnit.MINUTES).build())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-    fun login(email: String, password: String, onSession: Action1<LoginReturn>) {
+    fun login(email: String, password: String, onSync: Action1<LoginReturn>) {
 
 
         val sessionObservable = retrofit1Url.create<LoginServices>(LoginServices::class.java!!)
@@ -51,7 +51,21 @@ object OnlineData {
                     .subscribeOn(Schedulers.newThread())
                     .doOnError { throwable -> throwable.printStackTrace() }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { session -> onSession.call(session) }
+                    .subscribe ( object:Subscriber<LoginReturn>(){
+                        override fun onNext(t: LoginReturn?) {
+                            onSync.call(t)
+                        }
+
+                        override fun onError(e: Throwable?) {
+                            e!!.printStackTrace();
+                            onSync.call(null)
+                        }
+
+                        override fun onCompleted() {
+
+                        }
+
+                    } )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -71,7 +85,21 @@ object OnlineData {
                     .subscribeOn(Schedulers.newThread())
                     .doOnError { throwable -> throwable.printStackTrace() }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { syncData -> onSync.call(syncData) }
+                    .subscribe(object:Subscriber<SyncResult>(){
+                        override fun onNext(t: SyncResult?) {
+                            onSync.call(t)
+                        }
+
+                        override fun onError(e: Throwable?) {
+                            e!!.printStackTrace();
+                            onSync.call(null)
+                        }
+
+                        override fun onCompleted() {
+
+                        }
+
+                    })
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -89,7 +117,21 @@ object OnlineData {
                     .subscribeOn(Schedulers.newThread())
                     .doOnError { throwable -> throwable.printStackTrace() }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { syncData -> onSync.call(syncData) }
+                    .subscribe (object:Subscriber<SyncLoanResult>(){
+                        override fun onNext(t: SyncLoanResult?) {
+                            onSync.call(t)
+                        }
+
+                        override fun onError(e: Throwable?) {
+                            e!!.printStackTrace();
+                            onSync.call(null)
+                        }
+
+                        override fun onCompleted() {
+
+                        }
+
+                    } )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -107,7 +149,21 @@ object OnlineData {
                     .subscribeOn(Schedulers.newThread())
                     .doOnError { throwable -> throwable.printStackTrace() }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { syncData -> onSync.call(syncData) }
+                    .subscribe (object:Subscriber<SyncLoanResult>(){
+                        override fun onNext(t: SyncLoanResult?) {
+                            onSync.call(t)
+                        }
+
+                        override fun onError(e: Throwable?) {
+                            e!!.printStackTrace();
+                            onSync.call(null)
+                        }
+
+                        override fun onCompleted() {
+
+                        }
+
+                    } )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -125,7 +181,21 @@ object OnlineData {
                     .subscribeOn(Schedulers.newThread())
                     .doOnError { throwable -> throwable.printStackTrace() }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { syncData -> onSync.call(syncData) }
+                    .subscribe (object:Subscriber<SyncLoanResult>(){
+                        override fun onNext(t: SyncLoanResult?) {
+                            onSync.call(t)
+                        }
+
+                        override fun onError(e: Throwable?) {
+                            e!!.printStackTrace();
+                            onSync.call(null)
+                        }
+
+                        override fun onCompleted() {
+
+                        }
+
+                    } )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -143,7 +213,21 @@ object OnlineData {
                     .subscribeOn(Schedulers.newThread())
                     .doOnError { throwable -> throwable.printStackTrace() }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { syncData -> onSync.call(syncData) }
+                    .subscribe (object:Subscriber<SyncLoanResult>(){
+                        override fun onNext(t: SyncLoanResult?) {
+                            onSync.call(t)
+                        }
+
+                        override fun onError(e: Throwable?) {
+                            e!!.printStackTrace();
+                            onSync.call(null)
+                        }
+
+                        override fun onCompleted() {
+
+                        }
+
+                    } )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -161,7 +245,21 @@ object OnlineData {
                     .subscribeOn(Schedulers.newThread())
                     .doOnError { throwable -> throwable.printStackTrace() }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { syncData -> onSync.call(syncData) }
+                    .subscribe (object:Subscriber<SyncLoanResult>(){
+                        override fun onNext(t: SyncLoanResult?) {
+                            onSync.call(t)
+                        }
+
+                        override fun onError(e: Throwable?) {
+                            e!!.printStackTrace();
+                            onSync.call(null)
+                        }
+
+                        override fun onCompleted() {
+
+                        }
+
+                    } )
         } catch (e: Exception) {
             e.printStackTrace()
         }

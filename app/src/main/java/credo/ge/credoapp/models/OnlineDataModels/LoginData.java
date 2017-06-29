@@ -11,6 +11,8 @@ public class LoginData extends SugarRecord{
 
     private String pin;
 
+    private boolean tutorial = true;
+    private boolean sendLoanTutorial = true;
 
     private String name;
 
@@ -92,5 +94,21 @@ public class LoginData extends SugarRecord{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isTutorial() {
+        return tutorial;
+    }
+
+    public void setTutorial(boolean tutorial) {
+        this.tutorial = tutorial;
+    }
+
+    public boolean isSendLoanTutorial() {
+        return sendLoanTutorial;
+    }
+
+    public void setSendLoanTutorial(boolean sendLoanTutorial) {
+        this.sendLoanTutorial = sendLoanTutorial;
     }
 }

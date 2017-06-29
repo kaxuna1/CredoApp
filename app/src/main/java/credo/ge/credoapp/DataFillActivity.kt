@@ -1,5 +1,6 @@
 package credo.ge.credoapp
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
@@ -7,11 +8,8 @@ import credo.ge.credoapp.anotations.ViewAnnotationParser
 import credo.ge.credoapp.views.CredoExtendActivity
 import kotlinx.android.synthetic.main.activity_data_fill.*
 import android.support.design.widget.Snackbar
-import android.util.Log
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.noButton
-import org.jetbrains.anko.toast
-import org.jetbrains.anko.yesButton
+import android.widget.EditText
+import org.jetbrains.anko.*
 
 
 class DataFillActivity : CredoExtendActivity() {
@@ -38,6 +36,14 @@ class DataFillActivity : CredoExtendActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_data_fill)
         //layout = findViewById(R.id.linearFormPlace) as LinearLayout
+        val font1 = Typeface.createFromAsset(pager.context.getAssets(), "fonts/font1.ttf");
+
+        mainView2.applyRecursively {view ->
+            when(view){
+                is EditText-> view.typeface = font1
+            }
+        }
+
         val extras = intent.extras
         val classname: Class<*> = extras.getSerializable("class") as Class<*>
 
@@ -85,7 +91,7 @@ class DataFillActivity : CredoExtendActivity() {
                 func()
             }
             finish()
-        }, "შენახვა", autoSave, supportFragmentManager, pager, tabs, !hideSave)
+        }, "შენახვა", autoSave, supportFragmentManager, pager, tabs, !hideSave,this)
 
 
         backBtn.setOnClickListener {

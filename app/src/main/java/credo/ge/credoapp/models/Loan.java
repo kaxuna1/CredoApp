@@ -21,6 +21,8 @@ import java.util.List;
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressFlower;
 import credo.ge.credoapp.R;
+import credo.ge.credoapp.StaticData;
+import credo.ge.credoapp.StaticJava;
 import credo.ge.credoapp.anotations.ButtonFieldTypeViewAnnotation;
 import credo.ge.credoapp.anotations.DataGroupContainerTypeViewAnotation;
 import credo.ge.credoapp.anotations.ObjectFieldTypeViewAnotation;
@@ -59,6 +61,7 @@ public class Loan extends SugarRecord {
             isMethod = true,
             type = "comboBox",
             sqlData = true,
+            filterWith = "1",
             requiredForSave = true,
             canAddToDb = false, position = 0)
     public Person person;
@@ -191,12 +194,13 @@ public class Loan extends SugarRecord {
             canAddToDb = false,
             joinField = "loan", position = 22, page = 2)
     public List<FamilyExpanse> familyExpanses;
-    @TextFieldTypeViewAnotation(name = "ოჯახის წევრების რაოდენობა", defaultValue = "1", type = "int", page = 2, position = 23)
+    @TextFieldTypeViewAnotation(name = "ოჯახის წევრების რაოდენობა",requiredForSave = true, defaultValue = "1", type = "int", page = 2, position = 23)
     public int familyQuantity;
     @ObjectFieldTypeViewAnotation(name = "დასახლების ტიპი",
             displayField = "getName",
             isMethod = true,
             type = "comboBox",
+            requiredForSave = true,
             sqlData = true,
             canAddToDb = false, position = 24,
             page = 2,
@@ -305,6 +309,16 @@ public class Loan extends SugarRecord {
 
             return false;
         }
+        if( (BusinesExpanse.findbyloan(getId()).size()+OtherExpanse.findbyloan(getId()).size()+ FamilyExpanse.findbyloan(getId()).size())==0){
+            Snackbar.make(view, "ხარჯები არ გაქვთ შევსებული", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            return false;
+        }
+        if ((businessBalance.getCount()+personalBalance.getCount())==0){
+            Snackbar.make(view, "ბალანსი არ გაქვთ შევსებული", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            return false;
+        }
 
 
         InternalStorage storage = SimpleStorage.getInternalStorage(context);
@@ -372,106 +386,126 @@ public class Loan extends SugarRecord {
 
 
 
-            if (isValid(v.getContext(), v)) {
+            if (StaticData.INSTANCE.isNetworkAvailable(v.getContext())){
+                if (isValid(v.getContext(), v)) {
 
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
-                builder1.setMessage("გსურთ გააგზავნოთ სესხი CSS-ში?");
-                builder1.setCancelable(true);
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
+                    builder1.setMessage("გსურთ გააგზავნოთ სესხი CSS-ში?");
+                    builder1.setCancelable(true);
 
-                builder1.setPositiveButton(
-                        "კი",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogAlert, int id) {
+                    builder1.setPositiveButton(
+                            "კი",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogAlert, int id) {
 
-                                agroProductTypes = AgroProductType.findbyloan(getId());
-                                urbaProductTypes = UrbaProductType.findbyloan(getId());
-                                tourismProductTypes = TourismProductType.findbyloan(getId());
-                                otherIncomeTypes = OtherIncomeType.findbyloan(getId());
-                                businesExpanses = BusinesExpanse.findbyloan(getId());
-                                otherExpanses = OtherExpanse.findbyloan(getId());
-                                familyExpanses = FamilyExpanse.findbyloan(getId());
-                                expansesListItems = ExpansesListItem.findbyloan(getId());
-                                person.family = FamilyPerson.findbyperson(person.getId());
-                                businessBalance.initData();
-                                personalBalance.initData();
+                                    agroProductTypes = AgroProductType.findbyloan(getId());
+                                    urbaProductTypes = UrbaProductType.findbyloan(getId());
+                                    tourismProductTypes = TourismProductType.findbyloan(getId());
+                                    otherIncomeTypes = OtherIncomeType.findbyloan(getId());
+                                    businesExpanses = BusinesExpanse.findbyloan(getId());
+                                    otherExpanses = OtherExpanse.findbyloan(getId());
+                                    familyExpanses = FamilyExpanse.findbyloan(getId());
+                                    expansesListItems = ExpansesListItem.findbyloan(getId());
+                                    person.family = FamilyPerson.findbyperson(person.getId());
+                                    businessBalance.initData();
+                                    personalBalance.initData();
 
-                                Gson g = new Gson();
+                                    Gson g = new Gson();
 
-                                JsonObject jsonObject = g.toJsonTree(getThis()).getAsJsonObject();
+                                    JsonObject jsonObject = g.toJsonTree(getThis()).getAsJsonObject();
 
-                                Log.d("kaxa", jsonObject.toString());
+                                    Log.d("kaxa", jsonObject.toString());
 
 
-                                final ACProgressFlower dialog = new ACProgressFlower.Builder(v.getContext())
-                                        .direction(ACProgressConstant.DIRECT_CLOCKWISE)
-                                        .themeColor(Color.WHITE)
-                                        .text("რეგისტრაცია")
-                                        .fadeColor(Color.DKGRAY).build();
-                                dialog.show();
-                                try{
-                                    OnlineData.INSTANCE.syncLoan(getThis(), new Action1<SyncLoanResult>() {
-                                        @Override
-                                        public void call(SyncLoanResult syncLoanResult) {
-                                            SyncLoanResult k = syncLoanResult;
-                                            boolean f = true;
-                                            if (syncLoanResult.data != null) {
-                                                if (syncLoanResult.data.loanID > 0) {
-                                                    getThis().serverId = syncLoanResult.data.loanID;
-                                                    getThis().sent = true;
-                                                    getThis().status = syncLoanResult.data.errorMessage;
-                                                    getThis().save();
-                                                    dialog.hide();
-                                                    final ACProgressFlower dialog2 = new ACProgressFlower.Builder(v.getContext())
-                                                            .direction(ACProgressConstant.DIRECT_CLOCKWISE)
-                                                            .themeColor(Color.WHITE)
-                                                            .text("სქორინგი")
-                                                            .fadeColor(Color.DKGRAY).build();
-                                                    dialog2.show();
-                                                    OnlineData.INSTANCE.syncLoanScoring(getThis(), new Action1<SyncLoanResult>() {
-                                                        @Override
-                                                        public void call(SyncLoanResult syncLoanResult) {
-                                                            dialog2.hide();
-                                                            Intent intent = new Intent(v.getContext(), sent_loan_page.class);
-                                                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                                            intent.putExtra("id", getThis().getId());
-                                                            v.getContext().startActivity(intent);
+                                    final ACProgressFlower dialog = new ACProgressFlower.Builder(v.getContext())
+                                            .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                                            .themeColor(Color.WHITE)
+                                            .text("რეგისტრაცია")
+                                            .fadeColor(Color.DKGRAY).build();
+                                    dialog.show();
+                                    try{
+                                        OnlineData.INSTANCE.syncLoan(getThis(), new Action1<SyncLoanResult>() {
+                                            @Override
+                                            public void call(SyncLoanResult syncLoanResult) {
+                                                if(syncLoanResult!=null){
+                                                    if (syncLoanResult.data != null) {
+                                                        if (syncLoanResult.data.loanID > 0) {
+                                                            getThis().serverId = syncLoanResult.data.loanID;
+                                                            getThis().sent = true;
+                                                            getThis().status = syncLoanResult.data.errorMessage;
+                                                            getThis().save();
+                                                            dialog.hide();
+                                                            final ACProgressFlower dialog2 = new ACProgressFlower.Builder(v.getContext())
+                                                                    .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                                                                    .themeColor(Color.WHITE)
+                                                                    .text("სქორინგი")
+                                                                    .fadeColor(Color.DKGRAY).build();
+                                                            dialog2.show();
+                                                            OnlineData.INSTANCE.syncLoanScoring(getThis(), new Action1<SyncLoanResult>() {
+                                                                @Override
+                                                                public void call(SyncLoanResult syncLoanResult) {
+                                                                    if(syncLoanResult!=null){
+                                                                        dialog2.hide();
+                                                                        Intent intent = new Intent(v.getContext(), sent_loan_page.class);
+                                                                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                                                        intent.putExtra("id", getThis().getId());
+                                                                        v.getContext().startActivity(intent);
+                                                                    }else{
+                                                                        dialog2.hide();
+                                                                        Snackbar.make(v, "სესხის სქორინგის დროს მოხდა შეცდომა! \n განაახლეთ სტატუსი გაგზავნი მოთხოვნების გვერდიდან.", Snackbar.LENGTH_LONG)
+                                                                                .setAction("Action", null).show();
+                                                                    }
 
+
+
+                                                                }
+                                                            });
 
                                                         }
-                                                    });
-
+                                                    } else{
+                                                        dialog.hide();
+                                                    }
+                                                }else{
+                                                    dialog.hide();
+                                                    Snackbar.make(v, "სესხის რეგისტრაციის დროს მოხდა შეცდომა!", Snackbar.LENGTH_LONG)
+                                                            .setAction("Action", null).show();
                                                 }
+
                                             }
-                                        }
-                                    });
-                                }catch (Exception e){
-                                    dialog.hide();
+                                        });
+                                    }catch (Exception e){
+                                        dialog.hide();
+                                    }
+
+
+                                    dialogAlert.cancel();
                                 }
+                            });
+
+                    builder1.setNegativeButton(
+                            "არა",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
 
 
-                                dialogAlert.cancel();
-                            }
-                        });
+                                    dialog.cancel();
+                                }
+                            });
 
-                builder1.setNegativeButton(
-                        "არა",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-
-
-                                dialog.cancel();
-                            }
-                        });
-
-                AlertDialog alert11 = builder1.create();
-                alert11.show();
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
 
 
 
 
-            } else {
+                } else {
 
+                }
+            }else{
+                Snackbar.make(v, "სესხის რეგისტრაციისთვის საჭიროა ინტერნეტ კავშირი!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
+
 
 
         }

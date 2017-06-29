@@ -1,5 +1,7 @@
 package credo.ge.credoapp;
 
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -13,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import credo.ge.credoapp.models.OnlineDataModels.AutoCheckMethod;
 import credo.ge.credoapp.models.PdfFile;
@@ -144,5 +148,23 @@ public class StaticJava {
             return false;
         }
 
+    }
+
+    public InputFilter getFilter(final String alowedChars){
+        return new InputFilter() {
+
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+                for (int i = 0; i <source.length(); i++) {
+                    Matcher matcher= Pattern.compile("[ა-ჰ0-9,.;:\\-]").matcher(""+source.charAt(i));
+                    if(!matcher.matches())
+                        return "";
+                }
+
+
+                return null;
+            }
+        };
     }
 }

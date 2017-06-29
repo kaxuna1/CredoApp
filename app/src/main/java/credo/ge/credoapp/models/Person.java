@@ -9,6 +9,8 @@ import android.view.View;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.orm.SugarRecord;
+import com.orm.query.Condition;
+import com.orm.query.Select;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -86,7 +88,7 @@ public class Person extends SugarRecord {
             position = 13)
     public Industry industry;
 
-    public boolean ready = false;
+    public int ready = 0;
 
     public Person getThis(){
         return this;
@@ -97,7 +99,7 @@ public class Person extends SugarRecord {
         @Override
         public void onClick(final View v) {
             if (isValid()) {
-                ready = true;
+                ready = 1;
                 getThis().save();
                 Snackbar.make(v, "კლიენტი შენახულია! შეგიძლიათ შეავსოთ მასზე სესხი.", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -153,6 +155,8 @@ public class Person extends SugarRecord {
     }
 
 
+
+
     @ObjectsListFieldTypeViewAnottion(name = "ოჯახის წევრები",
             displayField = "getName",
             isMethod = true,
@@ -168,6 +172,9 @@ public class Person extends SugarRecord {
 
     public static List<Person> getData() {
         return Person.listAll(Person.class);
+    }
+    public static List<Person> getData(String type){
+        return Person.find(Person.class,"ready = ?",type);
     }
 
     public static Person getById(long id) {

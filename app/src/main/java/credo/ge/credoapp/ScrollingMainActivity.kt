@@ -41,22 +41,29 @@ import android.graphics.drawable.Drawable
 import android.media.Image
 import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetSequence
+import com.getkeepsafe.taptargetview.TapTargetView
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import com.rey.material.app.BottomSheetDialog
+import credo.ge.credoapp.views.SingleSectionHoverMenuService
 import lecho.lib.hellocharts.model.Line
 import lecho.lib.hellocharts.model.LineChartData
 import lecho.lib.hellocharts.model.PointValue
 import lecho.lib.hellocharts.view.LineChartView
 import org.jetbrains.anko.*
+import org.jetbrains.anko.sdk25.coroutines.onClick
 
 
 class ScrollingMainActivity : CredoExtendActivity() {
@@ -65,24 +72,34 @@ class ScrollingMainActivity : CredoExtendActivity() {
     val READ_EXST = 0x4
     internal var layout: LinearLayout? = null
     private var progressDialog: ProgressDialog? = null
-
+    var drawable: TextDrawable? = null
     internal var activity: CredoExtendActivity? = null
 
     protected var mGoogleApiClient: GoogleApiClient? = null
+
+
+    var instruction = true;
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scrolling_main)
 
+
+
+
+
         askPermission(Manifest.permission.ACCESS_FINE_LOCATION, LOCATION)
-     /*   askPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_EXST)
-        askPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXST)
-*/
+        /*   askPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_EXST)
+           askPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXST)
+   */
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             val utilLocation: Location? = null
             val manager: LocationManager
             manager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
             val location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         }
+
 
 
 
@@ -204,6 +221,11 @@ class ScrollingMainActivity : CredoExtendActivity() {
 
         }
         files.setCustomTextFont("fonts/font1.otf")
+        files.setOnClickListener {
+
+        }
+
+
         var refresh = findViewById(R.id.refresh) as ImageView
 
 
@@ -221,19 +243,73 @@ class ScrollingMainActivity : CredoExtendActivity() {
         nameImage.setOnClickListener {
             val countries = listOf("გამოსვლა", "დახურვა")
             selector("აირჩიეთ მოქმედება", countries) { dialogInterface, i ->
-               if(i==0){
-                   var pref = this.applicationContext.getSharedPreferences(StaticData.preferencesName, StaticData.preferencesMode)
-                   val editor = pref!!.edit();
-                   editor!!.putLong("session", 0)
-                   editor!!.commit()
-                   startActivity(intentFor<LoginActivity>().singleTop())
+                if (i == 0) {
+                    var pref = this.applicationContext.getSharedPreferences(StaticData.preferencesName, StaticData.preferencesMode)
+                    val editor = pref!!.edit();
+                    editor!!.putLong("session", 0)
+                    editor!!.commit()
+                    startActivity(intentFor<LoginActivity>().singleTop())
 
-               }
+                }
             }
         }
 
 
+    }
 
+    fun tapTarget() {
+        if (StaticData.loginData!!.isTutorial) {
+            StaticData.loginData!!.isTutorial = false;
+            StaticData.loginData!!.save()
+            TapTargetSequence(this).targets(
+
+                    TapTarget.forView(findViewById(R.id.refresh), "მუშაობის დასაწყებათ საჭიროა სინქრონიზაცია",
+                            "სინქრონიზაციისთვის გჭირდებათ ინტერნეტთან კავშირი, გთხოვთ დააჭიროთ მითითებულ ღილაკს.")
+                            .outerCircleColor(R.color.colorPrimary)
+                            .outerCircleAlpha(0.96f)
+                            .targetCircleColor(R.color.white)
+                            .titleTextSize(20)
+                            .titleTextColor(R.color.white)
+                            .descriptionTextSize(13)
+                            .descriptionTextColor(R.color.white)
+                            .textColor(R.color.white)
+                            .textTypeface(Typeface.SANS_SERIF)
+                            .dimColor(R.color.material_blue_grey_950)
+                            .drawShadow(true)
+                            .cancelable(false)
+                            .tintTarget(true)
+                            .transparentTarget(false)
+                            .targetRadius(60),
+                    TapTarget.forView(findViewById(R.id.nameImage), "სისტემიდან გამოსასვლელად დააკლიკეთ პროფილის ღილაკს",
+                            "")
+                            .outerCircleColor(R.color.colorPrimary)
+                            .outerCircleAlpha(0.96f)
+                            .targetCircleColor(R.color.white)
+                            .titleTextSize(20)
+                            .titleTextColor(R.color.white)
+                            .descriptionTextSize(13)
+                            .descriptionTextColor(R.color.white)
+                            .textColor(R.color.white)
+                            .textTypeface(Typeface.SANS_SERIF)
+                            .dimColor(R.color.material_blue_grey_950)
+                            .drawShadow(true)
+                            .cancelable(false)
+                            .tintTarget(false)
+                            .transparentTarget(true)
+                            .targetRadius(60)).listener(object : TapTargetSequence.Listener {
+                override fun onSequenceCanceled(lastTarget: TapTarget?) {
+
+                }
+
+                override fun onSequenceFinish() {
+                    refresh.callOnClick()
+                }
+
+                override fun onSequenceStep(lastTarget: TapTarget?, targetClicked: Boolean) {
+
+                }
+            }).start()
+        }
 
     }
 
@@ -242,95 +318,110 @@ class ScrollingMainActivity : CredoExtendActivity() {
     }
 
     fun syncData(view: View) {
-        progressDialog!!.setMessage("მიმდინარეობს განახლება!")
-        progressDialog!!.setCancelable(false)
-        progressDialog!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-        progressDialog!!.show()
-        try {
-            OnlineData.syncData(StaticData.loginData!!.access_token, Action1 {
+
+        if (StaticData.isNetworkAvailable(this.applicationContext)) {
+            progressDialog!!.setMessage("მიმდინარეობს განახლება!")
+            progressDialog!!.setCancelable(false)
+            progressDialog!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+            progressDialog!!.show()
+            try {
+                OnlineData.syncData(StaticData.loginData!!.access_token, Action1 {
 
 
-                var ka = VilageCounsel.findAll(VilageCounsel::class.java)
+                    if (it!=null){
+                        var ka = VilageCounsel.findAll(VilageCounsel::class.java)
 
-                Branch.deleteAll(Branch::class.java)
-                VilageCounsel.deleteAll(VilageCounsel::class.java)
-                Industry.deleteAll(Industry::class.java)
-                LoanOficer.deleteAll(LoanOficer::class.java)
-                Product.deleteAll(Product::class.java)
-                Purpose.deleteAll(Purpose::class.java)
-                PurposeType.deleteAll(Purpose::class.java)
-                Vilage.deleteAll(Vilage::class.java)
-                Dictionary.deleteAll(Dictionary::class.java)
-                Loan.deleteAll(Loan::class.java)
-                Person.deleteAll(Person::class.java)
-                FamilyPerson.deleteAll(FamilyPerson::class.java)
-
-
-                var k = it
-                var branches = ArrayList<Branch>();
-                val consuls = ArrayList<VilageCounsel>();
-                val industries = ArrayList<Industry>();
-                val oficers = ArrayList<LoanOficer>();
-                val products = ArrayList<Product>();
-                val purposes = ArrayList<Purpose>();
-                val purposesTypes = ArrayList<PurposeType>();
-                val vilages = ArrayList<Vilage>();
-                val dictionaries = ArrayList<Dictionary>();
-
-                it.data.syncModel.branches.forEach {
-                    branches.add(Branch(it))//.save()
-                }
-                it.data.syncModel.consuls.forEach {
-                    consuls.add(VilageCounsel(it))//.save()
-                }
-                it.data.syncModel.industries.forEach {
-                    industries.add(Industry(it))//.save()
-                }
-                it.data.syncModel.loanOfficers.forEach {
-                    oficers.add(LoanOficer(it))//.save();
-                }
-                it.data.syncModel.products.forEach {
-                    products.add(Product(it))//.save()
-                }
-                it.data.syncModel.purposes.forEach {
-                    purposes.add(Purpose(it))//.save()
-                }
-                it.data.syncModel.purposesTypes.forEach {
-                    purposesTypes.add(PurposeType(it))//.save()
-                }
-                it.data.syncModel.villages.forEach {
-                    vilages.add(Vilage(it))//.save()
-                }
-                it.data.syncModel.dictionaries.forEach {
-                    dictionaries.add(Dictionary(it))//.save()
-                }
+                        Branch.deleteAll(Branch::class.java)
+                        VilageCounsel.deleteAll(VilageCounsel::class.java)
+                        Industry.deleteAll(Industry::class.java)
+                        LoanOficer.deleteAll(LoanOficer::class.java)
+                        Product.deleteAll(Product::class.java)
+                        Purpose.deleteAll(Purpose::class.java)
+                        PurposeType.deleteAll(Purpose::class.java)
+                        Vilage.deleteAll(Vilage::class.java)
+                        Dictionary.deleteAll(Dictionary::class.java)
+                        Loan.deleteAll(Loan::class.java)
+                        Person.deleteAll(Person::class.java)
+                        FamilyPerson.deleteAll(FamilyPerson::class.java)
 
 
-                SugarRecord.saveInTx(branches)
-                SugarRecord.saveInTx(consuls)
-                SugarRecord.saveInTx(industries)
-                SugarRecord.saveInTx(oficers)
-                SugarRecord.saveInTx(products)
-                SugarRecord.saveInTx(purposes)
-                SugarRecord.saveInTx(purposesTypes)
-                SugarRecord.saveInTx(vilages)
-                SugarRecord.saveInTx(dictionaries)
+                        var k = it
+                        var branches = ArrayList<Branch>();
+                        val consuls = ArrayList<VilageCounsel>();
+                        val industries = ArrayList<Industry>();
+                        val oficers = ArrayList<LoanOficer>();
+                        val products = ArrayList<Product>();
+                        val purposes = ArrayList<Purpose>();
+                        val purposesTypes = ArrayList<PurposeType>();
+                        val vilages = ArrayList<Vilage>();
+                        val dictionaries = ArrayList<Dictionary>();
+
+                        it.data.syncModel.branches.forEach {
+                            branches.add(Branch(it))//.save()
+                        }
+                        it.data.syncModel.consuls.forEach {
+                            consuls.add(VilageCounsel(it))//.save()
+                        }
+                        it.data.syncModel.industries.forEach {
+                            industries.add(Industry(it))//.save()
+                        }
+                        it.data.syncModel.loanOfficers.forEach {
+                            oficers.add(LoanOficer(it))//.save();
+                        }
+                        it.data.syncModel.products.forEach {
+                            products.add(Product(it))//.save()
+                        }
+                        it.data.syncModel.purposes.forEach {
+                            purposes.add(Purpose(it))//.save()
+                        }
+                        it.data.syncModel.purposesTypes.forEach {
+                            purposesTypes.add(PurposeType(it))//.save()
+                        }
+                        it.data.syncModel.villages.forEach {
+                            vilages.add(Vilage(it))//.save()
+                        }
+                        it.data.syncModel.dictionaries.forEach {
+                            dictionaries.add(Dictionary(it))//.save()
+                        }
 
 
+                        SugarRecord.saveInTx(branches)
+                        SugarRecord.saveInTx(consuls)
+                        SugarRecord.saveInTx(industries)
+                        SugarRecord.saveInTx(oficers)
+                        SugarRecord.saveInTx(products)
+                        SugarRecord.saveInTx(purposes)
+                        SugarRecord.saveInTx(purposesTypes)
+                        SugarRecord.saveInTx(vilages)
+                        SugarRecord.saveInTx(dictionaries)
+
+
+                        progressDialog!!.hide()
+                        Snackbar.make(view, "სინქრონიზაცია დასრულდა წარმატებით!", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show()
+
+
+                    }else{
+                        progressDialog!!.hide()
+                        Snackbar.make(view, "სინქრონიზაციის დროს მოხდა შეცდომა!", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show()
+                    }
+
+
+                    /*  it.data.syncModel.branches.forEach {
+                          Log.d("logKaxa",it.name)
+                      }*/
+                })
+            } catch (e: Exception) {
                 progressDialog!!.hide()
-                Snackbar.make(view, "სინქრონიზაცია დასრულდა წარმატებით!", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "მოხდა შეცდომა", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show()
-
-
-                /*  it.data.syncModel.branches.forEach {
-                      Log.d("logKaxa",it.name)
-                  }*/
-            })
-        } catch (e: Exception) {
-            progressDialog!!.hide()
-            Snackbar.make(view, "მოხდა შეცდომა", Snackbar.LENGTH_LONG)
+            }
+        } else {
+            Snackbar.make(view, "სინქრონიზაციისთვის საჭიროა ინტერნეტთან წვდომა", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
+
     }
 
     fun askPermission(permission: String, requestCode: Int) {
@@ -347,44 +438,44 @@ class ScrollingMainActivity : CredoExtendActivity() {
         val font1 = Typeface.createFromAsset(applicationContext.getAssets(), "fonts/font1.ttf");
         var firstName = "";
         var lastName = "";
-        if(StaticData.loginData != null){
+        if (StaticData.loginData != null) {
             val nameStrings = StaticData.loginData!!.name.split(" ")
-            if(nameStrings.size==2){
-                firstName = nameStrings[0].substring(0,1)
-                lastName = nameStrings[1].substring(0,1)
+            if (nameStrings.size == 2) {
+                firstName = nameStrings[0].substring(0, 1)
+                lastName = nameStrings[1].substring(0, 1)
+            } else {
+                firstName = StaticData.loginData!!.name.substring(0, 1)
             }
-            else{
-                firstName = StaticData.loginData!!.name.substring(0,1)
-            }
-
-
             updateCurrencies()
+            val generator = ColorGenerator.MATERIAL;
+            val color1 = generator.getRandomColor()
 
-        }else{
+            drawable = TextDrawable.builder()
+                    .beginConfig()
+                    .textColor(Color.WHITE)
+                    .useFont(font1)
+                    .bold()
+                    .toUpperCase()
+                    .withBorder(12) /* thickness in px */
+                    .endConfig()
+                    .buildRound("${firstName}${lastName}", resources.getColor(R.color.colorAccent))
+            nameImage.setImageDrawable(drawable)
+            tapTarget();
+        } else {
 
         }
-        val generator = ColorGenerator.MATERIAL;
-        val color1 = generator.getRandomColor()
-        val drawable = TextDrawable.builder()
-                .beginConfig()
-                .textColor(Color.WHITE)
-                .useFont(font1)
-                .bold()
-                .toUpperCase()
-                .withBorder(12) /* thickness in px */
-                .endConfig()
-                .buildRound("${firstName}${lastName}", resources.getColor(R.color.colorAccent))
-        nameImage.setImageDrawable(drawable)
 
 
     }
-    fun drawCurrency(){
+
+    fun drawCurrency() {
         currencyPlace.removeAllViews()
+
         var data = CurrencyData.listAll(CurrencyData::class.java)
-        if(data.size>0){
-            arrayOf("USD","EUR","RUB").forEach {
-                var value=it
-                var item = data.first { p->p.code == value }
+        if (data.size > 0) {
+            arrayOf("USD", "EUR", "RUB").forEach {
+                var value = it
+                var item = data.first { p -> p.code == value }
                 var view = layoutInflater.inflate(R.layout.currencycard, null)
                 var image = view.findViewById(R.id.flag) as ImageView
                 var currencyText = view.findViewById(R.id.currency) as TextView
@@ -400,29 +491,29 @@ class ScrollingMainActivity : CredoExtendActivity() {
                 currencyText.text = "${item.rate}"
                 var chart = view.findViewById(R.id.chart) as LineChartView
 
-                var values =  ArrayList<PointValue>();
+                var values = ArrayList<PointValue>();
 
                 var i = 0f
-                data.filter { p->p.code==value }.forEach {
-                    values.add(PointValue(i,it.rate))
+                data.filter { p -> p.code == value }.forEach {
+                    values.add(PointValue(i, it.rate))
                     i++;
                 }
                 val generator = ColorGenerator.MATERIAL;
                 val color1 = generator.getRandomColor()
 
 
-                var line =  Line(values).setColor(color1).setCubic(true).setFilled(true).setHasPoints(false).setHasLabels(true);
-                var lines =  ArrayList<Line>();
+                var line = Line(values).setColor(color1).setCubic(true).setFilled(true).setHasPoints(false).setHasLabels(true);
+                var lines = ArrayList<Line>();
                 lines.add(line);
-                var chartData =  LineChartData();
+                var chartData = LineChartData();
                 chartData.setLines(lines);
                 chart.setLineChartData(chartData);
 
                 currencyPlace.addView(view);
             }
-        }else{
-            arrayOf("USD","EUR","RUB").forEach {
-                var value=it
+        } else {
+            arrayOf("USD", "EUR", "RUB").forEach {
+                var value = it
 
                 var view = layoutInflater.inflate(R.layout.currencycard, null)
                 var image = view.findViewById(R.id.flag) as ImageView
@@ -439,7 +530,7 @@ class ScrollingMainActivity : CredoExtendActivity() {
                 currencyText.text = "არ მოიძებნა"
                 var chart = view.findViewById(R.id.chart) as LineChartView
 
-                var values =  ArrayList<PointValue>();
+                var values = ArrayList<PointValue>();
 
                 var i = 0f
 
@@ -447,35 +538,54 @@ class ScrollingMainActivity : CredoExtendActivity() {
                 val color1 = generator.getRandomColor()
 
 
-                var line =  Line(values).setColor(color1).setCubic(true).setFilled(true).setHasPoints(false).setHasLabels(true);
-                var lines =  ArrayList<Line>();
+                var line = Line(values).setColor(color1).setCubic(true).setFilled(true).setHasPoints(false).setHasLabels(true);
+                var lines = ArrayList<Line>();
                 lines.add(line);
-                var chartData =  LineChartData();
+                var chartData = LineChartData();
                 chartData.setLines(lines);
                 chart.setLineChartData(chartData);
 
                 currencyPlace.addView(view);
+
+                view.onClick {
+                    var mDialog = BottomSheetDialog(view.context);
+
+                    mDialog.contentView(verticalLayout {
+                        val name = editText()
+                        button("Say Hello") {
+                            onClick { toast("Hello, ${name.text}!") }
+                        }
+                    })
+                            .heightParam(ViewGroup.LayoutParams.WRAP_CONTENT)
+                            .inDuration(500)
+                            .cancelable(true)
+                            .show();
+                }
+
             }
         }
 
 
-
-
-
-
-
-
     }
-    fun updateCurrencies(){
-        if(StaticData.isInternetAvailable()){
-            OnlineData.syncCurrencies(Action1 {
-                CurrencyData.deleteAll(CurrencyData::class.java)
-                CurrencyData.saveInTx(it.data.currencyData);
+
+    fun updateCurrencies() {
+        try{
+            if (StaticData.isInternetAvailable()) {
+                OnlineData.syncCurrencies(Action1 {
+                    if(it!=null){
+                        CurrencyData.deleteAll(CurrencyData::class.java)
+                        CurrencyData.saveInTx(it.data.currencyData);
+                    }
+                    drawCurrency()
+                })
+            } else {
                 drawCurrency()
-            })
-        }else{
-            drawCurrency()
+            }
+        }catch (e:Exception){
+            e.printStackTrace();
+            toast("კურსების განახლების დროს მოხდა შეცდომა!")
         }
+
 
     }
 

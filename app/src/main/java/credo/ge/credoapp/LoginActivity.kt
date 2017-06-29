@@ -46,6 +46,7 @@ import credo.ge.credoapp.online.OnlineData
 import kotlinx.android.synthetic.main.pin_layout.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.toast
 import rx.functions.Action1
 
 /**
@@ -130,6 +131,8 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             indicatorDots!!.setIndicatorType(IndicatorDots.IndicatorType.FILL_WITH_ANIMATION);
             ///indicatorDots!!.setBackgroundColor(R.color.material_grey_800)
             var logoutBtn = findViewById(R.id.logoutBtn) as TextView
+            var pinChooseView = findViewById(R.id.choosePin) as TextView
+            pinChooseView.visibility = View.GONE
             logoutBtn.visibility = View.VISIBLE
 
             logoutBtn.setOnClickListener {
@@ -261,6 +264,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             showProgress(true)
             try {
                 OnlineData.login(email, password, Action1 {
+
                     var result = it;
                     if (result != null) {
                         if (result.data.expires_in != 0L) {
@@ -311,6 +315,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
                     } else {
                         showProgress(false)
+                        toast("სისტემაში შესვლის დროს მოხდა შეცდომა!")
                     }
                 })
             } catch (e: Exception) {

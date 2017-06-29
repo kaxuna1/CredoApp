@@ -16,6 +16,7 @@ import android.support.design.widget.Snackbar
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
@@ -37,6 +38,7 @@ import rx.functions.Action1
 import rx.observables.StringObservable
 import rx.schedulers.Schedulers
 import credo.ge.credoapp.views.FloatingViewControlFragment
+import credo.ge.credoapp.views.SingleSectionHoverMenuService
 import kotlinx.android.synthetic.main.float_body.*
 
 
@@ -44,7 +46,7 @@ class AutoCheckActivity : AppCompatActivity() {
     private var progressDialog: ProgressDialog? = null
 
 
-    var floaty: Floaty? = null
+    //var floaty: Floaty? = null
     private val NOTIFICATION_ID = 1500
     val PERMISSION_REQUEST_CODE = 16
 
@@ -73,7 +75,8 @@ class AutoCheckActivity : AppCompatActivity() {
         }
 
         val head = LayoutInflater.from(this).inflate(R.layout.float_head, null);
-        val body = LayoutInflater.from(this).inflate(R.layout.float_body, null)
+
+        StaticData.body = LayoutInflater.from(this).inflate(R.layout.float_body, null)
         btn_search.setOnClickListener {
             val id = idNumber.text.toString()
             progressDialog!!.setMessage("მიმდინარეობს განახლება!")
@@ -82,23 +85,21 @@ class AutoCheckActivity : AppCompatActivity() {
             progressDialog!!.show()
             StaticJava().download(storage,StaticData.loginData!!.access_token, id, StaticData.loginData!!.branchId, StaticData.loginData!!.userId, Action1 {
 
-                val intent = Intent(this, AutoCheckActivity::class.java);
-                val resultPendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                val notification = Floaty.createNotification(this, "კრედო ", "pdf გახსნილია", R.drawable.icon, resultPendingIntent);
 
 
-
-                var closeButton =
-                        body.findViewById(R.id.closebtn) as Button
-                val pdfView = body.findViewById(R.id.pdfView) as PDFView
-                closeButton.setOnClickListener {
-                    floaty!!.stopService()
-                }
+                StaticData.pdf = it.pdf
 
 
 
 
-                floaty = Floaty.createInstance(this, head, body, NOTIFICATION_ID, notification, object : FloatyOrientationListener {
+
+
+
+
+
+
+
+               /* floaty = Floaty.createInstance(this, head, body, NOTIFICATION_ID, notification, object : FloatyOrientationListener {
                     override
                     fun beforeOrientationChange(floaty: Floaty) {
                         Toast.makeText(me, "Orientation Change Start", Toast.LENGTH_SHORT).show();
@@ -108,12 +109,13 @@ class AutoCheckActivity : AppCompatActivity() {
                     fun afterOrientationChange(floaty: Floaty) {
                         Toast.makeText(me, "Orientation Change End", Toast.LENGTH_SHORT).show();
                     }
-                });
+                });*/
 
                 //
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if(Settings.canDrawOverlays(this)){
-                        floaty!!.startService();
+                        val startHoverIntent =  Intent(applicationContext, SingleSectionHoverMenuService::class.java)
+                        startService(startHoverIntent)
                     }else{
                         val intent2 = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                                 Uri.parse("package:" + packageName))
@@ -121,17 +123,14 @@ class AutoCheckActivity : AppCompatActivity() {
                     }
 
                 }else{
-                    floaty!!.startService();
+                    val startHoverIntent =  Intent(applicationContext, SingleSectionHoverMenuService::class.java)
+                    startService(startHoverIntent)
                 }
 
 
-                pdfView.fromBytes(it.pdf)
-                        .enableSwipe(true) // allows to block changing pages using swipe
-                        .swipeHorizontal(false)
-                        .enableDoubletap(true)
-                        .defaultPage(0)
-                        .enableAntialiasing(true)
-                        .load()
+
+
+
 
                 progressDialog!!.hide()
                 Snackbar.make(btn_search, "PDF ჩაიტვირთა", Snackbar.LENGTH_LONG)
@@ -158,7 +157,8 @@ class AutoCheckActivity : AppCompatActivity() {
 
     @TargetApi(Build.VERSION_CODES.M)
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        floaty!!.startService();
+        val startHoverIntent =  Intent(applicationContext, SingleSectionHoverMenuService::class.java)
+        startService(startHoverIntent)
     }
 
     /**

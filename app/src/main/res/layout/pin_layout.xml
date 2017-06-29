@@ -46,4 +46,14 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="14dp" />
 
+    <TextView
+        android:id="@+id/choosePin"
+        android:textColor="#ffffff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="შეიყვანეთ 4 ნიშნა \n პინ კოდი" />
+
 </RelativeLayout>
