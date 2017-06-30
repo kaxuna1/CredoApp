@@ -94,15 +94,37 @@ public class Person extends SugarRecord {
         return this;
     }
 
-    @ButtonFieldTypeViewAnnotation(name = "შენახვა", position = 14)
+    @ButtonFieldTypeViewAnnotation(name = "CSS-ში რეგისტრაცია", position = 14)
     public View.OnClickListener sendClick = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
             if (isValid()) {
-                ready = 1;
-                getThis().save();
-                Snackbar.make(v, "კლიენტი შენახულია! შეგიძლიათ შეავსოთ მასზე სესხი.", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Loan l= new Loan();
+                l.person = getThis();
+                final ACProgressFlower dialog = new ACProgressFlower.Builder(v.getContext())
+                        .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                        .themeColor(Color.WHITE)
+                        .text("რეგისტრაცია")
+                        .fadeColor(Color.DKGRAY).build();
+                dialog.show();
+                OnlineData.INSTANCE.syncLoan(l, new Action1<SyncLoanResult>() {
+                    @Override
+                    public void call(SyncLoanResult syncLoanResult) {
+                        if(syncLoanResult!=null){
+
+                            ready = 1;
+                            getThis().save();
+                            dialog.hide();
+                        }else{
+                            //
+                            dialog.hide();
+                            Snackbar.make(v, "მოხდა შეცდომა კლიენტის რეგისტრაციის დროს!", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+
+                    }
+                });
+
             }else{
                 Snackbar.make(v, "შეავსეთ სავალდებულო ველები", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();

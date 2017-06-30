@@ -24,11 +24,12 @@ class DataFillActivity : CredoExtendActivity() {
             }
         }
     }
-    var parser: ViewAnnotationParser?=null
+
+    var parser: ViewAnnotationParser? = null
     var updaterUUID: String? = ""
 
     var autoSave: Boolean = false
-    var savedNotification:Snackbar? = null;
+    var savedNotification: Snackbar? = null;
 
     internal var layout: LinearLayout? = null
 
@@ -38,9 +39,9 @@ class DataFillActivity : CredoExtendActivity() {
         //layout = findViewById(R.id.linearFormPlace) as LinearLayout
         val font1 = Typeface.createFromAsset(pager.context.getAssets(), "fonts/font1.ttf");
 
-        mainView2.applyRecursively {view ->
-            when(view){
-                is EditText-> view.typeface = font1
+        mainView2.applyRecursively { view ->
+            when (view) {
+                is EditText -> view.typeface = font1
             }
         }
 
@@ -85,26 +86,33 @@ class DataFillActivity : CredoExtendActivity() {
         parser = ViewAnnotationParser()
         parser!!.parse(classname, bindObject, View.OnClickListener {
 
-            classname.getMethod("save").invoke(bindObject)
+            if (parser!!.checkRequaredFieldsForSave()) {
+
+                parser!!.saveFun()
+                parser!!.showSavedNotif()
+                finish()
+            }else{
+                parser!!.showNotFilledNotification()
+            }
+
             if (updaterUUID != null) {
                 val func = StaticData.comboBoxUpdateFunctions.get(updaterUUID!!) as () -> Unit
                 func()
             }
-            finish()
-        }, "შენახვა", autoSave, supportFragmentManager, pager, tabs, !hideSave,this)
+        }, "შენახვა", autoSave, supportFragmentManager, pager, tabs, !hideSave, this)
 
 
         backBtn.setOnClickListener {
-            finish()
+            onBackPressed()
         }
 
 
     }
 
     override fun onBackPressed() {
-        if(parser!!.dataModel!!){
-            if(parser!!.checkRequaredFieldsForSave()){
-                alert("გსურთ გამოხვიდეთ და შეინახოთ ცვლილებები"){
+        if (parser!!.dataModel!!) {
+            if (parser!!.checkRequaredFieldsForSave()) {
+                alert("გსურთ გამოხვიდეთ და შეინახოთ ცვლილებები") {
                     yesButton {
                         parser!!.saveFun()
                         finish()
@@ -113,8 +121,8 @@ class DataFillActivity : CredoExtendActivity() {
                         toast("დახურვის გაუქმება")
                     }
                 }.show()
-            }else{
-                alert("საველდებულო ველები არაა შევსებული. გამოსვლის შემთხვევაში არ მოხდება ჩანაწერის შენახვა. გსურთ გაგრძელება?"){
+            } else {
+                alert("საველდებულო ველები არაა შევსებული. გამოსვლის შემთხვევაში არ მოხდება ჩანაწერის შენახვა. გსურთ გაგრძელება?") {
                     yesButton {
                         finish()
                     }
@@ -123,7 +131,7 @@ class DataFillActivity : CredoExtendActivity() {
                     }
                 }.show()
             }
-        }else{
+        } else {
             finish()
         }
 

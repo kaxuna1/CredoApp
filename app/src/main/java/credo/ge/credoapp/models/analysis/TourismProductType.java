@@ -30,26 +30,26 @@ public class TourismProductType extends SugarRecord{
             displayField = "getName",
             isMethod = true,
             type = "comboBox",
-            sqlData = true,
+            sqlData = true,requiredForSave = true,
             canAddToDb = false, position = 2,
             filterWith ="68")
     public Dictionary tourismZone;
     @ObjectFieldTypeViewAnotation(name = "პროდუქტი",
             displayField = "getName",
             isMethod = true,
-            type = "comboBox",
+            type = "comboBox",requiredForSave = true,
             sqlData = true,
             canAddToDb = false, position = 3,
             filterWith ="35")
     public Dictionary product;
 
-    @TextFieldTypeViewAnotation(name = "რაოდენობა", defaultValue = "1",type = "int", position = 4)
+    @TextFieldTypeViewAnotation(name = "რაოდენობა",requiredForSave = true, defaultValue = "0",type = "int", position = 4)
     public int quantity;
 
     @ObjectFieldTypeViewAnotation(name = "მდებარეობა",
             displayField = "getName",
             isMethod = true,
-            type = "comboBox",
+            type = "comboBox",requiredForSave = true,
             sqlData = true,
             canAddToDb = false, position = 5,
             filterWith ="69")
@@ -59,14 +59,14 @@ public class TourismProductType extends SugarRecord{
             displayField = "getName",
             isMethod = true,
             type = "comboBox",
-            sqlData = true,
+            sqlData = true,requiredForSave = true,
             canAddToDb = false, position = 6,
             filterWith ="36")
     public Dictionary service;
     @ObjectFieldTypeViewAnotation(name = "მომსახურების ხარისხი",
             displayField = "getName",
             isMethod = true,
-            type = "comboBox",
+            type = "comboBox",requiredForSave = true,
             sqlData = true,
             canAddToDb = false, position = 7,
             filterWith ="37")

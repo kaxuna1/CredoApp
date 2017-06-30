@@ -26,15 +26,15 @@ public class OtherExpanse extends SugarRecord {
 
     @ObjectFieldTypeViewAnotation(name = "სხვა ხარჯები",
             displayField = "getName",
-            isMethod = true,
+            isMethod = true,requiredForSave = true,
             type = "comboBox",
             sqlData = true,
             canAddToDb = false, position = 2,
             filterWith ="43")
     public Dictionary expanseType;
 
-    @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "1",type = "int", position = 3)
-    public int comment;
+    @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "",type = "text", position = 3)
+    public String comment;
 
 
 
@@ -44,7 +44,7 @@ public class OtherExpanse extends SugarRecord {
     public String label1;
 
 
-    @TextFieldTypeViewAnotation(name = "თანხა", defaultValue = "1",type = "int", position = 8)
+    @TextFieldTypeViewAnotation(name = "თანხა",requiredForSave = true, defaultValue = "0",type = "int", position = 8)
     public int sum;
 
 

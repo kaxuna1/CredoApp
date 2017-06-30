@@ -137,6 +137,7 @@ object OnlineData {
         }
 
     }
+
     fun syncLoanScoring(loan: Loan, onSync: Action1<SyncLoanResult>){
 
         val headers = mapOf<String, String>("Authorization" to "Bearer ${StaticData.loginData!!.access_token}")
@@ -265,7 +266,6 @@ object OnlineData {
         }
 
     }
-
     fun autoCheck(token: String, pn: String, branchId: String, byUserID: String, onSync: Action1<ResponseBody>) {
 
 

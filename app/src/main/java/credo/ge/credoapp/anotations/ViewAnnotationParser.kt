@@ -72,12 +72,25 @@ class ViewAnnotationParser {
         return validForSave;
     }
 
-    public var saveFun = fun() {
+    public fun  saveFun  ( clazz: Class<*>, myLocalObject:Any) {
+        if (checkRequaredFieldsForSave()) {
+            clazz!!.getMethod("save").invoke(myLocalObject)
+        }
+    }
+    public  fun saveFun ()  {
         if (checkRequaredFieldsForSave()) {
             clazz!!.getMethod("save").invoke(myLocalObject)
         }
     }
 
+    public fun showNotFilledNotification(){
+        Snackbar.make(pager!!, "შეავსეთ სავალდებულო ველები!", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+    }
+    public fun showSavedNotif(){
+        Snackbar.make(pager!!, "მონაცემები შენახულია!", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+    }
     var tapInstructions = ConcurrentHashMap<Int,TapTargetSequence>()
 
     fun viewToList(fields: Array<Field>,
@@ -131,7 +144,7 @@ class ViewAnnotationParser {
                     val fieldValue = field.get(myLocalObject)
                     var valueToSet = deffaultValue;
                     if (fieldValue != null) {
-                        if (type == "text")
+                        if (type == "text" || type == "number")
                             valueToSet = fieldValue as String
                         if (type == "int") {
                             var value = fieldValue as Int
@@ -140,8 +153,6 @@ class ViewAnnotationParser {
                             } else {
                                 valueToSet = ""
                             }
-
-
                         }
 
                     }
@@ -181,7 +192,7 @@ class ViewAnnotationParser {
                             }
 
                             if (autoSave) {
-                                saveFun()
+                                saveFun(clazz,myLocalObject)
                             }
                         }
                     })
@@ -246,7 +257,7 @@ class ViewAnnotationParser {
                             if (type == "int" && !s.isEmpty())
                                 field.set(myLocalObject, editText.text.toString().toInt())
                             if (autoSave) {
-                                saveFun()
+                                saveFun(clazz,myLocalObject)
                             }
                         }
                     })
@@ -324,7 +335,7 @@ class ViewAnnotationParser {
 
                         field.set(myLocalObject, date)
 
-                        saveFun()
+                        saveFun(clazz,myLocalObject)
 
                         button.setText(sdf.format(date))
 
@@ -464,7 +475,7 @@ class ViewAnnotationParser {
                                     visibilityCheck(fieldPaterns, fieldNameMap, bindObject)
 
                                     if (autoSave) {
-                                        saveFun()
+                                        saveFun(clazz,myLocalObject)
                                     }
                                     builder.hide()
                                 }
@@ -663,7 +674,7 @@ class ViewAnnotationParser {
                 addBtn.setOnClickListener {
 
                     if (checkRequaredFieldsForSave()) {
-                        saveFun()
+                        saveFun(clazz,myLocalObject)
                         var joinId = (clazz.getMethod("getId").invoke(myLocalObject) as Long)
                         val ctor = listClass.getConstructor()
                         var objectItemToSave = ctor.newInstance()
@@ -731,7 +742,7 @@ class ViewAnnotationParser {
                     var listAdapter: ReflectionAdapterAdapter? = null
                     val func = fun() {
                         if (checkRequaredFieldsForSave()) {
-                            saveFun()
+                            saveFun(clazz,myLocalObject)
                             val method = listClass.getMethod("findby" + joinField, Long::class.java)
                             val dataToLoad = method.invoke(null, (clazz.getMethod("getId").invoke(bindObject) as Long)) as ArrayList<Any>
                             //dataOfField.addAll(dataToLoad)
@@ -768,7 +779,7 @@ class ViewAnnotationParser {
                     addBtn.setOnClickListener {
 
                         if (checkRequaredFieldsForSave()) {
-                            saveFun()
+                            saveFun(clazz,myLocalObject)
                             var dialogBody = inflater.inflate(R.layout.multifieldviewandadd, null);
 
                             val builder = AlertDialog.Builder(pager.context).setTitle(annotation.name).setView(dialogBody).create()
@@ -860,81 +871,123 @@ class ViewAnnotationParser {
                     val inflater = LayoutInflater.from(pager.context)
 
                     if (annotation.objectType == "loan") {
-                        var dataToLoad = method.invoke(null) as List<Loan>
+
 
                         if (annotation.filter.equals("1")) {
-                            dataToLoad.filter { loan -> loan.sent }.forEach {
 
-                                var textColor = Color.WHITE
-                                var color = pager.context.resources.getColor(R.color.grey)
+                            var first = true;
+                            var updaterUUID = UUID.randomUUID().toString()
+
+                            var func = fun(){
+                                var dataToLoad = method.invoke(null) as List<Loan>
+                                view.removeAllViews()
+                                dataToLoad.filter { loan -> loan.sent }.forEach {
+
+                                    var textColor = Color.WHITE
+                                    var color = pager.context.resources.getColor(R.color.grey)
 
 
-                                val globalIt = it;
+                                    val globalIt = it;
 
-                                when (globalIt.product.name) {
-                                    "U1" -> {
-                                        textColor = Color.WHITE
-                                        color = pager.context.resources.getColor(R.color.grey)
+                                    when (globalIt.product.name) {
+                                        "U1" -> {
+                                            textColor = Color.WHITE
+                                            color = pager.context.resources.getColor(R.color.grey)
+                                        }
+                                        "A1" -> {
+                                            textColor = Color.WHITE
+                                            color = pager.context.resources.getColor(R.color.darkgrey)
+                                        }
+                                        else -> {
+                                            textColor = Color.BLACK
+                                            color = pager.context.resources.getColor(R.color.white)
+                                        }
                                     }
-                                    "A1" -> {
-                                        textColor = Color.WHITE
-                                        color = pager.context.resources.getColor(R.color.darkgrey)
+                                    var item = inflater.inflate(R.layout.loanlistitem, null, false)
+
+
+                                    var productImage = item.findViewById(R.id.image) as ImageView
+                                    val generator = ColorGenerator.MATERIAL;
+                                    val color1 = generator.getRandomColor()
+                                    val drawable = TextDrawable.builder()
+                                            .beginConfig()
+                                            .textColor(textColor)
+                                            .useFont(font1)
+                                            .bold()
+                                            .toUpperCase()
+                                            .withBorder(12) /* thickness in px */
+                                            .endConfig()
+                                            .buildRoundRect("${globalIt.product.product}", color, 20)
+                                    productImage.setImageDrawable(drawable)
+                                    productImage.setOnClickListener{
+                                        val intent = Intent(pager.context, sent_loan_page::class.java)
+
+
+                                        //intent.putExtra("updaterUUID", uuid)
+                                        intent.putExtra("id", globalIt.id)
+                                        pager.context.startActivity(intent)
                                     }
-                                    else -> {
-                                        textColor = Color.BLACK
-                                        color = pager.context.resources.getColor(R.color.white)
+
+
+                                    val user = item.findViewById(R.id.clientName) as TextView
+                                    val status = item.findViewById(R.id.status) as TextView
+                                    val loanSum = item.findViewById(R.id.loanSum) as TextView
+
+                                    user.setOnClickListener {
+                                        val intent = Intent(pager.context, sent_loan_page::class.java)
+                                        //intent.putExtra("updaterUUID", uuid)
+                                        intent.putExtra("id", globalIt.id)
+                                        pager.context.startActivity(intent)
                                     }
-                                }
-                                var item = inflater.inflate(R.layout.loanlistitem, null, false)
+
+                                    if (it.person != null)
+                                        user.setText(it.person.fullName() + " " + (if (it.person.personalNumber != null) it.person.personalNumber else ""))
 
 
-                                var productImage = item.findViewById(R.id.image) as ImageView
-                                val generator = ColorGenerator.MATERIAL;
-                                val color1 = generator.getRandomColor()
-                                val drawable = TextDrawable.builder()
-                                        .beginConfig()
-                                        .textColor(textColor)
-                                        .useFont(font1)
-                                        .bold()
-                                        .toUpperCase()
-                                        .withBorder(12) /* thickness in px */
-                                        .endConfig()
-                                        .buildRoundRect("${globalIt.product.product}", color, 20)
-                                productImage.setImageDrawable(drawable)
+                                    loanSum.setText("${globalIt.loanSum} ${globalIt.currency.name}")
+
+                                    status.text = "${it.getStatus()}"
 
 
-                                val user = item.findViewById(R.id.clientName) as TextView
-                                val status = item.findViewById(R.id.status) as TextView
-                                val loanSum = item.findViewById(R.id.loanSum) as TextView
+                                    var reloadButton = item.findViewById(R.id.reloadStatus) as ImageView
 
-                                user.setOnClickListener {
-                                    val intent = Intent(pager.context, sent_loan_page::class.java)
-                                    //intent.putExtra("updaterUUID", uuid)
-                                    intent.putExtra("id", globalIt.id)
-                                    pager.context.startActivity(intent)
-                                }
+                                    val observer = reloadButton.viewTreeObserver
 
-                                if (it.person != null)
-                                    user.setText(it.person.fullName() + " " + (if (it.person.personalNumber != null) it.person.personalNumber else ""))
+                                    observer.addOnDrawListener {
+                                        Snackbar.make(reloadButton, "ღილაკი დაიხატა", Snackbar.LENGTH_LONG)
+                                                .setAction("Action", null).show()
+                                    }
 
+                                    reloadButton.setOnClickListener{
+                                        val dialog = ACProgressFlower.Builder(pager.getContext())
+                                                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                                                .themeColor(Color.WHITE)
+                                                .text("გადამოწმება")
+                                                .fadeColor(Color.DKGRAY).build()
+                                        dialog.show()
+                                        try {
+                                            OnlineData.syncLoanStatus(globalIt, Action1 {
+                                                if (it != null) {
+                                                    val loanStatus = it.data.errorMessage
+                                                    globalIt.status = loanStatus
+                                                    globalIt.save()
+                                                    status.setText(globalIt.getStatus())
+                                                    dialog.hide()
+                                                } else {
+                                                    dialog.hide()
+                                                    Snackbar.make(reloadButton, "სტატუსის განახლების დროს მოხდა შეცდომა! \n ცადეთ მოგვიანებით.", Snackbar.LENGTH_LONG)
+                                                            .setAction("Action", null).show()
+                                                }
 
-                                loanSum.setText("${globalIt.loanSum} ${globalIt.currency.name}")
+                                            })
+                                        } catch (e: Exception) {
+                                            view.context.toast("ვერ მოხდა სერვერთან დაკავშირება!")
+                                            dialog.hide()
+                                        }
+                                    }
+                                    /*reloadButton.setOnClickListener {
 
-                                status.text = "${it.getStatus()}"
-
-
-                                var reloadButton = item.findViewById(R.id.reloadStatus) as ImageView
-
-                                val observer = reloadButton.viewTreeObserver
-
-                                observer.addOnDrawListener {
-                                    Snackbar.make(reloadButton, "ღილაკი დაიხატა", Snackbar.LENGTH_LONG)
-                                            .setAction("Action", null).show()
-                                }
-
-                                reloadButton.setOnClickListener {
-
-                                    /*        var mDialog = BottomSheetDialog(view.context);
+                                        *//*        var mDialog = BottomSheetDialog(view.context);
 
                                             mDialog.contentView(view.context.verticalLayout  {
                                                 val name = editText()
@@ -945,7 +998,7 @@ class ViewAnnotationParser {
                                                     .heightParam(ViewGroup.LayoutParams.WRAP_CONTENT)
                                                     .inDuration(500)
                                                     .cancelable(true)
-                                                    .show();*/
+                                                    .show();*//*
 
                                     val dialog = ACProgressFlower.Builder(pager.getContext())
                                             .direction(ACProgressConstant.DIRECT_CLOCKWISE)
@@ -973,139 +1026,155 @@ class ViewAnnotationParser {
                                         dialog.hide()
                                     }
 
-                                }
+                                }*/
 
-                                view.addView(item)
+                                    view.addView(item)
+                                }
                             }
+
+                            StaticData.comboBoxUpdateFunctions.put(updaterUUID, func)
+                            func()
                         }
                         if (annotation.filter.equals("2")) {
+
                             var first = true;
-                            dataToLoad.filter { loan -> !loan.sent }.forEach {
+                            var updaterUUID = UUID.randomUUID().toString()
+                            var func = fun(){
+                                var dataToLoad = method.invoke(null) as List<Loan>
+                                view.removeAllViews()
+                                dataToLoad.filter { loan -> !loan.sent }.forEach {
 
 
-                                var textColor = Color.WHITE
-                                var color = pager.context.resources.getColor(R.color.grey)
+                                    var textColor = Color.WHITE
+                                    var color = pager.context.resources.getColor(R.color.grey)
 
 
-                                val globalIt = it;
+                                    val globalIt = it;
 
-                                when (globalIt.product.name) {
-                                    "U1" -> {
-                                        textColor = Color.WHITE
-                                        color = pager.context.resources.getColor(R.color.grey)
-                                    }
-                                    "A1" -> {
-                                        textColor = Color.WHITE
-                                        color = pager.context.resources.getColor(R.color.darkgrey)
-                                    }
-                                    else -> {
-                                        textColor = Color.BLACK
-                                        color = pager.context.resources.getColor(R.color.white)
-                                    }
-                                }
-                                var item = inflater.inflate(R.layout.loanlistitem, null, false)
-
-
-                                var productImage = item.findViewById(R.id.image) as ImageView
-                                val generator = ColorGenerator.MATERIAL;
-                                val color1 = generator.getRandomColor()
-                                val drawable = TextDrawable.builder()
-                                        .beginConfig()
-                                        .textColor(textColor)
-                                        .useFont(font1)
-                                        .bold()
-                                        .toUpperCase()
-                                        .withBorder(12) /* thickness in px */
-                                        .endConfig()
-                                        .buildRoundRect("${globalIt.product.product}", color, 20)
-                                productImage.setImageDrawable(drawable)
-
-                                productImage.setOnClickListener {
-                                    val intent = Intent(pager.context, DataFillActivity::class.java)
-                                    intent.putExtra("class", Loan::class.java)
-
-                                    //intent.putExtra("updaterUUID", uuid)
-                                    intent.putExtra("id", globalIt.id)
-                                    pager.context.startActivity(intent)
-                                }
-
-
-                                val user = item.findViewById(R.id.clientName) as TextView
-                                val status = item.findViewById(R.id.status) as TextView
-                                val loanSum = item.findViewById(R.id.loanSum) as TextView
-
-                                if (it.person != null)
-                                    user.setText(it.person.fullName() + " " + (if (it.person.personalNumber != null) it.person.personalNumber else ""))
-
-
-                                loanSum.setText("${globalIt.loanSum} ${globalIt.currency.name}")
-
-                                status.text = "${it.getStatus()}"
-
-
-                                var sendButton = item.findViewById(R.id.reloadStatus) as ImageView
-
-                                sendButton.setImageResource(R.drawable.cloud_up)
-
-                                sendButton.setOnClickListener(globalIt.sendClick)
-                                if(first&&StaticData.loginData!!.isSendLoanTutorial){
-                                    first = false;
-                                    var instructions =  TapTargetSequence(this.activity).targets(
-                                            TapTarget.forView(productImage, "განაცხადის შესაცვლელად დააჭირეთ მითითებულ ღილაკს ",
-                                                    "ეს ღილაკი გადაგიყვანთ განაცხადის ედიტირების გვერდზე საიდანაც შეძლებთ შემდგომ განაცხადის გაგზავნას.")
-                                                    .outerCircleColor(R.color.colorPrimary)
-                                                    .outerCircleAlpha(0.96f)
-                                                    .targetCircleColor(R.color.white)
-                                                    .titleTextSize(20)
-                                                    .titleTextColor(R.color.white)
-                                                    .descriptionTextSize(13)
-                                                    .descriptionTextColor(R.color.white)
-                                                    .textColor(R.color.white)
-                                                    .textTypeface(Typeface.SANS_SERIF)
-                                                    .dimColor(R.color.material_blue_grey_950)
-                                                    .drawShadow(true)
-                                                    .cancelable(false)
-                                                    .tintTarget(false)
-                                                    .transparentTarget(true)
-                                                    .targetRadius(60),
-                                            TapTarget.forView(sendButton, "შევსებული განაცხადის გადაგზავნა",
-                                                    "განაცხადი გადაიგზავნება მხოლოდ იმ შემთხვევაში თუ ყველა სავალდებულო ველი შევსებულია")
-                                                    .outerCircleColor(R.color.colorPrimary)
-                                                    .outerCircleAlpha(0.96f)
-                                                    .targetCircleColor(R.color.white)
-                                                    .titleTextSize(20)
-                                                    .titleTextColor(R.color.white)
-                                                    .descriptionTextSize(13)
-                                                    .descriptionTextColor(R.color.white)
-                                                    .textColor(R.color.white)
-                                                    .textTypeface(Typeface.SANS_SERIF)
-                                                    .dimColor(R.color.material_blue_grey_950)
-                                                    .drawShadow(true)
-                                                    .cancelable(false)
-                                                    .tintTarget(true)
-                                                    .transparentTarget(false)
-                                                    .targetRadius(60)).listener(object : TapTargetSequence.Listener {
-                                        override fun onSequenceCanceled(lastTarget: TapTarget?) {
-
+                                    when (globalIt.product.name) {
+                                        "U1" -> {
+                                            textColor = Color.WHITE
+                                            color = pager.context.resources.getColor(R.color.grey)
                                         }
-
-                                        override fun onSequenceFinish() {
-                                            StaticData.loginData!!.isSendLoanTutorial = false
-                                            StaticData.loginData!!.save()
+                                        "A1" -> {
+                                            textColor = Color.WHITE
+                                            color = pager.context.resources.getColor(R.color.darkgrey)
                                         }
-
-                                        override fun onSequenceStep(lastTarget: TapTarget?, targetClicked: Boolean) {
-
+                                        else -> {
+                                            textColor = Color.BLACK
+                                            color = pager.context.resources.getColor(R.color.white)
                                         }
-                                    })
+                                    }
+                                    var item = inflater.inflate(R.layout.loanlistitem, null, false)
 
-                                    tapInstructions.put(annotation.page,instructions)
+
+                                    var productImage = item.findViewById(R.id.image) as ImageView
+                                    val generator = ColorGenerator.MATERIAL;
+                                    val color1 = generator.getRandomColor()
+                                    val drawable = TextDrawable.builder()
+                                            .beginConfig()
+                                            .textColor(textColor)
+                                            .useFont(font1)
+                                            .bold()
+                                            .toUpperCase()
+                                            .withBorder(12) /* thickness in px */
+                                            .endConfig()
+                                            .buildRoundRect("${globalIt.product.product}", color, 20)
+                                    productImage.setImageDrawable(drawable)
+
+                                    productImage.setOnClickListener {
+                                        val intent = Intent(pager.context, DataFillActivity::class.java)
+                                        intent.putExtra("class", Loan::class.java)
+
+                                        intent.putExtra("updaterUUID",updaterUUID)
+                                        intent.putExtra("hideSave",true)
+                                        intent.putExtra("autosave",true)
+                                        //intent.putExtra("updaterUUID", uuid)
+                                        intent.putExtra("id", globalIt.id)
+                                        pager.context.startActivity(intent)
+                                    }
+
+
+                                    val user = item.findViewById(R.id.clientName) as TextView
+                                    val status = item.findViewById(R.id.status) as TextView
+                                    val loanSum = item.findViewById(R.id.loanSum) as TextView
+
+                                    if (it.person != null)
+                                        user.setText(it.person.fullName() + " " + (if (it.person.personalNumber != null) it.person.personalNumber else ""))
+
+
+                                    loanSum.setText("${globalIt.loanSum} ${globalIt.currency.name}")
+
+                                    status.text = "${it.getStatus()}"
+
+
+                                    var sendButton = item.findViewById(R.id.reloadStatus) as ImageView
+
+                                    sendButton.setImageResource(R.drawable.cloud_up)
+
+                                    sendButton.setOnClickListener(globalIt.sendClick)
+                                    if(first&&StaticData.loginData!!.isSendLoanTutorial){
+                                        first = false;
+                                        var instructions =  TapTargetSequence(this.activity).targets(
+                                                TapTarget.forView(productImage, "განაცხადის შესაცვლელად დააჭირეთ მითითებულ ღილაკს ",
+                                                        "ეს ღილაკი გადაგიყვანთ განაცხადის ედიტირების გვერდზე საიდანაც შეძლებთ შემდგომ განაცხადის გაგზავნას.")
+                                                        .outerCircleColor(R.color.colorPrimary)
+                                                        .outerCircleAlpha(0.96f)
+                                                        .targetCircleColor(R.color.white)
+                                                        .titleTextSize(20)
+                                                        .titleTextColor(R.color.white)
+                                                        .descriptionTextSize(13)
+                                                        .descriptionTextColor(R.color.white)
+                                                        .textColor(R.color.white)
+                                                        .textTypeface(Typeface.SANS_SERIF)
+                                                        .dimColor(R.color.material_blue_grey_950)
+                                                        .drawShadow(true)
+                                                        .cancelable(false)
+                                                        .tintTarget(false)
+                                                        .transparentTarget(true)
+                                                        .targetRadius(60),
+                                                TapTarget.forView(sendButton, "შევსებული განაცხადის გადაგზავნა",
+                                                        "განაცხადი გადაიგზავნება მხოლოდ იმ შემთხვევაში თუ ყველა სავალდებულო ველი შევსებულია")
+                                                        .outerCircleColor(R.color.colorPrimary)
+                                                        .outerCircleAlpha(0.96f)
+                                                        .targetCircleColor(R.color.white)
+                                                        .titleTextSize(20)
+                                                        .titleTextColor(R.color.white)
+                                                        .descriptionTextSize(13)
+                                                        .descriptionTextColor(R.color.white)
+                                                        .textColor(R.color.white)
+                                                        .textTypeface(Typeface.SANS_SERIF)
+                                                        .dimColor(R.color.material_blue_grey_950)
+                                                        .drawShadow(true)
+                                                        .cancelable(false)
+                                                        .tintTarget(true)
+                                                        .transparentTarget(false)
+                                                        .targetRadius(60)).listener(object : TapTargetSequence.Listener {
+                                            override fun onSequenceCanceled(lastTarget: TapTarget?) {
+
+                                            }
+
+                                            override fun onSequenceFinish() {
+                                                StaticData.loginData!!.isSendLoanTutorial = false
+                                                StaticData.loginData!!.save()
+                                            }
+
+                                            override fun onSequenceStep(lastTarget: TapTarget?, targetClicked: Boolean) {
+
+                                            }
+                                        })
+
+                                        tapInstructions.put(annotation.page,instructions)
+                                    }
+
+                                    view.addView(item)
+
+
                                 }
-
-                                view.addView(item)
-
-
                             }
+                            StaticData.comboBoxUpdateFunctions.put(updaterUUID, func)
+                            func()
+
                         }
                     }
 
@@ -1143,7 +1212,7 @@ class ViewAnnotationParser {
                     field.set(myLocalObject, isChecked)
                     visibilityCheck(fieldPaterns, fieldNameMap, myLocalObject)
                     if (autoSave) {
-                        saveFun()
+                        saveFun(clazz,myLocalObject)
                     }
                 })
                 viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
@@ -1215,7 +1284,7 @@ class ViewAnnotationParser {
 
                 addBtn.setOnClickListener {
                     if (checkRequaredFieldsForSave()) {
-                        saveFun()
+                        saveFun(clazz,myLocalObject)
                         val intent = Intent(pager.context, DataFillActivity::class.java)
                         intent.putExtra("class", field.type)
                         intent.putExtra("updaterUUID", updaterUUID)
@@ -1275,8 +1344,12 @@ class ViewAnnotationParser {
 
     var activity:Activity? = null
 
+    var pager: ViewPager? = null
     fun parse(clazz: Class<*>, bindObject: Any, onSave: View.OnClickListener?,
               saveText: String, autoSave: Boolean, fragmentManager: FragmentManager, pager: ViewPager, tabs: PagerSlidingTabStrip, saveVisible: Boolean = true, dataFillActivity: Activity) {
+
+        this.pager = pager
+
 
         this.activity = dataFillActivity
 
@@ -1303,6 +1376,7 @@ class ViewAnnotationParser {
         visibilityCheck(fieldPaterns, fieldNameMap, bindObject)
         adapter.items = viewPagesListOuter
         pager.adapter = adapter;
+        pager.offscreenPageLimit = 10
         tabs.setViewPager(pager)
         tabs.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {

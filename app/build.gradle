@@ -41,6 +41,11 @@ dependencies {
     })
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     // https://mvnrepository.com/artifact/com.esotericsoftware.kryo/kryo
+    compile 'com.github.medyo:fancybuttons:1.8.3'
+    compile "org.jetbrains.anko:anko-commons:$anko_version"
+    compile "org.jetbrains.anko:anko:$anko_version"
+
+
     compile 'com.esotericsoftware.kryo:kryo:2.24.0'
     compile 'com.github.medyo:fancybuttons:1.8.3'
     compile 'com.github.barteksc:android-pdf-viewer:2.5.1'
@@ -48,7 +53,6 @@ dependencies {
     compile 'io.reactivex:rxjava-string:1.1.1'
     compile 'com.bezyapps.floatieslibrary:floaties:1.0.1'
     compile 'com.mattprecious.swirl:swirl:1.0.0'
-    compile 'com.github.medyo:fancybuttons:1.8.3'
     compile 'com.github.recruit-lifestyle:FloatingView:2.2'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.multidots:fingerprint-auth:1.0.1'
@@ -77,18 +81,15 @@ dependencies {
     compile 'com.google.android.gms:play-services:10.2.6'
     compile 'com.github.jhonnyx2012:horizontal-picker:1.0.5'
     compile 'cc.cloudist.acplibrary:library:1.2.1'
-    testCompile 'junit:junit:4.12'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.karumi:dexter:4.1.0'
-    compile "org.jetbrains.anko:anko-commons:$anko_version"
-    compile "org.jetbrains.anko:anko:$anko_version"
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     compile 'com.github.rey5137:material:1.2.4'
     compile 'com.github.lecho:hellocharts-android:v1.5.8'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
-
     compile 'io.mattcarroll.hover:hover:0.9.8'
+    testCompile 'junit:junit:4.12'
 
 }
 repositories {

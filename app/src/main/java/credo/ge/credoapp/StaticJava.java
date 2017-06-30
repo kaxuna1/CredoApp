@@ -157,7 +157,7 @@ public class StaticJava {
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
 
                 for (int i = 0; i <source.length(); i++) {
-                    Matcher matcher= Pattern.compile("[ა-ჰ0-9,.;:\\-]").matcher(""+source.charAt(i));
+                    Matcher matcher= Pattern.compile("[ა-ჰ0-9,.;:\\- ]").matcher(""+source.charAt(i));
                     if(!matcher.matches())
                         return "";
                 }

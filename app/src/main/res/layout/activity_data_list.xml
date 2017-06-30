@@ -30,7 +30,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:paddingLeft="15dp"
-            app:srcCompat="@drawable/arrow"
+            app:srcCompat="@drawable/backw"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />

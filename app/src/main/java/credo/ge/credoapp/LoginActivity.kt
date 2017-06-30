@@ -272,6 +272,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
                             OnlineData.syncUserName(result.data.userId,result.data.access_token, Action1 {
                                 var name = it.data.errorMessage
+                                var position = it.data.position
 
                                 setContentView(R.layout.pin_layout)
                                 indicatorDots = findViewById(R.id.indicator_dots) as IndicatorDots
@@ -281,9 +282,10 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                                 mPinLockView!!.attachIndicatorDots(indicatorDots);
                                 mPinLockView!!.setPinLockListener(object : PinLockListener {
                                     override fun onComplete(pin: String) {
-                                        Log.d("kkaaxxaa", "Pin complete: " + pin)
+
                                         result.data.pin = pin
                                         result.data.name = name
+                                        result.data.position = position
                                         result.data.save()
                                         editor!!.putLong("session", result.data.id)
                                         editor!!.commit()

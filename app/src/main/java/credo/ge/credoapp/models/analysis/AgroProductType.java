@@ -25,7 +25,7 @@ public class AgroProductType extends SugarRecord{
             displayField = "getName",
             isMethod = true,
             type = "comboBox",
-            sqlData = true,
+            sqlData = true,requiredForSave = true,
             canAddToDb = false, position = 2,
             filterWith ="31")
     public Dictionary product;
@@ -42,21 +42,21 @@ public class AgroProductType extends SugarRecord{
             displayField = "getName",
             isMethod = true,
             type = "comboBox",
-            sqlData = true,
+            sqlData = true,requiredForSave = true,
             canAddToDb = false, position = 4,
             filterWith ="2")
     public Dictionary unit;
 
-    @TextFieldTypeViewAnotation(name = "რაოდენობა", defaultValue = "1",type = "int", position = 5)
+    @TextFieldTypeViewAnotation(name = "რაოდენობა", defaultValue = "0",requiredForSave = true,type = "int", position = 5)
     public int quantity;
 
     @LabelFieldTypeViewAnotaion(label = "წლიური შემოსავალი",position = 6)
     public String label1;
 
-    @TextFieldTypeViewAnotation(name = "რაოდენობა", defaultValue = "1",type = "int", position = 7)
+    @TextFieldTypeViewAnotation(name = "რაოდენობა",requiredForSave = true, defaultValue = "1",type = "int", position = 7)
     public int quantityAnual;
 
-    @TextFieldTypeViewAnotation(name = "თანხა", defaultValue = "1",type = "int", position = 8)
+    @TextFieldTypeViewAnotation(name = "თანხა",requiredForSave = true, defaultValue = "1",type = "int", position = 8)
     public int sum;
 
 

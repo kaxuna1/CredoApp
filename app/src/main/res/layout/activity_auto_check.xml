@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:fancy="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorAccent"
+    android:background="#e2e2e2"
     tools:context="credo.ge.credoapp.AutoCheckActivity">
 
     <RelativeLayout
@@ -40,7 +40,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:paddingLeft="15dp"
-            app:srcCompat="@drawable/arrow"
+            app:srcCompat="@drawable/backw"
             android:layout_below="@+id/imageView2"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true" />

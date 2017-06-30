@@ -2,6 +2,7 @@ package credo.ge.credoapp.models.OnlineDataModels;
 
 import com.orm.SugarRecord;
 
+
 /**
  * Created by vakhtanggelashvili on 5/4/17.
  */
@@ -23,6 +24,7 @@ public class LoginData extends SugarRecord{
     private String UserId;
     private String token_type;
     private long expires_in;
+    public String position;
 
     public String getBranchId() {
         return BranchId;

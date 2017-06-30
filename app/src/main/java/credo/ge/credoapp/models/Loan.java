@@ -79,7 +79,7 @@ public class Loan extends SugarRecord {
             requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 3)
     public Product product;
     @ObjectFieldTypeViewAnotation(name = "სოფელი",
-            requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 4)
+            requiredForSave = true,filterWithField = "branch:serverId:branchId", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 4)
     public Vilage vilage;
     @ObjectFieldTypeViewAnotation(name = "სოფლის კონსული",
             requiredForSave = true, displayField = "getName",filterWithField = "vilage:serverId:villageId", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 5)
@@ -98,10 +98,10 @@ public class Loan extends SugarRecord {
             position = 7)
     public Purpose purpose;
     @TextFieldTypeViewAnotation(name = "გამოცდილება",
-            requiredForSave = true, defaultValue = "1", type = "int", position = 8, hint = "წელი")
+            requiredForSave = true, defaultValue = "0", type = "int", position = 8, hint = "წელი")
     public int gamocdileba;
     @TextFieldTypeViewAnotation(name = "თანხა",
-            requiredForSave = true, defaultValue = "1", type = "int", position = 9)
+            requiredForSave = true, defaultValue = "0", type = "int", hint = "თანხა",position = 9)
     public int loanSum;
     @ObjectFieldTypeViewAnotation(name = "ვალუტა",
             requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 10, filterWith = "16")
@@ -194,8 +194,8 @@ public class Loan extends SugarRecord {
             canAddToDb = false,
             joinField = "loan", position = 22, page = 2)
     public List<FamilyExpanse> familyExpanses;
-    @TextFieldTypeViewAnotation(name = "ოჯახის წევრების რაოდენობა",requiredForSave = true, defaultValue = "1", type = "int", page = 2, position = 23)
-    public int familyQuantity;
+    @TextFieldTypeViewAnotation(name = "ოჯახის წევრების რაოდენობა", defaultValue = "1", type = "int", page = 2, position = 23)
+    public int familyQuantity = 0;
     @ObjectFieldTypeViewAnotation(name = "დასახლების ტიპი",
             displayField = "getName",
             isMethod = true,

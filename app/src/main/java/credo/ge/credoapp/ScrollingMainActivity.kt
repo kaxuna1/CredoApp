@@ -13,7 +13,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationServices
@@ -42,9 +41,7 @@ import android.media.Image
 import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
 import com.getkeepsafe.taptargetview.TapTarget
@@ -240,18 +237,23 @@ class ScrollingMainActivity : CredoExtendActivity() {
                 }
             }.show()
         }
-        nameImage.setOnClickListener {
-            val countries = listOf("გამოსვლა", "დახურვა")
-            selector("აირჩიეთ მოქმედება", countries) { dialogInterface, i ->
-                if (i == 0) {
-                    var pref = this.applicationContext.getSharedPreferences(StaticData.preferencesName, StaticData.preferencesMode)
-                    val editor = pref!!.edit();
-                    editor!!.putLong("session", 0)
-                    editor!!.commit()
-                    startActivity(intentFor<LoginActivity>().singleTop())
 
-                }
-            }
+        nameImage.setOnClickListener {
+            /* val countries = listOf("გამოსვლა", "დახურვა")
+             selector("აირჩიეთ მოქმედება", countries) { dialogInterface, i ->
+                 if (i == 0) {
+                     var pref = this.applicationContext.getSharedPreferences(StaticData.preferencesName, StaticData.preferencesMode)
+                     val editor = pref!!.edit();
+                     editor!!.putLong("session", 0)
+                     editor!!.commit()
+                     startActivity(intentFor<LoginActivity>().singleTop())
+
+                 }
+             }*/
+
+            startActivity<ProfileActivity>()
+
+
         }
 
 
@@ -328,7 +330,7 @@ class ScrollingMainActivity : CredoExtendActivity() {
                 OnlineData.syncData(StaticData.loginData!!.access_token, Action1 {
 
 
-                    if (it!=null){
+                    if (it != null) {
                         var ka = VilageCounsel.findAll(VilageCounsel::class.java)
 
                         Branch.deleteAll(Branch::class.java)
@@ -401,7 +403,7 @@ class ScrollingMainActivity : CredoExtendActivity() {
                                 .setAction("Action", null).show()
 
 
-                    }else{
+                    } else {
                         progressDialog!!.hide()
                         Snackbar.make(view, "სინქრონიზაციის დროს მოხდა შეცდომა!", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show()
@@ -510,6 +512,10 @@ class ScrollingMainActivity : CredoExtendActivity() {
                 chart.setLineChartData(chartData);
 
                 currencyPlace.addView(view);
+
+                view.onClick {
+
+                }
             }
         } else {
             arrayOf("USD", "EUR", "RUB").forEach {
@@ -547,20 +553,6 @@ class ScrollingMainActivity : CredoExtendActivity() {
 
                 currencyPlace.addView(view);
 
-                view.onClick {
-                    var mDialog = BottomSheetDialog(view.context);
-
-                    mDialog.contentView(verticalLayout {
-                        val name = editText()
-                        button("Say Hello") {
-                            onClick { toast("Hello, ${name.text}!") }
-                        }
-                    })
-                            .heightParam(ViewGroup.LayoutParams.WRAP_CONTENT)
-                            .inDuration(500)
-                            .cancelable(true)
-                            .show();
-                }
 
             }
         }
@@ -569,10 +561,10 @@ class ScrollingMainActivity : CredoExtendActivity() {
     }
 
     fun updateCurrencies() {
-        try{
+        try {
             if (StaticData.isInternetAvailable()) {
                 OnlineData.syncCurrencies(Action1 {
-                    if(it!=null){
+                    if (it != null) {
                         CurrencyData.deleteAll(CurrencyData::class.java)
                         CurrencyData.saveInTx(it.data.currencyData);
                     }
@@ -581,7 +573,7 @@ class ScrollingMainActivity : CredoExtendActivity() {
             } else {
                 drawCurrency()
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace();
             toast("კურსების განახლების დროს მოხდა შეცდომა!")
         }

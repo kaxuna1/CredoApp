@@ -26,7 +26,7 @@ public class ExpansesListItem extends SugarRecord {
     @ObjectFieldTypeViewAnotation(name = "ხარჯის ტიპი",
             displayField = "getName",
             isMethod = true,
-            type = "comboBox",
+            type = "comboBox",requiredForSave = true,
             sqlData = true,
             canAddToDb = false, position = 2,
             filterWith ="43")
@@ -43,7 +43,7 @@ public class ExpansesListItem extends SugarRecord {
     public String label1;
 
 
-    @TextFieldTypeViewAnotation(name = "თანხა", defaultValue = "1",type = "int", position = 8)
+    @TextFieldTypeViewAnotation(name = "თანხა",requiredForSave = true, defaultValue = "0",type = "int", position = 8)
     public int sum;
 
 
