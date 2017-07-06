@@ -353,6 +353,7 @@ class ScrollingMainActivity : CredoExtendActivity() {
                         Loan.deleteAll(Loan::class.java)
                         Person.deleteAll(Person::class.java)
                         FamilyPerson.deleteAll(FamilyPerson::class.java)
+                        ExpanseType.deleteAll(ExpanseType::class.java)
 
 
                         var k = it
@@ -365,6 +366,13 @@ class ScrollingMainActivity : CredoExtendActivity() {
                         val purposesTypes = ArrayList<PurposeType>();
                         val vilages = ArrayList<Vilage>();
                         val dictionaries = ArrayList<Dictionary>();
+                        val expanses = ArrayList<ExpanseType>();
+
+
+
+                        it.data.syncModel.expanseTypeses.forEach{
+                            expanses.add(ExpanseType(it))
+                        }
 
                         it.data.syncModel.branches.forEach {
                             branches.add(Branch(it))//.save()
@@ -415,7 +423,7 @@ class ScrollingMainActivity : CredoExtendActivity() {
                         SugarRecord.saveInTx(purposesTypes)
                         SugarRecord.saveInTx(vilages)
                         SugarRecord.saveInTx(dictionaries)
-
+                        SugarRecord.saveInTx(expanses)
 
                         progressDialog!!.hide()
                         Snackbar.make(view, "სინქრონიზაცია დასრულდა წარმატებით!", Snackbar.LENGTH_LONG)

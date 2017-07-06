@@ -47,12 +47,10 @@ public class FamilyPerson extends SugarRecord {
     public String address;
 
     @TextFieldTypeViewAnotation(name = "მობილური",
-            requiredForSave = true, defaultValue = "",type = "number",mask = "(5##)-###-###", position = 7)
-    public String mobile;
-
-    @TextFieldTypeViewAnotation(name = "ტელეფონი",
-            requiredForSave = true, defaultValue = "",type = "text", position = 8)
-    public String phone;
+            requiredForSave = true, defaultValue = "",type = "number",mask = "#########", position = 7)
+    public String mobile="";
+    @TextFieldTypeViewAnotation(name = "ტელეფონი", defaultValue = "",type = "number", position = 8)
+    public String phone="";
     @ObjectFieldTypeViewAnotation(name = "სქესი",
             requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 10, filterWith = "3")
     public Dictionary sexType;

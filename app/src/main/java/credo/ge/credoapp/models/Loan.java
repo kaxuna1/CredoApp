@@ -118,8 +118,8 @@ public class Loan extends SugarRecord {
 
     @TextFieldTypeViewAnotation(name = "ცხოველების რაოდენობა", defaultValue = "", visibilityPatern = {"product:A1,A2"}, type = "int", position = 13)
     public int numberOfAnimals=0;
-    @TextFieldTypeViewAnotation(name = "მიწა (ჰა)", defaultValue = "", type = "float", visibilityPatern = {"product:A1,A2"}, position = 14)
-    public float mitsa=0f;
+    @TextFieldTypeViewAnotation(name = "მიწა (ჰა)", mask = "#######", defaultValue = "", type = "number", visibilityPatern = {"product:A1,A2"}, position = 14)
+    public String mitsa="";
 
 
     @ObjectsListFieldTypeViewAnottion(name = "ხარჯების ჩამონათვალი",
@@ -758,7 +758,7 @@ public class Loan extends SugarRecord {
         return this.loanDuration;
     }
 
-    public float getLand() {
+    public String getLand() {
         return this.mitsa;
     }
 

@@ -92,12 +92,12 @@ public class PersonalBalance extends SugarRecord {
         if (stillAsset.sum > 0)
             count++;
         if(getId()!=null){
-            count+=Obligation.findbybusinessbalance(getId()).size();
-            count+=LongObligation.findbybusinessbalance(getId()).size();
-            count+=LoanObligation.findbybusinessbalance(getId()).size();
-            count+=LongLoanObligation.findbybusinessbalance(getId()).size();
-            count+=OtherObligation.findbybusinessbalance(getId()).size();
-            count+=CredoObligation.findbybusinessbalance(getId()).size();
+            count+=Obligation.findbypersonalbalance(getId()).size();
+            count+=LongObligation.findbypersonalbalance(getId()).size();
+            count+=LoanObligation.findbypersonalbalance(getId()).size();
+            count+=LongLoanObligation.findbypersonalbalance(getId()).size();
+            count+=OtherObligation.findbypersonalbalance(getId()).size();
+            count+=CredoObligation.findbypersonalbalance(getId()).size();
         }
         return count;
     }
@@ -110,11 +110,11 @@ public class PersonalBalance extends SugarRecord {
 
     public void initData() {
      
-        shortObligations = Obligation.findbybusinessbalance(getId());
-        longTermObligation = LongObligation.findbybusinessbalance(getId());
-        loanObligation = LoanObligation.findbybusinessbalance(getId());
-        longTermLoanObligation = LongLoanObligation.findbybusinessbalance(getId());
-        otherObligation = OtherObligation.findbybusinessbalance(getId());
-        credoObligations = CredoObligation.findbybusinessbalance(getId());
+        shortObligations = Obligation.findbypersonalbalance(getId());
+        longTermObligation = LongObligation.findbypersonalbalance(getId());
+        loanObligation = LoanObligation.findbypersonalbalance(getId());
+        longTermLoanObligation = LongLoanObligation.findbypersonalbalance(getId());
+        otherObligation = OtherObligation.findbypersonalbalance(getId());
+        credoObligations = CredoObligation.findbypersonalbalance(getId());
     }
 }

@@ -1,6 +1,7 @@
 package credo.ge.credoapp.anotations
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.view.View
 
 import java.lang.reflect.*
@@ -181,7 +182,7 @@ class ViewAnnotationParser {
 
                     var filter = StaticJava().getFilter(allowed)
                     var filter2 = StaticJava().getFilterLengh(annotation.length)
-                    editText.filters = arrayOf(filter,filter2)
+                    editText.filters = arrayOf(filter)
                     editText.addTextChangedListener(object : TextWatcher {
 
                         override fun afterTextChanged(s: Editable) {}
@@ -230,7 +231,7 @@ class ViewAnnotationParser {
                     val fieldValue = field.get(myLocalObject)
                     var valueToSet = deffaultValue;
                     if (fieldValue != null) {
-                        if (type == "text")
+                        if (type == "text"||type =="number")
                             valueToSet = fieldValue as String
                         if (type == "int") {
                             var value = fieldValue as Int
@@ -312,6 +313,9 @@ class ViewAnnotationParser {
 
                 viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
                 viewPagesList.get(annotation.page)!!.put(annotation.position, view);
+                if (linear != null) {
+                    linear.addView(view)
+                }
 
             }
             if (field.isAnnotationPresent(DateFieldTypeViewAnotation::class.java)) {
@@ -483,7 +487,7 @@ class ViewAnnotationParser {
                                         val val2 = clazz.getField(filterObject).type.getField(filterField).get(clazz.getField(filterObject).get(bindObject)).toString()
                                         if (val2 != "0")
                                             filteredList = filteredList.filter {
-                                                val val1 = field.type.getField(filterField).get((it)).toString();
+                                                val val1 = field.type.getField(filterFieldMy).get((it)).toString();
                                                 val1 == val2
                                             }
                                     } catch (e: Exception) {
@@ -652,6 +656,9 @@ class ViewAnnotationParser {
                     viewPagesList.get(annotation.page)!!.put(annotation.position, view);
                     if (!filterObject.isNullOrEmpty()) {
                         fieldFilterMap.put(filterObject, viewFieldHolder);
+                    }
+                    if (linear != null) {
+                        linear.addView(view)
                     }
                 }
 
@@ -909,6 +916,9 @@ class ViewAnnotationParser {
                     fieldPaterns.add(viewFieldHolder)
                     viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
                     viewPagesList.get(annotation.page)!!.put(annotation.position, view);
+                    if (linear != null) {
+                        linear.addView(view)
+                    }
                 }
                 if (type == "list") {
                     var view = inflater.inflate(R.layout.object_list_view, null) as LinearLayout
@@ -1236,6 +1246,9 @@ class ViewAnnotationParser {
                     fieldPaterns.add(viewFieldHolder)
                     viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
                     viewPagesList.get(annotation.page)!!.put(annotation.position, view);
+                    if (linear != null) {
+                        linear.addView(view)
+                    }
                 }
 
 
@@ -1266,6 +1279,9 @@ class ViewAnnotationParser {
                 })
                 viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
                 viewPagesList.get(annotation.page)!!.put(annotation.position, view);
+                if (linear != null) {
+                    linear.addView(view)
+                }
 
             }
             if (field.isAnnotationPresent(DataGroupFieldTypeViewAnotation::class.java)) {
@@ -1462,7 +1478,7 @@ class ViewAnnotationParser {
     val fieldFilterMap = HashMap<String, ViewFieldHolder>()
     var pager: ViewPager? = null
     fun parse(clazz: Class<*>, bindObject: Any, onSave: View.OnClickListener?,
-              saveText: String, autoSave: Boolean, fragmentManager: FragmentManager, pager: ViewPager, tabs: PagerSlidingTabStrip, saveVisible: Boolean = true, dataFillActivity: Activity, dialog: ACProgressFlower) {
+              saveText: String, autoSave: Boolean, fragmentManager: FragmentManager, pager: ViewPager, tabs: PagerSlidingTabStrip, saveVisible: Boolean = true, dataFillActivity: Activity, dialog: ProgressDialog) {
 
         this.pager = pager
 
@@ -1561,7 +1577,7 @@ class ViewAnnotationParser {
                 }
 
 
-                dialog.hide();
+                dialog.hide()
             }
         }
 

@@ -44,6 +44,8 @@
                 android:ems="10"
                 android:typeface="monospace"
                 android:inputType="text"
+
+                android:maxLength="255"
                 android:text="Name"
                 android:layout_below="@+id/label"
                 android:layout_alignParentLeft="true"

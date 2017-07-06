@@ -42,7 +42,7 @@ import rx.functions.Action1;
  */
 @ParserClassAnnotation(cols = {"კლიენტი", "ოჯახის წევრები"})
 public class Person extends SugarRecord {
-    @TextFieldTypeViewAnotation(name = "პირადი ნომერი", required = true, requiredForSave = true, defaultValue = "", type = "text", length = 11,position = 1)
+    @TextFieldTypeViewAnotation(name = "პირადი ნომერი", required = true, requiredForSave = true, mask = "###########",defaultValue = "", type = "text", length = 11,position = 1)
     public String personalNumber = "";
 
     @TextFieldTypeViewAnotation(name = "სახელი", required = true, requiredForSave = true, defaultValue = "", type = "text", position = 2)
@@ -61,7 +61,7 @@ public class Person extends SugarRecord {
     @ObjectFieldTypeViewAnotation(name = "ტიპი", displayField = "getName", requiredForSave = true, isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 6, filterWith = "13")
     public Dictionary personType;
 
-    @TextFieldTypeViewAnotation(name = "მობილური", defaultValue = "", requiredForSave = true, type = "number", length = 9, position = 7)
+    @TextFieldTypeViewAnotation(name = "მობილური",mask = "#########",defaultValue = "", requiredForSave = true, type = "number", length = 9, position = 7)
     public String mobile = "";
 
     @TextFieldTypeViewAnotation(name = "ტელეფონი", defaultValue = "", type = "number", position = 8)

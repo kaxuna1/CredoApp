@@ -8,6 +8,7 @@ import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.BranchAdapte
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.DictionaryAdapter;
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.IndustryAdapter;
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.LoanOficerAdapter;
+import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.MobileExpanseTypesAdapter;
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.ProductAdapter;
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.PurposeAdapter;
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.VilageAdapter;
@@ -31,6 +32,7 @@ public class SyncModel {
     private ArrayList<ProductAdapter> products;
     private ArrayList<IndustryAdapter> industries;
     private ArrayList<DictionaryAdapter> dictionaries;
+    private ArrayList<MobileExpanseTypesAdapter> expanseTypeses;
 
     public ArrayList<BranchAdapterClass> getBranches() {
         return branches;
@@ -102,5 +104,13 @@ public class SyncModel {
 
     public void setPurposesTypes(ArrayList<PurposeAdapter> purposesTypes) {
         this.purposesTypes = purposesTypes;
+    }
+
+    public ArrayList<MobileExpanseTypesAdapter> getExpanseTypeses() {
+        return expanseTypeses;
+    }
+
+    public void setExpanseTypeses(ArrayList<MobileExpanseTypesAdapter> expanseTypeses) {
+        this.expanseTypeses = expanseTypeses;
     }
 }

@@ -9,6 +9,7 @@ import credo.ge.credoapp.anotations.ObjectFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.ParserClassAnnotation;
 import credo.ge.credoapp.anotations.TextFieldTypeViewAnotation;
 import credo.ge.credoapp.models.Dictionary;
+import credo.ge.credoapp.models.ExpanseType;
 import credo.ge.credoapp.models.Loan;
 
 /**
@@ -28,9 +29,8 @@ public class ExpansesListItem extends SugarRecord {
             isMethod = true,
             type = "comboBox",requiredForSave = true,
             sqlData = true,
-            canAddToDb = false, position = 2,
-            filterWith ="43")
-    public Dictionary expanseType;
+            canAddToDb = false, position = 2)
+    public ExpanseType expanseType;
 
     @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "1",type = "int", position = 3)
     public int comment;
@@ -39,13 +39,6 @@ public class ExpansesListItem extends SugarRecord {
 
 
 
-    @LabelFieldTypeViewAnotaion(label = "წლიური ხარჯი",position = 6)
-    public String label1;
-
-
-    @TextFieldTypeViewAnotation(name = "თანხა",requiredForSave = true, defaultValue = "0",type = "int", position = 8)
-    public int sum;
-
 
     public static List<ExpansesListItem> findbyloan(long id) {
         return ExpansesListItem.find(ExpansesListItem.class, "loan = ?", id + "");
@@ -53,7 +46,7 @@ public class ExpansesListItem extends SugarRecord {
 
 
     public String getName() {
-        return expanseType.name +" "+sum ;
+        return expanseType.name +" "+expanseType.amount+" "+expanseType.cur ;
     }
     public Loan loan;
 }

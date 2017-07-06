@@ -45,6 +45,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="4dp"
                 android:ems="10"
+                android:maxLength="255"
                 android:typeface="monospace"
                 app:keep_hint="false"
                 android:inputType="text"
