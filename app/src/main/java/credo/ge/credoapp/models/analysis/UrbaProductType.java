@@ -38,7 +38,7 @@ public class UrbaProductType extends SugarRecord {
             isMethod = true,
             type = "comboBox",requiredForSave = true,
             sqlData = true,
-            canAddToDb = false, position = 2,
+            canAddToDb = false, position = 3,
             filterWith ="1099")
     public Dictionary service2;
     @ObjectFieldTypeViewAnotation(name = "პროდუქტი",
@@ -46,12 +46,12 @@ public class UrbaProductType extends SugarRecord {
             isMethod = true,
             type = "comboBox",requiredForSave = true,
             sqlData = true,
-            canAddToDb = false, position = 3,
+            canAddToDb = false, position = 4,
             filterWith ="67")
     public Dictionary product;
 
-    @TextFieldTypeViewAnotation(name = "გამოცდილება",requiredForSave = true, defaultValue = "0",hint = "წელი",type = "text", position = 4)
-    public int comment;
+    @TextFieldTypeViewAnotation(name = "გამოცდილება",requiredForSave = true, defaultValue = "0",hint = "წელი",type = "text", position = 5)
+    public String comment;
 
     public String getName() {
         return product.name + " " + sum;
@@ -60,10 +60,10 @@ public class UrbaProductType extends SugarRecord {
 
 
 
-    @LabelFieldTypeViewAnotaion(label = "წლიური შემოსავალი",position = 5)
+    @LabelFieldTypeViewAnotaion(label = "წლიური შემოსავალი",position = 6)
     public String label1;
 
-    @TextFieldTypeViewAnotation(name = "თანხა", defaultValue = "1",type = "int", position = 6)
+    @TextFieldTypeViewAnotation(name = "თანხა", defaultValue = "1",type = "int", position = 7)
     public int sum;
 
 

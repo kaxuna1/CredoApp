@@ -40,9 +40,9 @@ import rx.functions.Action1;
 /**
  * Created by vakhtanggelashvili on 4/26/17.
  */
-@ParserClassAnnotation(cols = {"მომხმარებელი", "ოჯახის წევრები"})
+@ParserClassAnnotation(cols = {"კლიენტი", "ოჯახის წევრები"})
 public class Person extends SugarRecord {
-    @TextFieldTypeViewAnotation(name = "პირადი ნომერი", required = true, requiredForSave = true, defaultValue = "", type = "text", mask = "###########", position = 1)
+    @TextFieldTypeViewAnotation(name = "პირადი ნომერი", required = true, requiredForSave = true, defaultValue = "", type = "text", length = 11,position = 1)
     public String personalNumber = "";
 
     @TextFieldTypeViewAnotation(name = "სახელი", required = true, requiredForSave = true, defaultValue = "", type = "text", position = 2)
@@ -61,14 +61,15 @@ public class Person extends SugarRecord {
     @ObjectFieldTypeViewAnotation(name = "ტიპი", displayField = "getName", requiredForSave = true, isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 6, filterWith = "13")
     public Dictionary personType;
 
-    @TextFieldTypeViewAnotation(name = "მობილური", defaultValue = "", requiredForSave = true, type = "number", mask = "(5##)-###-###", position = 7)
+    @TextFieldTypeViewAnotation(name = "მობილური", defaultValue = "", requiredForSave = true, type = "number", length = 9, position = 7)
     public String mobile = "";
 
     @TextFieldTypeViewAnotation(name = "ტელეფონი", defaultValue = "", type = "number", position = 8)
     public String phone = "";
-    @TextFieldTypeViewAnotation(name = "დამოკიდებულ პირთა რაოდენობა", defaultValue = "", type = "int", position = 9)
+    @TextFieldTypeViewAnotation(name = "დამოკიდებულ პირთა რაოდენობა", requiredForSave = true, defaultValue = "", type = "int", position = 9)
     public int connectedPersonsNumber = 0;
 
+    public int serverId;
 
     @ObjectFieldTypeViewAnotation(name = "სქესი", displayField = "getName", requiredForSave = true, isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 10, filterWith = "3")
     public Dictionary sexType;
@@ -76,21 +77,22 @@ public class Person extends SugarRecord {
     @ObjectFieldTypeViewAnotation(name = "ოჯახური მდგომარეობა",
             displayField = "getName", isMethod = true,
             type = "comboBox", sqlData = true,
+            requiredForSave = true,
             canAddToDb = false, position = 11,
             filterWith = "100")
     public Dictionary ojaxuriMdgomareoba;
 
 
-    @ObjectFieldTypeViewAnotation(name = "სექტორი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 12, filterWith = "101")
+    @ObjectFieldTypeViewAnotation(name = "სექტორი", requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 12, filterWith = "101")
     public Dictionary sector;
 
-    @ObjectFieldTypeViewAnotation(name = "ინდუსტრია", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false,
+    @ObjectFieldTypeViewAnotation(name = "ინდუსტრია", requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false,
             position = 13)
     public Industry industry;
 
     public int ready = 0;
 
-    public Person getThis(){
+    public Person getThis() {
         return this;
     }
 
@@ -99,8 +101,8 @@ public class Person extends SugarRecord {
         @Override
         public void onClick(final View v) {
             if (isValid()) {
-                Loan l= new Loan();
-                l.person = getThis();
+                Loan l = new Loan();
+                l.person = Person.getById(getId());
                 final ACProgressFlower dialog = new ACProgressFlower.Builder(v.getContext())
                         .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                         .themeColor(Color.WHITE)
@@ -110,12 +112,14 @@ public class Person extends SugarRecord {
                 OnlineData.INSTANCE.syncLoan(l, new Action1<SyncLoanResult>() {
                     @Override
                     public void call(SyncLoanResult syncLoanResult) {
-                        if(syncLoanResult!=null){
+                        if (syncLoanResult != null) {
 
                             ready = 1;
                             getThis().save();
                             dialog.hide();
-                        }else{
+                            Snackbar.make(v, "მომხმარებელი დამატებულია CSS-ში!", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        } else {
                             //
                             dialog.hide();
                             Snackbar.make(v, "მოხდა შეცდომა კლიენტის რეგისტრაციის დროს!", Snackbar.LENGTH_LONG)
@@ -125,7 +129,7 @@ public class Person extends SugarRecord {
                     }
                 });
 
-            }else{
+            } else {
                 Snackbar.make(v, "შეავსეთ სავალდებულო ველები", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -155,9 +159,6 @@ public class Person extends SugarRecord {
         if (mobile == "") {
             valid = false;
         }
-        if (phone == "") {
-            valid = false;
-        }
         if (connectedPersonsNumber == 0) {
             valid = false;
         }
@@ -177,8 +178,6 @@ public class Person extends SugarRecord {
     }
 
 
-
-
     @ObjectsListFieldTypeViewAnottion(name = "ოჯახის წევრები",
             displayField = "getName",
             isMethod = true,
@@ -195,8 +194,9 @@ public class Person extends SugarRecord {
     public static List<Person> getData() {
         return Person.listAll(Person.class);
     }
-    public static List<Person> getData(String type){
-        return Person.find(Person.class,"ready = ?",type);
+
+    public static List<Person> getData(String type) {
+        return Person.find(Person.class, "ready = ?", type);
     }
 
     public static Person getById(long id) {

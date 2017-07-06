@@ -1,12 +1,20 @@
 package credo.ge.credoapp;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.Spanned;
+import android.util.Base64;
 import android.util.Log;
+import android.widget.EditText;
 
 import com.google.gson.Gson;
 import com.sromku.simple.storage.InternalStorage;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -43,6 +51,10 @@ import rx.schedulers.Schedulers;
 
 public class StaticJava {
     static String TAG = "kaxaaa";
+
+    public void setKeyboard(EditText e){
+        e.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+    }
 
     public void download(InternalStorage storage, String token, String pn, String branchId, String byUserID, Action1<PdfFile> onSync) {
         AutoCheckService downloadService = createService(AutoCheckService.class, "http://109.238.225.188:8081/");
@@ -157,10 +169,39 @@ public class StaticJava {
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
 
                 for (int i = 0; i <source.length(); i++) {
-                    Matcher matcher= Pattern.compile("[ა-ჰ0-9,.;:\\- ]").matcher(""+source.charAt(i));
+                    Matcher matcher= Pattern.compile("[ა-ჰ0-9,-_.;:\\- ]").matcher(""+source.charAt(i));
                     if(!matcher.matches())
                         return "";
                 }
+
+
+                return null;
+            }
+        };
+    }
+
+
+    public static String encodeToBase64(Bitmap image, Bitmap.CompressFormat compressFormat, int quality)
+    {
+        ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
+        image.compress(compressFormat, quality, byteArrayOS);
+        return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
+    }
+
+    public static Bitmap decodeBase64(String input)
+    {
+        byte[] decodedBytes = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+    }
+
+    public InputFilter getFilterLengh(final int length) {
+        return new InputFilter() {
+
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+                if(source.length()>length)
+                    return "";
 
 
                 return null;

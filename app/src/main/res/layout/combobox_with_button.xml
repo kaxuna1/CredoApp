@@ -59,14 +59,13 @@
             android:layout_toEndOf="@+id/label"
             android:layout_above="@+id/editBtn" />
 
-        <TextView
+        <EditText
             android:id="@+id/editBtn"
             android:textSize="20sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="4dp"
             android:layout_marginTop="3dp"
-            android:background="@drawable/borderbotom"
             android:layout_marginBottom="3dp"
             android:ems="10"
             android:focusable="false"

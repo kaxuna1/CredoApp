@@ -19,33 +19,42 @@ public class FamilyPerson extends SugarRecord {
             displayField = "getName",
             isMethod = true,
             type = "comboBox",
+            requiredForSave = true,
             sqlData = true,
             canAddToDb = false, position = 0,
             filterWith ="56")
     public Dictionary memberType;
 
-    @TextFieldTypeViewAnotation(name = "პირადი ნომერი", defaultValue = "", type = "text", mask = "###########", position = 1)
+    @TextFieldTypeViewAnotation(name = "პირადი ნომერი",
+            requiredForSave = true, defaultValue = "", type = "text", mask = "###########", position = 1)
     public String personalNumber;
 
-    @TextFieldTypeViewAnotation(name = "სახელი", defaultValue = "",type = "text", position = 2)
+    @TextFieldTypeViewAnotation(name = "სახელი",
+            requiredForSave = true, defaultValue = "",type = "text", position = 2)
     public String name = "";
 
-    @TextFieldTypeViewAnotation(name = "გვარი", defaultValue = "",type = "text", position = 3)
+    @TextFieldTypeViewAnotation(name = "გვარი",
+            requiredForSave = true, defaultValue = "",type = "text", position = 3)
     public String surname = "";
 
-    @DateFieldTypeViewAnotation(name = "დაბადების თარიღი",  position = 4)
+    @DateFieldTypeViewAnotation(name = "დაბადების თარიღი",
+            requiredForSave = true, position = 4)
     public Date birthDate = new Date();
 
 
-    @TextFieldTypeViewAnotation(name = "ფაქტობრივი მისამართი", defaultValue = "",type = "text", position = 5)
+    @TextFieldTypeViewAnotation(name = "ფაქტობრივი მისამართი",
+            requiredForSave = true, defaultValue = "",type = "text", position = 5)
     public String address;
 
-    @TextFieldTypeViewAnotation(name = "მობილური", defaultValue = "",type = "number",mask = "(5##)-###-###", position = 7)
+    @TextFieldTypeViewAnotation(name = "მობილური",
+            requiredForSave = true, defaultValue = "",type = "number",mask = "(5##)-###-###", position = 7)
     public String mobile;
 
-    @TextFieldTypeViewAnotation(name = "ტელეფონი", defaultValue = "",type = "text", position = 8)
+    @TextFieldTypeViewAnotation(name = "ტელეფონი",
+            requiredForSave = true, defaultValue = "",type = "text", position = 8)
     public String phone;
-    @ObjectFieldTypeViewAnotation(name = "სქესი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 10, filterWith = "3")
+    @ObjectFieldTypeViewAnotation(name = "სქესი",
+            requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 10, filterWith = "3")
     public Dictionary sexType;
 
 

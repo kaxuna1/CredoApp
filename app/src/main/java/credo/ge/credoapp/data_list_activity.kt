@@ -1,6 +1,7 @@
 package credo.ge.credoapp
 
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
@@ -73,6 +74,7 @@ class data_list_activity : CredoExtendActivity() {
                 intent.putExtra("autosave",true)
                 intent.putExtra("updaterUUID", uuid)
                 intent.putExtra("id", currentId)
+                intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
                 applicationContext.startActivity(intent)
                 builder.hide()
 

@@ -34,7 +34,7 @@ public class OtherExpanse extends SugarRecord {
     public Dictionary expanseType;
 
     @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "",type = "text", position = 3)
-    public String comment;
+    public String comment="";
 
 
 

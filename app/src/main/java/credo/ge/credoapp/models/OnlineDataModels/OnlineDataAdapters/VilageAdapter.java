@@ -9,7 +9,15 @@ public class VilageAdapter {
 
     public String city;
 
-    public int branchId;
+    private int branchId;
 
     public int id;
+
+    public int getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(int branchId) {
+        this.branchId = branchId;
+    }
 }

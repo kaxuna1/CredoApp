@@ -29,8 +29,8 @@ public class BusinesExpanse extends SugarRecord {
             filterWith ="42")
     public Dictionary expanseType;
 
-    @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "",type = "int", position = 3)
-    public String comment;
+    @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "",type = "text", position = 3)
+    public String comment="";
 
 
 

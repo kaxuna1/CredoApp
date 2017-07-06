@@ -20,6 +20,7 @@ import rx.Observable
 import rx.Subscriber
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 
 /**
@@ -240,6 +241,38 @@ object OnlineData {
 
         val syncLoanObservable = retrofit1Url.create<SyncDataServices>(SyncDataServices::class.java!!)
                 .syncLoan(headers, Gson().toJsonTree(MethodName("GetVillageList",userId)).asJsonObject)
+
+        try {
+            syncLoanObservable
+                    .subscribeOn(Schedulers.newThread())
+                    .doOnError { throwable -> throwable.printStackTrace() }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe (object:Subscriber<SyncLoanResult>(){
+                        override fun onNext(t: SyncLoanResult?) {
+                            onSync.call(t)
+                        }
+
+                        override fun onError(e: Throwable?) {
+                            e!!.printStackTrace();
+                            onSync.call(null)
+                        }
+
+                        override fun onCompleted() {
+
+                        }
+
+                    } )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+    fun syncFiles(images:List<ImageDataModel>,loan:Loan, onSync: Action1<SyncLoanResult>){
+
+        val headers = mapOf<String, String>("Authorization" to "Bearer ${StaticData.loginData!!.access_token}")
+
+        val syncLoanObservable = retrofit1Url.create<SyncDataServices>(SyncDataServices::class.java!!)
+                .syncLoan(headers, Gson().toJsonTree(MethodName("GetAllDictionariesForMobile",loan,images,StaticData!!.loginData!!.userId)).asJsonObject)
 
         try {
             syncLoanObservable

@@ -28,7 +28,7 @@ public class BusinessBalance extends SugarRecord {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 3)
-    public List<ObligationsToReceive> obligationsToReceives;
+    public List<ObligationsToReceive> obligationsToReceives = new ArrayList<>();
 
     @InlineObjectsListFieldTypeViewAnotation(name = "მზა პროდუქტი",
             displayField = "getName",
@@ -37,7 +37,7 @@ public class BusinessBalance extends SugarRecord {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 4)
-    public List<ReadyProduct> readyProduct;
+    public List<ReadyProduct> readyProduct = new ArrayList<>();
     @InlineObjectsListFieldTypeViewAnotation(name = "ნედლეული/მარაგები",
             displayField = "getName",
             isMethod = true,
@@ -45,7 +45,7 @@ public class BusinessBalance extends SugarRecord {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 5)
-    public List<Materials> materialses;
+    public List<Materials> materialses = new ArrayList<>();
     @InlineObjectsListFieldTypeViewAnotation(name = "პირუტყვი",
             displayField = "getName",
             isMethod = true,
@@ -53,7 +53,7 @@ public class BusinessBalance extends SugarRecord {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 6)
-    public List<Cattle> cattle;
+    public List<Cattle> cattle = new ArrayList<>();
     @InlineObjectsListFieldTypeViewAnotation(name = "მანქანა/დანადგარები",
             displayField = "getName",
             isMethod = true,
@@ -61,7 +61,7 @@ public class BusinessBalance extends SugarRecord {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 7)
-    public List<Machines> machines;
+    public List<Machines> machines = new ArrayList<>();
     @InlineObjectsListFieldTypeViewAnotation(name = "შენობა/ნაგებობა",
             displayField = "getName",
             isMethod = true,
@@ -69,7 +69,7 @@ public class BusinessBalance extends SugarRecord {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 8)
-    public List<Building> buildings;
+    public List<Building> buildings = new ArrayList<>();
     @InlineObjectsListFieldTypeViewAnotation(name = "მიწა",
             displayField = "getName",
             isMethod = true,
@@ -77,7 +77,7 @@ public class BusinessBalance extends SugarRecord {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 9)
-    public List<Land> lands;
+    public List<Land> lands = new ArrayList<>();
     @InlineObjectsListFieldTypeViewAnotation(name = "მოკლევადიანი ვალდებულება",
             displayField = "getName",
             isMethod = true,
@@ -85,7 +85,7 @@ public class BusinessBalance extends SugarRecord {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 10)
-    public List<Obligation> shortObligations;
+    public List<Obligation> shortObligations = new ArrayList<>();
     @InlineObjectsListFieldTypeViewAnotation(name = "გრძელვადიანი ვალდებულება",
             displayField = "getName",
             isMethod = true,
@@ -93,7 +93,7 @@ public class BusinessBalance extends SugarRecord {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 11)
-    public List<LongObligation> longTermObligation;
+    public List<LongObligation> longTermObligation = new ArrayList<>();
     @InlineObjectsListFieldTypeViewAnotation(name = "სასესხო ვალდებულება",
             displayField = "getName",
             isMethod = true,
@@ -101,7 +101,7 @@ public class BusinessBalance extends SugarRecord {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 12)
-    public List<LoanObligation> loanObligation;
+    public List<LoanObligation> loanObligation = new ArrayList<>();
     @InlineObjectsListFieldTypeViewAnotation(name = "გრძელვადიანი სასესხო ვალდებულება",
             displayField = "getName",
             isMethod = true,
@@ -109,7 +109,7 @@ public class BusinessBalance extends SugarRecord {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 13)
-    public List<LongLoanObligation> longTermLoanObligation;
+    public List<LongLoanObligation> longTermLoanObligation = new ArrayList<>();
     @InlineObjectsListFieldTypeViewAnotation(name = "სხვა ვალდებულება",
             displayField = "getName",
             isMethod = true,
@@ -117,7 +117,7 @@ public class BusinessBalance extends SugarRecord {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 14)
-    public List<OtherObligation> otherObligation;
+    public List<OtherObligation> otherObligation = new ArrayList<>();
     @InlineObjectsListFieldTypeViewAnotation(name = "სესხი კრედოში",
             displayField = "getName",
             isMethod = true,
@@ -125,7 +125,7 @@ public class BusinessBalance extends SugarRecord {
             sqlData = true,
             canAddToDb = false,
             joinField = "businessbalance", position = 15)
-    public List<CredoObligation> credoObligations;
+    public List<CredoObligation> credoObligations = new ArrayList<>();
 
 
     public BusinessBalance() {

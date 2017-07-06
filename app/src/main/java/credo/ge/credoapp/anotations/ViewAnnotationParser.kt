@@ -36,8 +36,12 @@ import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
+import com.mvc.imagepicker.ImagePicker
 import credo.ge.credoapp.*
+import credo.ge.credoapp.models.Dictionary
 import credo.ge.credoapp.models.Loan
+import credo.ge.credoapp.models.UploadFileParameters
+import credo.ge.credoapp.models.ViewModels.FileUploadView
 import credo.ge.credoapp.online.OnlineData
 import org.jetbrains.anko.*
 import rx.functions.Action1
@@ -72,26 +76,31 @@ class ViewAnnotationParser {
         return validForSave;
     }
 
-    public fun  saveFun  ( clazz: Class<*>, myLocalObject:Any) {
-        if (checkRequaredFieldsForSave()) {
-            clazz!!.getMethod("save").invoke(myLocalObject)
-        }
-    }
-    public  fun saveFun ()  {
+    public fun saveFun(clazz: Class<*>, myLocalObject: Any) {
         if (checkRequaredFieldsForSave()) {
             clazz!!.getMethod("save").invoke(myLocalObject)
         }
     }
 
-    public fun showNotFilledNotification(){
+    public fun saveFun() {
+        if (checkRequaredFieldsForSave()) {
+            clazz!!.getMethod("save").invoke(myLocalObject)
+        }
+    }
+
+    public fun showNotFilledNotification() {
         Snackbar.make(pager!!, "შეავსეთ სავალდებულო ველები!", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
     }
-    public fun showSavedNotif(){
+
+    public fun showSavedNotif() {
         Snackbar.make(pager!!, "მონაცემები შენახულია!", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
     }
-    var tapInstructions = ConcurrentHashMap<Int,TapTargetSequence>()
+
+    public var listForActivityResult = ArrayList<(Int, Int, Intent) -> Unit>()
+
+    var tapInstructions = ConcurrentHashMap<Int, TapTargetSequence>()
 
     fun viewToList(fields: Array<Field>,
                    inflater: LayoutInflater,
@@ -100,7 +109,7 @@ class ViewAnnotationParser {
                    clazz: Class<*>,
                    bindObject: Any,
                    pager: ViewPager,
-                   autoSave: Boolean)
+                   autoSave: Boolean, linear: LinearLayout? = null)
             : ConcurrentHashMap<Int, ConcurrentHashMap<Int, View>> {
 
 
@@ -162,14 +171,17 @@ class ViewAnnotationParser {
                     } else {
                         if (type == "number") {
                             editText.inputType = InputType.TYPE_CLASS_PHONE
+                        } else {
+                            if (type == "float")
+                                StaticJava().setKeyboard(editText)
                         }
                     }
                     val allowed = "აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჰ"
 
 
                     var filter = StaticJava().getFilter(allowed)
-                    if (mask.isNullOrEmpty())
-                        editText.filters = arrayOf(filter)
+                    var filter2 = StaticJava().getFilterLengh(annotation.length)
+                    editText.filters = arrayOf(filter,filter2)
                     editText.addTextChangedListener(object : TextWatcher {
 
                         override fun afterTextChanged(s: Editable) {}
@@ -184,15 +196,21 @@ class ViewAnnotationParser {
 
                             if (type == "text" || type == "number")
                                 field.set(myLocalObject, editText.rawText.toString())
-                            if (type == "int" ){
-                                if(s.isEmpty())
+                            if (type == "int") {
+                                if (s.isEmpty())
                                     field.set(myLocalObject, 0)
                                 else
                                     field.set(myLocalObject, editText.rawText.toString().toInt())
                             }
+                            if (type == "float") {
+                                if (s.isEmpty())
+                                    field.set(myLocalObject, 0f)
+                                else
+                                    field.set(myLocalObject, editText.rawText.toString().toFloat())
+                            }
 
                             if (autoSave) {
-                                saveFun(clazz,myLocalObject)
+                                saveFun(clazz, myLocalObject)
                             }
                         }
                     })
@@ -232,6 +250,9 @@ class ViewAnnotationParser {
                     } else {
                         if (type == "number") {
                             editText.inputType = InputType.TYPE_CLASS_PHONE
+                        } else {
+                            if (type == "float")
+                                StaticJava().setKeyboard(editText)
                         }
                     }
 
@@ -256,8 +277,14 @@ class ViewAnnotationParser {
                                 field.set(myLocalObject, editText.text.toString())
                             if (type == "int" && !s.isEmpty())
                                 field.set(myLocalObject, editText.text.toString().toInt())
+                            if (type == "float") {
+                                if (s.isEmpty())
+                                    field.set(myLocalObject, 0f)
+                                else
+                                    field.set(myLocalObject, editText.toString().toFloat())
+                            }
                             if (autoSave) {
-                                saveFun(clazz,myLocalObject)
+                                saveFun(clazz, myLocalObject)
                             }
                         }
                     })
@@ -272,6 +299,9 @@ class ViewAnnotationParser {
                 fieldPaterns.add(viewFieldHolder)
                 viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
                 viewPagesList.get(annotation.page)!!.put(annotation.position, view);
+                if (linear != null) {
+                    linear.addView(view)
+                }
             }
             if (field.isAnnotationPresent(LabelFieldTypeViewAnotaion::class.java)) {
                 val annotation = field.getAnnotation<LabelFieldTypeViewAnotaion>(LabelFieldTypeViewAnotaion::class.java)
@@ -335,7 +365,7 @@ class ViewAnnotationParser {
 
                         field.set(myLocalObject, date)
 
-                        saveFun(clazz,myLocalObject)
+                        saveFun(clazz, myLocalObject)
 
                         button.setText(sdf.format(date))
 
@@ -361,6 +391,8 @@ class ViewAnnotationParser {
                 val filter = annotation.filterWith;
                 val filterWithField = annotation.filterWithField.split(":")
 
+                val fieldName = field.name
+
                 var filterObject: String = ""
 
                 var filterField: String = ""
@@ -371,6 +403,7 @@ class ViewAnnotationParser {
                     filterObject = filterWithField[0]
                     filterField = filterWithField[1]
                     filterFieldMy = filterWithField[2]
+
                 }
 
 
@@ -382,7 +415,7 @@ class ViewAnnotationParser {
                     // val spinner = view.findViewById(R.id.spinner) as Spinner
                     //val spinner2 = view.findViewById(R.id.spinner2) as SearchableSpinner
 
-                    val btn = view.findViewById(R.id.editBtn) as TextView
+                    val btn = view.findViewById(R.id.editBtn) as EditText
                     btn.typeface = font1
                     val required = view!!.findViewById(R.id.required) as ImageView
                     if (annotation.requiredForSave) {
@@ -447,15 +480,22 @@ class ViewAnnotationParser {
                                 if (filterWithField.size == 3) {
 
                                     try {
-                                        filteredList = filteredList.filter {
-                                            val val1 = field.type.getField(filterField).get((it)).toString();
-                                            val val2 = clazz.getField(filterObject).type.getField(filterField).get(clazz.getField(filterObject).get(bindObject)).toString()
-                                            val1 == val2
-                                        }
+                                        val val2 = clazz.getField(filterObject).type.getField(filterField).get(clazz.getField(filterObject).get(bindObject)).toString()
+                                        if (val2 != "0")
+                                            filteredList = filteredList.filter {
+                                                val val1 = field.type.getField(filterField).get((it)).toString();
+                                                val1 == val2
+                                            }
                                     } catch (e: Exception) {
                                         e.printStackTrace()
                                     }
 
+                                }
+                                if (!annotation.booleanFilterField.isNullOrEmpty()) {
+                                    filteredList = filteredList.filter {
+                                        var val1 = field.type.getField(annotation.booleanFilterField).get(it) as Boolean
+                                        val1 == annotation.booleanFilterVal
+                                    }
                                 }
 
 
@@ -475,9 +515,17 @@ class ViewAnnotationParser {
                                     visibilityCheck(fieldPaterns, fieldNameMap, bindObject)
 
                                     if (autoSave) {
-                                        saveFun(clazz,myLocalObject)
+                                        saveFun(clazz, myLocalObject)
                                     }
                                     builder.hide()
+
+
+                                    var holder = fieldFilterMap.get(fieldName)
+
+                                    if (holder != null) {
+                                        (holder.view!!.findViewById(R.id.editBtn) as TextView).text = "აირჩიეთ სიიდან"
+                                        holder.field!!.set(holder.bindObject!!, null)
+                                    }
                                 }
 
                             }
@@ -602,6 +650,9 @@ class ViewAnnotationParser {
                     fieldPaterns.add(viewFieldHolder)
                     viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
                     viewPagesList.get(annotation.page)!!.put(annotation.position, view);
+                    if (!filterObject.isNullOrEmpty()) {
+                        fieldFilterMap.put(filterObject, viewFieldHolder);
+                    }
                 }
 
 
@@ -638,25 +689,23 @@ class ViewAnnotationParser {
                     val dataToLoad = method.invoke(null, (clazz.getMethod("getId").invoke(myLocalObject) as Long)) as ArrayList<Any>
                     linearPlace.removeAllViews()
                     dataToLoad.forEach {
+                        var globalIt = it;
                         val objectItemView = inflater.inflate(R.layout.inline_objects_item_linear, null)
 
                         val linearForObjectFields = objectItemView.findViewById(R.id.linearForObjectFields) as LinearLayout
                         val deleteItemBtn = objectItemView.findViewById(R.id.removeObjectButton)
                         deleteItemBtn.setOnClickListener {
-                            listClass.getMethod("delete").invoke(it)
+                            listClass.getMethod("delete").invoke(globalIt)
                             val func1 = StaticData.comboBoxUpdateFunctions.get(updaterUUID) as () -> Unit
                             func1()
                         }
 
 
                         val viewPagesListInner: ConcurrentHashMap<Int, ConcurrentHashMap<Int, View>> =
-                                viewToList(listClass.fields, inflater, fieldNameMap, fieldPaterns, listClass, it, pager, true);
+                                viewToList(listClass.fields, inflater, fieldNameMap, fieldPaterns, listClass, it, pager, true, linearForObjectFields);
 
 
-                        viewPagesListInner[0]!!.forEach {
-                            i, v ->
-                            linearForObjectFields.addView(v)
-                        }
+
 
 
                         linearPlace.addView(objectItemView);
@@ -674,7 +723,7 @@ class ViewAnnotationParser {
                 addBtn.setOnClickListener {
 
                     if (checkRequaredFieldsForSave()) {
-                        saveFun(clazz,myLocalObject)
+                        saveFun(clazz, myLocalObject)
                         var joinId = (clazz.getMethod("getId").invoke(myLocalObject) as Long)
                         val ctor = listClass.getConstructor()
                         var objectItemToSave = ctor.newInstance()
@@ -742,7 +791,7 @@ class ViewAnnotationParser {
                     var listAdapter: ReflectionAdapterAdapter? = null
                     val func = fun() {
                         if (checkRequaredFieldsForSave()) {
-                            saveFun(clazz,myLocalObject)
+                            saveFun(clazz, myLocalObject)
                             val method = listClass.getMethod("findby" + joinField, Long::class.java)
                             val dataToLoad = method.invoke(null, (clazz.getMethod("getId").invoke(bindObject) as Long)) as ArrayList<Any>
                             //dataOfField.addAll(dataToLoad)
@@ -779,7 +828,7 @@ class ViewAnnotationParser {
                     addBtn.setOnClickListener {
 
                         if (checkRequaredFieldsForSave()) {
-                            saveFun(clazz,myLocalObject)
+                            saveFun(clazz, myLocalObject)
                             var dialogBody = inflater.inflate(R.layout.multifieldviewandadd, null);
 
                             val builder = AlertDialog.Builder(pager.context).setTitle(annotation.name).setView(dialogBody).create()
@@ -878,7 +927,7 @@ class ViewAnnotationParser {
                             var first = true;
                             var updaterUUID = UUID.randomUUID().toString()
 
-                            var func = fun(){
+                            var func = fun() {
                                 var dataToLoad = method.invoke(null) as List<Loan>
                                 view.removeAllViews()
                                 dataToLoad.filter { loan -> loan.sent }.forEach {
@@ -919,7 +968,7 @@ class ViewAnnotationParser {
                                             .endConfig()
                                             .buildRoundRect("${globalIt.product.product}", color, 20)
                                     productImage.setImageDrawable(drawable)
-                                    productImage.setOnClickListener{
+                                    productImage.setOnClickListener {
                                         val intent = Intent(pager.context, sent_loan_page::class.java)
 
 
@@ -958,7 +1007,7 @@ class ViewAnnotationParser {
                                                 .setAction("Action", null).show()
                                     }
 
-                                    reloadButton.setOnClickListener{
+                                    reloadButton.setOnClickListener {
                                         val dialog = ACProgressFlower.Builder(pager.getContext())
                                                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                                                 .themeColor(Color.WHITE)
@@ -1039,7 +1088,7 @@ class ViewAnnotationParser {
 
                             var first = true;
                             var updaterUUID = UUID.randomUUID().toString()
-                            var func = fun(){
+                            var func = fun() {
                                 var dataToLoad = method.invoke(null) as List<Loan>
                                 view.removeAllViews()
                                 dataToLoad.filter { loan -> !loan.sent }.forEach {
@@ -1086,9 +1135,9 @@ class ViewAnnotationParser {
                                         val intent = Intent(pager.context, DataFillActivity::class.java)
                                         intent.putExtra("class", Loan::class.java)
 
-                                        intent.putExtra("updaterUUID",updaterUUID)
-                                        intent.putExtra("hideSave",true)
-                                        intent.putExtra("autosave",true)
+                                        intent.putExtra("updaterUUID", updaterUUID)
+                                        intent.putExtra("hideSave", true)
+                                        intent.putExtra("autosave", true)
                                         //intent.putExtra("updaterUUID", uuid)
                                         intent.putExtra("id", globalIt.id)
                                         pager.context.startActivity(intent)
@@ -1113,9 +1162,9 @@ class ViewAnnotationParser {
                                     sendButton.setImageResource(R.drawable.cloud_up)
 
                                     sendButton.setOnClickListener(globalIt.sendClick)
-                                    if(first&&StaticData.loginData!!.isSendLoanTutorial){
+                                    if (first && StaticData.loginData!!.isSendLoanTutorial) {
                                         first = false;
-                                        var instructions =  TapTargetSequence(this.activity).targets(
+                                        var instructions = TapTargetSequence(this.activity).targets(
                                                 TapTarget.forView(productImage, "განაცხადის შესაცვლელად დააჭირეთ მითითებულ ღილაკს ",
                                                         "ეს ღილაკი გადაგიყვანთ განაცხადის ედიტირების გვერდზე საიდანაც შეძლებთ შემდგომ განაცხადის გაგზავნას.")
                                                         .outerCircleColor(R.color.colorPrimary)
@@ -1164,7 +1213,7 @@ class ViewAnnotationParser {
                                             }
                                         })
 
-                                        tapInstructions.put(annotation.page,instructions)
+                                        tapInstructions.put(annotation.page, instructions)
                                     }
 
                                     view.addView(item)
@@ -1212,7 +1261,7 @@ class ViewAnnotationParser {
                     field.set(myLocalObject, isChecked)
                     visibilityCheck(fieldPaterns, fieldNameMap, myLocalObject)
                     if (autoSave) {
-                        saveFun(clazz,myLocalObject)
+                        saveFun(clazz, myLocalObject)
                     }
                 })
                 viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
@@ -1235,14 +1284,13 @@ class ViewAnnotationParser {
 
                 label.typeface = font1
 
+
                 val viewPagesListInner: ConcurrentHashMap<Int, ConcurrentHashMap<Int, View>> =
-                        viewToList(field.type.fields, inflater, fieldNameMap, fieldPaterns, field.type, field.get(myLocalObject), pager, true);
+                        viewToList(field.type.fields, inflater, fieldNameMap, fieldPaterns, field.type, field.get(myLocalObject), pager, true, linear);
 
 
-                viewPagesListInner[0]!!.forEach({
-                    i, v ->
-                    linear.addView(v)
-                })
+
+
 
 
 
@@ -1272,11 +1320,8 @@ class ViewAnnotationParser {
                 val func = fun() {
 
                     val updateObj = field.type.getMethod("getById", Long::class.java).invoke(null, field.type.getMethod("getId").invoke(field.get(myLocalObject)) as Long)
-
                     field.set(myLocalObject, updateObj)
-
                     val countNumber = field.type.getMethod("getCount").invoke(field.get(myLocalObject)) as Int
-
                     fieldValue.setText("${countNumber}")
                 }
                 func()
@@ -1284,7 +1329,7 @@ class ViewAnnotationParser {
 
                 addBtn.setOnClickListener {
                     if (checkRequaredFieldsForSave()) {
-                        saveFun(clazz,myLocalObject)
+                        saveFun(clazz, myLocalObject)
                         val intent = Intent(pager.context, DataFillActivity::class.java)
                         intent.putExtra("class", field.type)
                         intent.putExtra("updaterUUID", updaterUUID)
@@ -1323,6 +1368,77 @@ class ViewAnnotationParser {
                 viewPagesList.get(annotation.page)!!.put(annotation.position, view)
 
             }
+            if (field.isAnnotationPresent(FileUploadAnnotation::class.java)) {
+                val annotation = field.getAnnotation<FileUploadAnnotation>(FileUploadAnnotation::class.java)
+                val name = annotation.name
+                val view = inflater.inflate(R.layout.file_upload_view, null)
+                var obj = myLocalObject as FileUploadView
+
+                var addButton = view.findViewById(R.id.addButton) as Button
+                var imagesPlace = view.findViewById(R.id.imagesPlace) as LinearLayout
+
+                var func = fun() {
+                    imagesPlace.removeAllViews()
+                    obj.image_list.forEach {
+
+                        val globalIt = it
+
+                        val imageItem = inflater.inflate(R.layout.file_upload_item, null)
+
+                        val image = imageItem.findViewById(R.id.imageViewItem) as ImageView
+
+                        image.setImageBitmap(it.bitmap)
+
+                        val imageRemoveButton = imageItem.findViewById(R.id.imageRemoveButton) as Button
+
+
+                        imageRemoveButton.setOnClickListener {
+                            obj.image_list.remove(globalIt)
+                            imagesPlace.removeView(imageItem)
+
+                        }
+
+                        imagesPlace.addView(imageItem)
+                    }
+                }
+
+                addButton.setOnClickListener {
+                    ImagePicker.pickImage(activity, "Select your image:");
+                }
+
+                func()
+                var activityResult = fun(requestCode: Int, resultCode: Int, data: Intent) {
+
+                    val types = Dictionary.getData("54");
+
+                    val list = ArrayList<String>()
+
+                    types.forEach {
+                        list.add(it.name)
+                    }
+                    activity!!.selector("დოკუმენტის ტიპი", list) {
+                        a, i ->
+                        var bitmap = ImagePicker.getImageFromResult(activity, requestCode, resultCode, data);
+
+                        var fileParam = UploadFileParameters()
+
+                        fileParam.bitmap = bitmap;
+
+                        fileParam.type = types.get(i).serverId
+
+                        obj.image_list.add(fileParam)
+
+                        func()
+                    }
+
+
+                }
+                listForActivityResult.add(activityResult)
+
+                viewPagesList.putIfAbsent(annotation.page, ConcurrentHashMap())
+                viewPagesList.get(annotation.page)!!.put(annotation.position, view)
+
+            }
 
         }
 
@@ -1342,11 +1458,11 @@ class ViewAnnotationParser {
 
     public var dataModel: Boolean? = null
 
-    var activity:Activity? = null
-
+    var activity: Activity? = null
+    val fieldFilterMap = HashMap<String, ViewFieldHolder>()
     var pager: ViewPager? = null
     fun parse(clazz: Class<*>, bindObject: Any, onSave: View.OnClickListener?,
-              saveText: String, autoSave: Boolean, fragmentManager: FragmentManager, pager: ViewPager, tabs: PagerSlidingTabStrip, saveVisible: Boolean = true, dataFillActivity: Activity) {
+              saveText: String, autoSave: Boolean, fragmentManager: FragmentManager, pager: ViewPager, tabs: PagerSlidingTabStrip, saveVisible: Boolean = true, dataFillActivity: Activity, dialog: ACProgressFlower) {
 
         this.pager = pager
 
@@ -1361,6 +1477,7 @@ class ViewAnnotationParser {
         val annotation = clazz.getAnnotation<ParserClassAnnotation>(ParserClassAnnotation::class.java)
 
         val fieldNameMap = HashMap<String, Field>()
+
         var titles = arrayOf("მთავარი")
         if (annotation.cols.isNotEmpty()) {
             titles = annotation.cols
@@ -1368,77 +1485,86 @@ class ViewAnnotationParser {
         this.dataModel = annotation.dataModel
 
         val adapter = CredoPageAdapter(fragmentManager, titles);
-        val viewPagesListOuter: ConcurrentHashMap<Int, ConcurrentHashMap<Int, View>> = viewToList(fields, inflater, fieldNameMap, fieldPaterns, clazz, bindObject, pager, autoSave);
+
+        doAsync {
+
+            val viewPagesListOuter: ConcurrentHashMap<Int, ConcurrentHashMap<Int, View>> = viewToList(fields, inflater, fieldNameMap, fieldPaterns, clazz, bindObject, pager, autoSave);
+
+            uiThread {
+
+
+                visibilityCheck(fieldPaterns, fieldNameMap, bindObject)
+                adapter.items = viewPagesListOuter
+                pager.adapter = adapter;
+                pager.offscreenPageLimit = 10
+                tabs.setViewPager(pager)
+                tabs.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                        val k = adapter.saveState()
+                        adapter.restoreState(k, null)
+                        var instruction = tapInstructions.get(position)
+                        if (instruction != null) {
+                            instruction!!.start()
+                        }
+                    }
+
+                    override fun onPageSelected(position: Int) {
+
+                    }
+
+                    override fun onPageScrollStateChanged(state: Int) {
+
+                    }
+                });
 
 
 
 
-        visibilityCheck(fieldPaterns, fieldNameMap, bindObject)
-        adapter.items = viewPagesListOuter
-        pager.adapter = adapter;
-        pager.offscreenPageLimit = 10
-        tabs.setViewPager(pager)
-        tabs.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                val k = adapter.saveState()
-                adapter.restoreState(k, null)
-                var instruction = tapInstructions.get(position)
-                if(instruction!=null){
-                    instruction!!.start()
+                pager.currentItem = 0
+
+                val font1 = Typeface.createFromAsset(pager.context.getAssets(), "fonts/font1.ttf");
+                tabs.applyRecursively { view ->
+                    when (view) {
+                        is EditText -> view.typeface = font1
+                        is TextView -> view.typeface = font1
+                    }
                 }
-            }
+                pager.applyRecursively { view ->
+                    when (view) {
+                        is EditText -> view.typeface = font1
+                        is TextView -> view.typeface = font1
+                    }
+                }
 
-            override fun onPageSelected(position: Int) {
-
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {
-
-            }
-        });
+                if (onSave != null && saveVisible && !autoSave) {
 
 
+                    val saveButton = FancyButton(pager.context)
+                    saveButton.setText(saveText)
+                    saveButton.setBackgroundColor(Color.parseColor("#3b5998"))
+                    saveButton.setFocusBackgroundColor(Color.parseColor("#5474b8"))
+                    saveButton.setTextSize(17)
+                    saveButton.setRadius(5)
+                    saveButton.setIconResource("\uf0c7")
+                    saveButton.setIconPosition(FancyButton.POSITION_LEFT)
+                    saveButton.setFontIconSize(30)
+
+                    val params = LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, 150)
+                    params.setMargins(50, 50, 50, 50);
+
+                    saveButton.setLayoutParams(params);
+
+                    saveButton.setOnClickListener(onSave)
+                    viewPagesListOuter.get(0)!!.put(100, saveButton);
+                } else {
+
+                }
 
 
-        pager.currentItem = 0
-
-        val font1 = Typeface.createFromAsset(pager.context.getAssets(), "fonts/font1.ttf");
-        tabs.applyRecursively { view ->
-            when (view) {
-                is EditText -> view.typeface = font1
-                is TextView -> view.typeface = font1
+                dialog.hide();
             }
         }
-        pager.applyRecursively { view ->
-            when (view) {
-                is EditText -> view.typeface = font1
-                is TextView -> view.typeface = font1
-            }
-        }
 
-        if (onSave != null && saveVisible && !autoSave) {
-
-
-            val saveButton = FancyButton(pager.context)
-            saveButton.setText(saveText)
-            saveButton.setBackgroundColor(Color.parseColor("#3b5998"))
-            saveButton.setFocusBackgroundColor(Color.parseColor("#5474b8"))
-            saveButton.setTextSize(17)
-            saveButton.setRadius(5)
-            saveButton.setIconResource("\uf0c7")
-            saveButton.setIconPosition(FancyButton.POSITION_LEFT)
-            saveButton.setFontIconSize(30)
-
-            val params = LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, 150)
-            params.setMargins(50, 50, 50, 50);
-
-            saveButton.setLayoutParams(params);
-
-            saveButton.setOnClickListener(onSave)
-            viewPagesListOuter.get(0)!!.put(100, saveButton);
-        } else {
-
-        }
 
     }
 

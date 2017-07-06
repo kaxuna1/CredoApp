@@ -49,19 +49,14 @@ import rx.functions.Action1;
  */
 
 
-@ParserClassAnnotation(cols = {"მთავარი", "შემოსავალები", "ხარჯები", "ბალანსი"})
+@ParserClassAnnotation(cols = {"სესხის განაცხადი", "შემოსავალები", "ხარჯები", "ბალანსი"})
 public class Loan extends SugarRecord {
-    public String getName() {
-        return person != null ? (person.fullName() + (product != null ? "" : "")) : "დაუსრულებელი სესხი";
-    }
-
 
     @ObjectFieldTypeViewAnotation(name = "პიროვნება",
             displayField = "fullName",
             isMethod = true,
             type = "comboBox",
             sqlData = true,
-            filterWith = "1",
             requiredForSave = true,
             canAddToDb = false, position = 0)
     public Person person;
@@ -73,16 +68,16 @@ public class Loan extends SugarRecord {
 
 
     @ObjectFieldTypeViewAnotation(name = "ოფიცერი",
-            requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 2)
+            requiredForSave = true, displayField = "getName", filterWithField = "vilage:serverId:villageId", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 2)
     public LoanOficer loanOficer;
     @ObjectFieldTypeViewAnotation(name = "პროდუქტი",
             requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 3)
     public Product product;
     @ObjectFieldTypeViewAnotation(name = "სოფელი",
-            requiredForSave = true,filterWithField = "branch:serverId:branchId", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 4)
+            requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 4)
     public Vilage vilage;
     @ObjectFieldTypeViewAnotation(name = "სოფლის კონსული",
-            requiredForSave = true, displayField = "getName",filterWithField = "vilage:serverId:villageId", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 5)
+            requiredForSave = true, displayField = "getName", filterWithField = "vilage:serverId:villageId", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 5)
     public VilageCounsel vilageCounsel;
     @ObjectFieldTypeViewAnotation(name = "მიზნობრიობის ტიპი",
             requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 6)
@@ -101,7 +96,7 @@ public class Loan extends SugarRecord {
             requiredForSave = true, defaultValue = "0", type = "int", position = 8, hint = "წელი")
     public int gamocdileba;
     @TextFieldTypeViewAnotation(name = "თანხა",
-            requiredForSave = true, defaultValue = "0", type = "int", hint = "თანხა",position = 9)
+            requiredForSave = true, defaultValue = "0", type = "int", hint = "თანხა", position = 9)
     public int loanSum;
     @ObjectFieldTypeViewAnotation(name = "ვალუტა",
             requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 10, filterWith = "16")
@@ -121,10 +116,10 @@ public class Loan extends SugarRecord {
 
     public String status = "m0";
 
-    @TextFieldTypeViewAnotation(name = "ცხოველების რაოდენობა", defaultValue = "1", visibilityPatern = {"product:A1,A2"}, type = "int", position = 13)
-    public int numberOfAnimals;
-    @TextFieldTypeViewAnotation(name = "მიწა (ჰა)", defaultValue = "1", type = "int", visibilityPatern = {"product:A1,A2"}, position = 14)
-    public int mitsa;
+    @TextFieldTypeViewAnotation(name = "ცხოველების რაოდენობა", defaultValue = "", visibilityPatern = {"product:A1,A2"}, type = "int", position = 13)
+    public int numberOfAnimals=0;
+    @TextFieldTypeViewAnotation(name = "მიწა (ჰა)", defaultValue = "", type = "float", visibilityPatern = {"product:A1,A2"}, position = 14)
+    public float mitsa=0f;
 
 
     @ObjectsListFieldTypeViewAnottion(name = "ხარჯების ჩამონათვალი",
@@ -135,6 +130,124 @@ public class Loan extends SugarRecord {
             canAddToDb = false,
             joinField = "loan", position = 15)
     public List<ExpansesListItem> expansesListItems;
+
+
+    @ButtonFieldTypeViewAnnotation(name = "ანალიზის გარეშე გაგზავნა გაგზავნა", position = 28, icon = R.drawable.cloudup)
+    public View.OnClickListener sendClick2 = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+
+
+            if (StaticData.INSTANCE.isNetworkAvailable(v.getContext())) {
+                if (isValidNoAnalitic(v.getContext(), v)) {
+
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
+                    builder1.setMessage("გსურთ გააგზავნოთ სესხი CSS-ში?");
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "კი",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogAlert, int id) {
+
+
+                                    final BusinessBalance businessBalanceLocal = businessBalance;
+                                    final PersonalBalance personalBalanceLocal = personalBalance;
+
+                                    agroProductTypes = new ArrayList<>();
+                                    urbaProductTypes = new ArrayList<>();
+                                    tourismProductTypes = new ArrayList<>();
+                                    otherIncomeTypes = new ArrayList<>();
+                                    businesExpanses = new ArrayList<>();
+                                    otherExpanses = new ArrayList<>();
+                                    familyExpanses = new ArrayList<>();
+                                    expansesListItems = new ArrayList<>();
+                                    person.family = new ArrayList<>();
+                                    businessBalance = new BusinessBalance();
+                                    personalBalance = new PersonalBalance();
+
+
+                                    Gson g = new Gson();
+
+                                    JsonObject jsonObject = g.toJsonTree(getThis()).getAsJsonObject();
+
+                                    Log.d("LoanLog",jsonObject.toString());
+
+
+                                    final ACProgressFlower dialog = new ACProgressFlower.Builder(v.getContext())
+                                            .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                                            .themeColor(Color.WHITE)
+                                            .text("რეგისტრაცია")
+                                            .fadeColor(Color.DKGRAY).build();
+                                    dialog.show();
+                                    try {
+                                        OnlineData.INSTANCE.syncLoan(getThis(), new Action1<SyncLoanResult>() {
+                                            @Override
+                                            public void call(SyncLoanResult syncLoanResult) {
+                                                if (syncLoanResult != null) {
+                                                    if (syncLoanResult.data != null) {
+                                                        if (syncLoanResult.data.loanID > 0) {
+                                                            Loan tempLoan = Loan.getById(getThis().getId());
+                                                            tempLoan.serverId = syncLoanResult.data.loanID;
+                                                            tempLoan.sent = true;
+                                                            tempLoan.status = syncLoanResult.data.errorMessage;
+                                                            tempLoan.save();
+                                                            tempLoan.person.serverId = syncLoanResult.data.personID;
+                                                            tempLoan.person.save();
+                                                            dialog.hide();
+                                                            Intent intent = new Intent(v.getContext(), sent_loan_page.class);
+                                                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                                            intent.putExtra("id", tempLoan.getId());
+                                                            v.getContext().startActivity(intent);
+
+                                                        }
+                                                    } else {
+                                                        dialog.hide();
+                                                    }
+                                                } else {
+                                                    dialog.hide();
+                                                    Snackbar.make(v, "სესხის რეგისტრაციის დროს მოხდა შეცდომა!", Snackbar.LENGTH_LONG)
+                                                            .setAction("Action", null).show();
+                                                }
+
+                                            }
+                                        });
+                                    } catch (Exception e) {
+                                        dialog.hide();
+                                    }
+
+
+                                    dialogAlert.cancel();
+                                }
+                            });
+
+                    builder1.setNegativeButton(
+                            "არა",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+
+                                    dialog.cancel();
+                                }
+                            });
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+
+
+                } else {
+
+                }
+            } else {
+                Snackbar.make(v, "სესხის რეგისტრაციისთვის საჭიროა ინტერნეტ კავშირი!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+
+
+        }
+    };
+
+
     @ObjectsListFieldTypeViewAnottion(name = "აგრო პროდუქტი",
             displayField = "getName",
             isMethod = true,
@@ -200,7 +313,6 @@ public class Loan extends SugarRecord {
             displayField = "getName",
             isMethod = true,
             type = "comboBox",
-            requiredForSave = true,
             sqlData = true,
             canAddToDb = false, position = 24,
             page = 2,
@@ -213,6 +325,78 @@ public class Loan extends SugarRecord {
 
     public Loan getThis() {
         return this;
+    }
+
+    public boolean isValidNoAnalitic(Context context, View view) {
+
+
+        if (person == null) {
+            Snackbar.make(view, "აირჩიეთ კლიენტი", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+
+            return false;
+        }
+        if (branch == null) {
+            Snackbar.make(view, "აირჩიეთ ფილიალი", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+
+            return false;
+        }
+        if (loanOficer == null) {
+            Snackbar.make(view, "აირჩიეთ ოფიცერი", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+
+            return false;
+        }
+        if (product == null) {
+            Snackbar.make(view, "აირჩიეთ პროდუქტი", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+
+            return false;
+        }
+        if (vilage == null) {
+            Snackbar.make(view, "აირჩიეთ სოფელი", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+
+            return false;
+        }
+        if (vilageCounsel == null) {
+            Snackbar.make(view, "აირჩიეთ კონსული", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+
+            return false;
+        }
+        if (purposeType == null) {
+            Snackbar.make(view, "აირჩიეთ მიზნობრიობის ტიპი", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+
+            return false;
+        }
+        if (purpose == null) {
+            Snackbar.make(view, "აირჩიეთ მიზნობრიობა", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+
+            return false;
+        }
+        if (gamocdileba == 0) {
+            Snackbar.make(view, "შეავსეთ გამოცდილება", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+
+            return false;
+        }
+        if (loanSum == 0) {
+            Snackbar.make(view, "შეავსეთ სესხის თანხა", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+
+            return false;
+        }
+        if (loanDuration == 0) {
+            Snackbar.make(view, "შეავსეთ სესხის ხანგრძლივობა", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+
+            return false;
+        }
+        return true;
     }
 
     public boolean isValid(Context context, View view) {
@@ -309,12 +493,12 @@ public class Loan extends SugarRecord {
 
             return false;
         }
-        if( (BusinesExpanse.findbyloan(getId()).size()+OtherExpanse.findbyloan(getId()).size()+ FamilyExpanse.findbyloan(getId()).size())==0){
+        if ((BusinesExpanse.findbyloan(getId()).size() + OtherExpanse.findbyloan(getId()).size() + FamilyExpanse.findbyloan(getId()).size()) == 0) {
             Snackbar.make(view, "ხარჯები არ გაქვთ შევსებული", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             return false;
         }
-        if ((businessBalance.getCount()+personalBalance.getCount())==0){
+        if ((businessBalance.getCount() + personalBalance.getCount()) == 0) {
             Snackbar.make(view, "ბალანსი არ გაქვთ შევსებული", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             return false;
@@ -371,7 +555,7 @@ public class Loan extends SugarRecord {
                     return "გაურკვეველი";
 
             }
-        }else{
+        } else {
             return "გაურკვეველი";
         }
 
@@ -379,14 +563,13 @@ public class Loan extends SugarRecord {
     }
 
 
-    @ButtonFieldTypeViewAnnotation(name = "გაგზავნა", page = 3, position = 27,icon= R.drawable.cloudup)
+    @ButtonFieldTypeViewAnnotation(name = "გაგზავნა", page = 3, position = 27, icon = R.drawable.cloudup)
     public View.OnClickListener sendClick = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
 
 
-
-            if (StaticData.INSTANCE.isNetworkAvailable(v.getContext())){
+            if (StaticData.INSTANCE.isNetworkAvailable(v.getContext())) {
                 if (isValid(v.getContext(), v)) {
 
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
@@ -423,11 +606,11 @@ public class Loan extends SugarRecord {
                                             .text("რეგისტრაცია")
                                             .fadeColor(Color.DKGRAY).build();
                                     dialog.show();
-                                    try{
+                                    try {
                                         OnlineData.INSTANCE.syncLoan(getThis(), new Action1<SyncLoanResult>() {
                                             @Override
                                             public void call(SyncLoanResult syncLoanResult) {
-                                                if(syncLoanResult!=null){
+                                                if (syncLoanResult != null) {
                                                     if (syncLoanResult.data != null) {
                                                         if (syncLoanResult.data.loanID > 0) {
                                                             getThis().serverId = syncLoanResult.data.loanID;
@@ -444,28 +627,29 @@ public class Loan extends SugarRecord {
                                                             OnlineData.INSTANCE.syncLoanScoring(getThis(), new Action1<SyncLoanResult>() {
                                                                 @Override
                                                                 public void call(SyncLoanResult syncLoanResult) {
-                                                                    if(syncLoanResult!=null){
+                                                                    if (syncLoanResult != null) {
                                                                         dialog2.hide();
                                                                         Intent intent = new Intent(v.getContext(), sent_loan_page.class);
                                                                         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                                                         intent.putExtra("id", getThis().getId());
                                                                         v.getContext().startActivity(intent);
-                                                                    }else{
+                                                                    } else {
                                                                         dialog2.hide();
                                                                         Snackbar.make(v, "სესხის სქორინგის დროს მოხდა შეცდომა! \n განაახლეთ სტატუსი გაგზავნი მოთხოვნების გვერდიდან.", Snackbar.LENGTH_LONG)
                                                                                 .setAction("Action", null).show();
                                                                     }
 
 
-
                                                                 }
                                                             });
 
+                                                        }else{
+                                                            dialog.hide();
                                                         }
-                                                    } else{
+                                                    } else {
                                                         dialog.hide();
                                                     }
-                                                }else{
+                                                } else {
                                                     dialog.hide();
                                                     Snackbar.make(v, "სესხის რეგისტრაციის დროს მოხდა შეცდომა!", Snackbar.LENGTH_LONG)
                                                             .setAction("Action", null).show();
@@ -473,7 +657,7 @@ public class Loan extends SugarRecord {
 
                                             }
                                         });
-                                    }catch (Exception e){
+                                    } catch (Exception e) {
                                         dialog.hide();
                                     }
 
@@ -496,16 +680,13 @@ public class Loan extends SugarRecord {
                     alert11.show();
 
 
-
-
                 } else {
 
                 }
-            }else{
+            } else {
                 Snackbar.make(v, "სესხის რეგისტრაციისთვის საჭიროა ინტერნეტ კავშირი!", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-
 
 
         }
@@ -577,7 +758,7 @@ public class Loan extends SugarRecord {
         return this.loanDuration;
     }
 
-    public int getLand() {
+    public float getLand() {
         return this.mitsa;
     }
 
@@ -648,5 +829,8 @@ public class Loan extends SugarRecord {
 
     public void setFamilyExpanses(ArrayList<FamilyExpanse> familyExpanses) {
         this.familyExpanses = familyExpanses;
+    }
+    public String getName(){
+        return person.fullName()+" "+product.getName()+" "+ loanSum+" "+currency.getName();
     }
 }

@@ -60,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="ძებნა"
-            android:text="01005022890"
+            android:text=""
             android:textColor="#333"
             android:id="@+id/idNumber"
             android:textColorHint="#666"
@@ -86,6 +86,7 @@
 
     <Button
         android:id="@+id/clear"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="clear"

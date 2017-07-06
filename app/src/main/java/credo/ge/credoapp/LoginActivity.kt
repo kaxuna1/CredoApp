@@ -313,11 +313,12 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                             //finish()
                         } else {
                             showProgress(false)
+                            toast("მომხმარებელი ან პაროლი არ არის სწორი!")
                         }
 
                     } else {
                         showProgress(false)
-                        toast("სისტემაში შესვლის დროს მოხდა შეცდომა!")
+
                     }
                 })
             } catch (e: Exception) {

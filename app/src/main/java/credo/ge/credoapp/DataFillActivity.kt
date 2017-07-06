@@ -1,5 +1,7 @@
 package credo.ge.credoapp
 
+import android.content.Intent
+import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
@@ -9,6 +11,8 @@ import credo.ge.credoapp.views.CredoExtendActivity
 import kotlinx.android.synthetic.main.activity_data_fill.*
 import android.support.design.widget.Snackbar
 import android.widget.EditText
+import cc.cloudist.acplibrary.ACProgressConstant
+import cc.cloudist.acplibrary.ACProgressFlower
 import org.jetbrains.anko.*
 
 
@@ -83,6 +87,14 @@ class DataFillActivity : CredoExtendActivity() {
         tabs.setIndicatorColor(getResources().getColor(R.color.white));
 
 
+        val dialog = ACProgressFlower.Builder(mainView2.context)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("ჩატვირთვა")
+                .fadeColor(Color.DKGRAY).build()
+        dialog.show()
+
+
         parser = ViewAnnotationParser()
         parser!!.parse(classname, bindObject, View.OnClickListener {
 
@@ -99,7 +111,7 @@ class DataFillActivity : CredoExtendActivity() {
                 val func = StaticData.comboBoxUpdateFunctions.get(updaterUUID!!) as () -> Unit
                 func()
             }
-        }, "შენახვა", autoSave, supportFragmentManager, pager, tabs, !hideSave, this)
+        }, "შენახვა", autoSave, supportFragmentManager, pager, tabs, !hideSave, this,dialog)
 
 
         backBtn.setOnClickListener {
@@ -107,6 +119,11 @@ class DataFillActivity : CredoExtendActivity() {
         }
 
 
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        parser!!.listForActivityResult.forEach {
+            it(requestCode,resultCode,data!!)
+        }
     }
 
     override fun onBackPressed() {

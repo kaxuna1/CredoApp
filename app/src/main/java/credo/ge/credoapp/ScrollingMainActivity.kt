@@ -54,6 +54,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import com.rey.material.app.BottomSheetDialog
+import credo.ge.credoapp.models.ViewModels.FileUploadView
 import credo.ge.credoapp.views.SingleSectionHoverMenuService
 import lecho.lib.hellocharts.model.Line
 import lecho.lib.hellocharts.model.LineChartData
@@ -219,6 +220,11 @@ class ScrollingMainActivity : CredoExtendActivity() {
         }
         files.setCustomTextFont("fonts/font1.otf")
         files.setOnClickListener {
+            val intent = Intent(this, DataFillActivity::class.java)
+            intent.putExtra("class", FileUploadView::class.java)
+            intent.putExtra("autosave", false)
+            intent.putExtra("hideSave", true)
+            startActivity(intent)
 
         }
 
@@ -259,10 +265,11 @@ class ScrollingMainActivity : CredoExtendActivity() {
 
     }
 
+
+
     fun tapTarget() {
         if (StaticData.loginData!!.isTutorial) {
-            StaticData.loginData!!.isTutorial = false;
-            StaticData.loginData!!.save()
+
             TapTargetSequence(this).targets(
 
                     TapTarget.forView(findViewById(R.id.refresh), "მუშაობის დასაწყებათ საჭიროა სინქრონიზაცია",
@@ -304,7 +311,8 @@ class ScrollingMainActivity : CredoExtendActivity() {
                 }
 
                 override fun onSequenceFinish() {
-                    refresh.callOnClick()
+                    StaticData.loginData!!.isTutorial = false;
+                    StaticData.loginData!!.save()
                 }
 
                 override fun onSequenceStep(lastTarget: TapTarget?, targetClicked: Boolean) {
@@ -361,6 +369,11 @@ class ScrollingMainActivity : CredoExtendActivity() {
                         it.data.syncModel.branches.forEach {
                             branches.add(Branch(it))//.save()
                         }
+                        var c = VilageCounsel()
+                        c.serverId = 0;
+                        c.villageId = 0
+                        c.consul = "-------"
+                        consuls.add(c)
                         it.data.syncModel.consuls.forEach {
                             consuls.add(VilageCounsel(it))//.save()
                         }
@@ -379,6 +392,12 @@ class ScrollingMainActivity : CredoExtendActivity() {
                         it.data.syncModel.purposesTypes.forEach {
                             purposesTypes.add(PurposeType(it))//.save()
                         }
+                        var v = Vilage()
+                        v.city = "";
+                        v.branchId = 0
+                        v.serverId = 0
+                        v.village = "-------"
+                        vilages.add(v)
                         it.data.syncModel.villages.forEach {
                             vilages.add(Vilage(it))//.save()
                         }
@@ -562,7 +581,7 @@ class ScrollingMainActivity : CredoExtendActivity() {
 
     fun updateCurrencies() {
         try {
-            if (StaticData.isInternetAvailable()) {
+            if (StaticData.isNetworkAvailable(this.applicationContext)) {
                 OnlineData.syncCurrencies(Action1 {
                     if (it != null) {
                         CurrencyData.deleteAll(CurrencyData::class.java)

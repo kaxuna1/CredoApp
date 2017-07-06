@@ -25,7 +25,7 @@ public class Vilage extends SugarRecord {
 
     public Vilage(VilageAdapter adapter){
         this.serverId = adapter.id;
-        this.branchId = adapter.branchId;
+        this.branchId = adapter.getBranchId();
         this.city = adapter.city;
         this.village = adapter.village;
     }

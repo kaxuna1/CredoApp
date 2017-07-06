@@ -10,6 +10,8 @@ import com.orm.SugarRecord;
 public class LoginData extends SugarRecord{
 
 
+
+
     private String pin;
 
     private boolean tutorial = true;
