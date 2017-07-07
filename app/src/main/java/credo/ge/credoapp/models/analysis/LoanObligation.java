@@ -15,9 +15,9 @@ import credo.ge.credoapp.models.Dictionary;
 public class LoanObligation extends SugarRecord {
     @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "",type = "text", position = 1)
     public String comment="";
-    @TextFieldTypeViewAnotation(name = "თანხა", defaultValue = "1",type = "int", position = 2)
+    @TextFieldTypeViewAnotation(name = "შენატანი", defaultValue = "1",type = "int", position = 2)
     public int sum=0;
-    @TextFieldTypeViewAnotation(name = "დასაფარი თანხა", defaultValue = "1",type = "int", position = 3)
+    @TextFieldTypeViewAnotation(name = "ძირი თანხა", defaultValue = "1",type = "int", position = 3)
     public int sumToPay=0;
     @ObjectFieldTypeViewAnotation(name = "ტიპი",
             displayField = "getName",

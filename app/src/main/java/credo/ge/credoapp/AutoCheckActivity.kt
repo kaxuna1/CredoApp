@@ -54,7 +54,6 @@ class AutoCheckActivity : AppCompatActivity() {
     private var storage: InternalStorage? = null
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
 
@@ -83,61 +82,61 @@ class AutoCheckActivity : AppCompatActivity() {
             progressDialog!!.setCancelable(false)
             progressDialog!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
             progressDialog!!.show()
-            StaticJava().download(storage,StaticData.loginData!!.access_token, id, StaticData.loginData!!.branchId, StaticData.loginData!!.userId, Action1 {
+            StaticJava().download(storage, StaticData.loginData!!.access_token,
+                    id, StaticData.loginData!!.branchId, StaticData.loginData!!.userId,
+                    Action1 {
+
+                        if(it != null){
+                            StaticData.pdf = it.pdf
 
 
+                            /* floaty = Floaty.createInstance(this, head, body, NOTIFICATION_ID, notification, object : FloatyOrientationListener {
+                                 override
+                                 fun beforeOrientationChange(floaty: Floaty) {
+                                     Toast.makeText(me, "Orientation Change Start", Toast.LENGTH_SHORT).show();
+                                 }
 
-                StaticData.pdf = it.pdf
+                                 override
+                                 fun afterOrientationChange(floaty: Floaty) {
+                                     Toast.makeText(me, "Orientation Change End", Toast.LENGTH_SHORT).show();
+                                 }
+                             });*/
 
+                            //
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (Settings.canDrawOverlays(this)) {
+                                    val startHoverIntent = Intent(applicationContext, SingleSectionHoverMenuService::class.java)
+                                    startService(startHoverIntent)
+                                } else {
+                                    val intent2 = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                            Uri.parse("package:" + packageName))
+                                    startActivityForResult(intent2, 1234)
+                                }
 
-
-
-
-
-
-
-
-
-
-               /* floaty = Floaty.createInstance(this, head, body, NOTIFICATION_ID, notification, object : FloatyOrientationListener {
-                    override
-                    fun beforeOrientationChange(floaty: Floaty) {
-                        Toast.makeText(me, "Orientation Change Start", Toast.LENGTH_SHORT).show();
-                    }
-
-                    override
-                    fun afterOrientationChange(floaty: Floaty) {
-                        Toast.makeText(me, "Orientation Change End", Toast.LENGTH_SHORT).show();
-                    }
-                });*/
-
-                //
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                    if(Settings.canDrawOverlays(this)){
-                        val startHoverIntent =  Intent(applicationContext, SingleSectionHoverMenuService::class.java)
-                        startService(startHoverIntent)
-                    }else{
-                        val intent2 = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                Uri.parse("package:" + packageName))
-                        startActivityForResult(intent2, 1234)
-                    }
-
-                }else{
-                    val startHoverIntent =  Intent(applicationContext, SingleSectionHoverMenuService::class.java)
-                    startService(startHoverIntent)
-                }
+                            } else {
+                                val startHoverIntent = Intent(applicationContext, SingleSectionHoverMenuService::class.java)
+                                startService(startHoverIntent)
+                            }
 
 
 
 
 
 
-                progressDialog!!.hide()
-                Snackbar.make(btn_search, "PDF ჩაიტვირთა", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show()
-                Log.d("pdfDownload", "Done")
+                            progressDialog!!.hide()
+                            Snackbar.make(btn_search, "PDF ჩაიტვირთა", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show()
+                            Log.d("pdfDownload", "Done")
+                        }else{
 
-            })
+                            progressDialog!!.hide()
+                            Snackbar.make(btn_search, "PDF არ ჩაიტვირთა", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show()
+                        }
+
+
+
+                    }, progressDialog)
         }
 
 
@@ -157,7 +156,7 @@ class AutoCheckActivity : AppCompatActivity() {
 
     @TargetApi(Build.VERSION_CODES.M)
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val startHoverIntent =  Intent(applicationContext, SingleSectionHoverMenuService::class.java)
+        val startHoverIntent = Intent(applicationContext, SingleSectionHoverMenuService::class.java)
         startService(startHoverIntent)
     }
 

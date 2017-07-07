@@ -79,8 +79,7 @@ object OnlineData {
         val headers = mapOf<String, String>("Authorization" to "Bearer ${token}")
 
         val syncObservable = retrofit1Url.create<SyncDataServices>(SyncDataServices::class.java!!)
-                .syncData(headers, Gson().toJsonTree(MethodName("GetAllSynchronizeList" +
-                        "")).asJsonObject)
+                .syncData(headers, Gson().toJsonTree(MethodName("GetAllSynchronizeList")).asJsonObject)
         try {
             syncObservable
                     .subscribeOn(Schedulers.newThread())

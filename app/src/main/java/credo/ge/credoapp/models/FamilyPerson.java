@@ -29,11 +29,11 @@ public class FamilyPerson extends SugarRecord {
             requiredForSave = true, defaultValue = "", type = "text", mask = "###########", position = 1)
     public String personalNumber;
 
-    @TextFieldTypeViewAnotation(name = "სახელი",
+    @TextFieldTypeViewAnotation(name = "სახელი",hint = "სახელი",
             requiredForSave = true, defaultValue = "",type = "text", position = 2)
     public String name = "";
 
-    @TextFieldTypeViewAnotation(name = "გვარი",
+    @TextFieldTypeViewAnotation(name = "გვარი",hint = "გვარი",
             requiredForSave = true, defaultValue = "",type = "text", position = 3)
     public String surname = "";
 

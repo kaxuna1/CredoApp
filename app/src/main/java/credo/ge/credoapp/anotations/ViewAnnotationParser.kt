@@ -85,7 +85,10 @@ class ViewAnnotationParser {
 
     public fun saveFun() {
         if (checkRequaredFieldsForSave()) {
-            clazz!!.getMethod("save").invoke(myLocalObject)
+            doAsync {
+
+                clazz!!.getMethod("save").invoke(myLocalObject)
+            }
         }
     }
 
@@ -979,9 +982,23 @@ class ViewAnnotationParser {
                                             .buildRoundRect("${globalIt.product.product}", color, 20)
                                     productImage.setImageDrawable(drawable)
                                     productImage.setOnClickListener {
-                                        val intent = Intent(pager.context, sent_loan_page::class.java)
+                                       /* val intent = Intent(pager.context, sent_loan_page::class.java)
 
 
+                                        //intent.putExtra("updaterUUID", uuid)
+                                        intent.putExtra("id", globalIt.id)
+                                        pager.context.startActivity(intent)
+
+
+                                        */
+
+
+                                        val intent = Intent(pager.context, DataFillActivity::class.java)
+                                        intent.putExtra("class", Loan::class.java)
+
+                                        intent.putExtra("updaterUUID", updaterUUID)
+                                        intent.putExtra("hideSave", true)
+                                        intent.putExtra("autosave", true)
                                         //intent.putExtra("updaterUUID", uuid)
                                         intent.putExtra("id", globalIt.id)
                                         pager.context.startActivity(intent)

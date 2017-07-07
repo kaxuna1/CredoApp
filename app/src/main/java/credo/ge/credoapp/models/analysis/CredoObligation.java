@@ -16,9 +16,9 @@ import credo.ge.credoapp.models.Product;
 public class CredoObligation extends SugarRecord {
     @ObjectFieldTypeViewAnotation(name = "პროდუქტი", displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 1)
     public Product product;
-    @TextFieldTypeViewAnotation(name = "თანხა", defaultValue = "1",type = "int", position = 2)
+    @TextFieldTypeViewAnotation(name = "შენატანი", defaultValue = "1",type = "int", position = 2)
     public int sum=0;
-    @TextFieldTypeViewAnotation(name = "დასაფარი თანხა", defaultValue = "1",type = "int", position = 3)
+    @TextFieldTypeViewAnotation(name = "ძირი თანხა", defaultValue = "1",type = "int", position = 3)
     public int sumToPay=0;
     @ObjectFieldTypeViewAnotation(name = "ტიპი",
             displayField = "getName",

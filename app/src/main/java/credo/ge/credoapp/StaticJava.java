@@ -1,7 +1,9 @@
 package credo.ge.credoapp;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.design.widget.Snackbar;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
@@ -56,7 +58,13 @@ public class StaticJava {
         e.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
     }
 
-    public void download(InternalStorage storage, String token, String pn, String branchId, String byUserID, Action1<PdfFile> onSync) {
+    public void download(InternalStorage storage,
+                         String token,
+                         String pn,
+                         String branchId,
+                         String byUserID,
+                         Action1<PdfFile> onSync,
+                         ProgressDialog progressDialog) {
         AutoCheckService downloadService = createService(AutoCheckService.class, "http://109.238.225.188:8081/");
 
 
@@ -79,7 +87,7 @@ public class StaticJava {
                     .flatMap(processResponse())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(handleResult(onSync, pn,storage));
+                    .subscribe(handleResult(onSync, pn,storage,progressDialog));
         }
 
     }
@@ -117,7 +125,7 @@ public class StaticJava {
         });
     }
 
-    private Observer<PdfFile> handleResult(final Action1<PdfFile> onSync, final String pn, final InternalStorage storage) {
+    private Observer<PdfFile> handleResult(final Action1<PdfFile> onSync, final String pn, final InternalStorage storage, final ProgressDialog progressDialog) {
 
         return new Observer<PdfFile>() {
             @Override
@@ -128,6 +136,7 @@ public class StaticJava {
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
+                onSync.call(null);
                 Log.d(TAG, "Error " + e.getMessage());
             }
 

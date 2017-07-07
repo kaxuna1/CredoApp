@@ -31,26 +31,32 @@ class sent_loan_page : AppCompatActivity() {
 
         val txt1 = TextView(applicationContext)
         txt1.text = loan.person.fullName()
+        txt1.setTextColor(R.color.blackk)
         linear.addView(txt1)
 
         val txt2 = TextView(applicationContext)
         txt2.text = "პირადი #: ${loan.person.personalNumber}"
+        txt2.setTextColor(R.color.blackk)
         linear.addView(txt2)
 
         val txt3 = TextView(applicationContext)
         txt3.text = "სტატუსი: ${loan.getStatus()}"
+        txt3.setTextColor(R.color.blackk)
         linear.addView(txt3)
 
         val txt4 = TextView(applicationContext)
         txt4.text = "სესხის თანხა: ${loan.amount}"
+        txt4.setTextColor(R.color.blackk)
         linear.addView(txt4)
 
         val txt5 = TextView(applicationContext)
         txt5.text = "სესხის ვალუტა: ${loan.currency.name}"
+        txt5.setTextColor(R.color.blackk)
         linear.addView(txt5)
 
         val txt6 = TextView(applicationContext)
         txt6.text = "სესხის ვადა: ${loan.loanDuration}"
+        txt6.setTextColor(R.color.blackk)
         linear.addView(txt6)
 
     /*    val txt7 = TextView(applicationContext)

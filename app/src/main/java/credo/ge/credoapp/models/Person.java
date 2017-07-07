@@ -45,17 +45,17 @@ public class Person extends SugarRecord {
     @TextFieldTypeViewAnotation(name = "პირადი ნომერი", required = true, requiredForSave = true, mask = "###########",defaultValue = "", type = "text", length = 11,position = 1)
     public String personalNumber = "";
 
-    @TextFieldTypeViewAnotation(name = "სახელი", required = true, requiredForSave = true, defaultValue = "", type = "text", position = 2)
+    @TextFieldTypeViewAnotation(name = "სახელი", hint = "სახელი",required = true, requiredForSave = true, defaultValue = "", type = "text", position = 2)
     public String name = "";
 
-    @TextFieldTypeViewAnotation(name = "გვარი", required = true, requiredForSave = true, defaultValue = "", type = "text", position = 3)
+    @TextFieldTypeViewAnotation(name = "გვარი", hint = "გვარი", required = true, requiredForSave = true, defaultValue = "", type = "text", position = 3)
     public String surname = "";
 
     @DateFieldTypeViewAnotation(name = "დაბადების თარიღი", requiredForSave = true, position = 4)
     public Date birthDate = new Date();
 
 
-    @TextFieldTypeViewAnotation(name = "ფაქტობრივი მისამართი", requiredForSave = true, defaultValue = "", type = "text", position = 5)
+    @TextFieldTypeViewAnotation(name = "ფაქტობრივი მისამართი",hint = "მისამართი", requiredForSave = true, defaultValue = "", type = "text", position = 5)
     public String address = "";
 
     @ObjectFieldTypeViewAnotation(name = "ტიპი", displayField = "getName", requiredForSave = true, isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 6, filterWith = "13")

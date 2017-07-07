@@ -106,7 +106,7 @@ public class Loan extends SugarRecord {
             requiredForSave = true, hint = "თვე", defaultValue = "1", type = "int", position = 11)
     public int loanDuration;
 
-    @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "", type = "text", position = 12)
+    @TextFieldTypeViewAnotation(name = "კომენტარი",hint = "კომენტარი",defaultValue = "", type = "text", position = 12)
     public String comment;
 
 
