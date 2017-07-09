@@ -68,7 +68,7 @@ public class Loan extends SugarRecord {
 
 
     @ObjectFieldTypeViewAnotation(name = "ოფიცერი",
-            requiredForSave = true, displayField = "getName", filterWithField = "vilage:serverId:villageId", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 2)
+            requiredForSave = true, displayField = "getName", filterWithField = "branch:serverId:branchId", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 2)
     public LoanOficer loanOficer;
     @ObjectFieldTypeViewAnotation(name = "პროდუქტი",
             requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 3)

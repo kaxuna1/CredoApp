@@ -16,7 +16,7 @@ public class Cattle extends SugarRecord {
     public String comment="";
     @TextFieldTypeViewAnotation(name = "თანხა", defaultValue = "1",type = "int", position = 2)
     public int sum=0;
-    @TextFieldTypeViewAnotation(name = "დამ. ინფორმაცია", defaultValue = "",type = "text", position = 3)
+    @TextFieldTypeViewAnotation(name = "დამ. ინფორმაცია", defaultValue = "",type = "number", position = 3)
     public String otherInfo="";
 
     public static List<Cattle> findbybusinessbalance(long id) {

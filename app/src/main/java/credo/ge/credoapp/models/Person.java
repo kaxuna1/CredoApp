@@ -86,7 +86,7 @@ public class Person extends SugarRecord {
     @ObjectFieldTypeViewAnotation(name = "სექტორი", requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false, position = 12, filterWith = "101")
     public Dictionary sector;
 
-    @ObjectFieldTypeViewAnotation(name = "ინდუსტრია", requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false,
+    @ObjectFieldTypeViewAnotation(name = "ინდუსტრია",filterWithField = "sector:serverId:sectorId",requiredForSave = true, displayField = "getName", isMethod = true, type = "comboBox", sqlData = true, canAddToDb = false,
             position = 13)
     public Industry industry;
 

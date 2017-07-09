@@ -13,6 +13,15 @@ import credo.ge.credoapp.models.Dictionary;
  */
 
 public class Obligation extends SugarRecord {
+
+    @ObjectFieldTypeViewAnotation(name = "ბანკი",
+            displayField = "getName",
+            isMethod = true,
+            type = "comboBox",
+            sqlData = true,
+            canAddToDb = false, position = 0,
+            filterWith ="10992")
+    public Dictionary bank;
     @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "",type = "text", position = 1)
     public String comment="";
     @TextFieldTypeViewAnotation(name = "შენატანი", defaultValue = "1",type = "int", position = 2)

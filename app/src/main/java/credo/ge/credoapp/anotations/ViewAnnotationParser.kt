@@ -38,6 +38,7 @@ import com.amulyakhare.textdrawable.util.ColorGenerator
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.mvc.imagepicker.ImagePicker
+import com.rey.material.app.DatePickerDialog
 import credo.ge.credoapp.*
 import credo.ge.credoapp.models.Dictionary
 import credo.ge.credoapp.models.Loan
@@ -345,7 +346,7 @@ class ViewAnnotationParser {
 
                 button.setOnClickListener {
 
-                    val dialogBody = inflater.inflate(R.layout.datepickerview, null);
+                   /* val dialogBody = inflater.inflate(R.layout.datepickerview, null);
 
                     val picker = dialogBody.findViewById(R.id.datePicker) as DatePicker
 
@@ -379,7 +380,12 @@ class ViewAnnotationParser {
                         builder.hide()
                     }
 
-                    builder.show()
+                    builder.show()*/
+
+                    var k = android.app.DatePickerDialog(activity)
+                    k.show()
+
+
                 }
 
 
