@@ -5,6 +5,7 @@ import com.orm.SugarRecord;
 import java.util.ArrayList;
 import java.util.List;
 
+import credo.ge.credoapp.StaticData;
 import credo.ge.credoapp.anotations.DataGroupFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.InlineObjectsListFieldTypeViewAnotation;
 import credo.ge.credoapp.anotations.ParserClassAnnotation;
@@ -105,6 +106,9 @@ public class PersonalBalance extends SugarRecord {
 
     public static PersonalBalance getById(long id) {
         return PersonalBalance.findById(PersonalBalance.class, id);
+    }
+    public boolean isValid(){
+        return StaticData.INSTANCE.checkPersonal(this);
     }
 
 

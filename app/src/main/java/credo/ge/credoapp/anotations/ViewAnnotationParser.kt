@@ -350,6 +350,10 @@ class ViewAnnotationParser {
 
                     val picker = dialogBody.findViewById(R.id.datePicker) as DatePicker
 
+                    var currentLocal = field.get(myLocalObject) as Date
+
+                    picker.updateDate(currentLocal.year,currentLocal.month,currentLocal.date)
+
 
                     val builder = AlertDialog.Builder(pager.context).setTitle(annotation.name).setView(dialogBody).create()
 
@@ -496,7 +500,7 @@ class ViewAnnotationParser {
                                         if (val2 != "0")
                                             filteredList = filteredList.filter {
                                                 val val1 = field.type.getField(filterFieldMy).get((it)).toString();
-                                                val1 == val2
+                                                val1 == val2 || val1 == "0"
                                             }
                                     } catch (e: Exception) {
                                         e.printStackTrace()

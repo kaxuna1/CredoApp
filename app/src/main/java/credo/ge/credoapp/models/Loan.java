@@ -1,10 +1,15 @@
 package credo.ge.credoapp.models;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +21,7 @@ import com.sromku.simple.storage.InternalStorage;
 import com.sromku.simple.storage.SimpleStorage;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
@@ -106,7 +112,7 @@ public class Loan extends SugarRecord {
             requiredForSave = true, hint = "თვე", defaultValue = "1", type = "int", position = 11)
     public int loanDuration;
 
-    @TextFieldTypeViewAnotation(name = "კომენტარი",hint = "კომენტარი",defaultValue = "", type = "text", position = 12)
+    @TextFieldTypeViewAnotation(name = "კომენტარი", hint = "კომენტარი", defaultValue = "", type = "text", position = 12)
     public String comment;
 
 
@@ -117,9 +123,9 @@ public class Loan extends SugarRecord {
     public String status = "m0";
 
     @TextFieldTypeViewAnotation(name = "ცხოველების რაოდენობა", defaultValue = "", visibilityPatern = {"product:A1,A2"}, type = "int", position = 13)
-    public int numberOfAnimals=0;
+    public int numberOfAnimals = 0;
     @TextFieldTypeViewAnotation(name = "მიწა (ჰა)", mask = "#######", defaultValue = "", type = "number", visibilityPatern = {"product:A1,A2"}, position = 14)
-    public String mitsa="";
+    public String mitsa = "";
 
 
     @ObjectsListFieldTypeViewAnottion(name = "ხარჯების ჩამონათვალი",
@@ -171,7 +177,7 @@ public class Loan extends SugarRecord {
 
                                     JsonObject jsonObject = g.toJsonTree(getThis()).getAsJsonObject();
 
-                                    Log.d("LoanLog",jsonObject.toString());
+                                    Log.d("LoanLog", jsonObject.toString());
 
 
                                     final ACProgressFlower dialog = new ACProgressFlower.Builder(v.getContext())
@@ -322,6 +328,19 @@ public class Loan extends SugarRecord {
     public BusinessBalance businessBalance = new BusinessBalance();
     @DataGroupContainerTypeViewAnotation(name = "პირადი ბალანსი", page = 3, position = 26)
     public PersonalBalance personalBalance = new PersonalBalance();
+
+
+    public int applicationStatusId;
+    public float amount;
+    public String currencyName;
+    public int period;
+    public float intRate;
+    public float effectivePercent;
+    public float loanCommission;
+    public float smsCommission;
+    public float payment;
+    public Date statusChangeDate;
+
 
     public Loan getThis() {
         return this;
@@ -503,6 +522,16 @@ public class Loan extends SugarRecord {
                     .setAction("Action", null).show();
             return false;
         }
+        if (!businessBalance.isValid()) {
+            Snackbar.make(view, "ბიზნეს ბალანსში შეავსეთ ყველა სავალდებულო ველი!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            return false;
+        }
+        if (!personalBalance.isValid()) {
+            Snackbar.make(view, "პირად ბალანსში შეავსეთ ყველა სავალდებულო ველი!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            return false;
+        }
 
 
         InternalStorage storage = SimpleStorage.getInternalStorage(context);
@@ -570,6 +599,17 @@ public class Loan extends SugarRecord {
 
 
             if (StaticData.INSTANCE.isNetworkAvailable(v.getContext())) {
+                agroProductTypes = AgroProductType.findbyloan(getId());
+                urbaProductTypes = UrbaProductType.findbyloan(getId());
+                tourismProductTypes = TourismProductType.findbyloan(getId());
+                otherIncomeTypes = OtherIncomeType.findbyloan(getId());
+                businesExpanses = BusinesExpanse.findbyloan(getId());
+                otherExpanses = OtherExpanse.findbyloan(getId());
+                familyExpanses = FamilyExpanse.findbyloan(getId());
+                expansesListItems = ExpansesListItem.findbyloan(getId());
+                person.family = FamilyPerson.findbyperson(person.getId());
+                businessBalance.initData();
+                personalBalance.initData();
                 if (isValid(v.getContext(), v)) {
 
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
@@ -581,17 +621,14 @@ public class Loan extends SugarRecord {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialogAlert, int id) {
 
-                                    agroProductTypes = AgroProductType.findbyloan(getId());
-                                    urbaProductTypes = UrbaProductType.findbyloan(getId());
-                                    tourismProductTypes = TourismProductType.findbyloan(getId());
-                                    otherIncomeTypes = OtherIncomeType.findbyloan(getId());
-                                    businesExpanses = BusinesExpanse.findbyloan(getId());
-                                    otherExpanses = OtherExpanse.findbyloan(getId());
-                                    familyExpanses = FamilyExpanse.findbyloan(getId());
-                                    expansesListItems = ExpansesListItem.findbyloan(getId());
-                                    person.family = FamilyPerson.findbyperson(person.getId());
-                                    businessBalance.initData();
-                                    personalBalance.initData();
+
+                                    if (ContextCompat.checkSelfPermission(v.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                                        LocationManager manager = (LocationManager) v.getContext().getSystemService(Context.LOCATION_SERVICE);
+                                        Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                                        getThis().x2 = location.getLongitude();
+                                        getThis().y2 = location.getLatitude();
+                                    }
+
 
                                     Gson g = new Gson();
 
@@ -629,10 +666,35 @@ public class Loan extends SugarRecord {
                                                                 public void call(SyncLoanResult syncLoanResult) {
                                                                     if (syncLoanResult != null) {
                                                                         dialog2.hide();
-                                                                        Intent intent = new Intent(v.getContext(), sent_loan_page.class);
-                                                                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                                                        intent.putExtra("id", getThis().getId());
-                                                                        v.getContext().startActivity(intent);
+
+                                                                        OnlineData.INSTANCE.syncLoanStatus(getThis(), new Action1<SyncLoanResult>() {
+                                                                            @Override
+                                                                            public void call(SyncLoanResult syncLoanResult2) {
+                                                                                if (syncLoanResult2 != null) {
+                                                                                    getThis().status = syncLoanResult2.data.result.getApplicationStatusId() + "";
+                                                                                    getThis().applicationStatusId = syncLoanResult2.data.result.getApplicationStatusId();
+                                                                                    getThis().amount = syncLoanResult2.data.result.getAmount();
+                                                                                    getThis().currencyName = syncLoanResult2.data.result.getCurrencyName();
+                                                                                    getThis().period = syncLoanResult2.data.result.getPeriod();
+                                                                                    getThis().intRate = syncLoanResult2.data.result.getIntRate();
+                                                                                    getThis().effectivePercent = syncLoanResult2.data.result.getEffectivePercent();
+                                                                                    getThis().loanCommission = syncLoanResult2.data.result.getLoanCommission();
+                                                                                    getThis().smsCommission = syncLoanResult2.data.result.getSmsCommission();
+                                                                                    getThis().payment = syncLoanResult2.data.result.getPayment();
+                                                                                    getThis().statusChangeDate = syncLoanResult2.data.result.getStatusChangeDate();
+
+                                                                                    getThis().save();
+                                                                                    Intent intent = new Intent(v.getContext(), sent_loan_page.class);
+                                                                                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                                                                    intent.putExtra("id", getThis().getId());
+                                                                                    v.getContext().startActivity(intent);
+                                                                                } else {
+                                                                                    Snackbar.make(v, "სესხის სტატუსის განახლების დროს მოხდა შეცდომა! \n განაახლეთ სტატუსი გაგზავნი მოთხოვნების გვერდიდან.", Snackbar.LENGTH_LONG)
+                                                                                            .setAction("Action", null).show();
+                                                                                }
+                                                                            }
+                                                                        });
+
                                                                     } else {
                                                                         dialog2.hide();
                                                                         Snackbar.make(v, "სესხის სქორინგის დროს მოხდა შეცდომა! \n განაახლეთ სტატუსი გაგზავნი მოთხოვნების გვერდიდან.", Snackbar.LENGTH_LONG)
@@ -643,7 +705,7 @@ public class Loan extends SugarRecord {
                                                                 }
                                                             });
 
-                                                        }else{
+                                                        } else {
                                                             dialog.hide();
                                                         }
                                                     } else {
@@ -691,6 +753,10 @@ public class Loan extends SugarRecord {
 
         }
     };
+    double x1 = 0;
+    double x2 = 0;
+    double y1 = 0;
+    double y2 = 0;
 
 
     public static List<Loan> getData() {
@@ -703,6 +769,8 @@ public class Loan extends SugarRecord {
 
     public Loan() {
         try {
+            x1 = StaticData.INSTANCE.getX();
+            y1 = StaticData.INSTANCE.getY();
             businessBalance.save();
             personalBalance.save();
         } catch (Exception e) {
@@ -830,7 +898,8 @@ public class Loan extends SugarRecord {
     public void setFamilyExpanses(ArrayList<FamilyExpanse> familyExpanses) {
         this.familyExpanses = familyExpanses;
     }
-    public String getName(){
-        return person.fullName()+" "+product.getName()+" "+ loanSum+" "+currency.getName();
+
+    public String getName() {
+        return person.fullName() + " " + product.getName() + " " + loanSum + " " + currency.getName();
     }
 }

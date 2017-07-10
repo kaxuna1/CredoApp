@@ -11,6 +11,7 @@ import credo.ge.credoapp.models.CurrencyData;
 public class SyncLoanDataModel {
     public boolean success;
     public String errorMessage;
+    public SyncStatusResult result;
     public String position;
     public int loanID;
     public int personID;

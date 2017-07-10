@@ -39,8 +39,6 @@ class MyFragment : android.support.v4.app.Fragment() {
             Functions.viewsHandler(orderedList,linearLayout);
         }catch (e:Exception){
             e.printStackTrace()
-        }catch (e2:NoClassDefFoundError){
-
         }
 
 

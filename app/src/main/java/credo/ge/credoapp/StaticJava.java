@@ -106,8 +106,6 @@ public class StaticJava {
             @Override
             public void call(Subscriber<? super PdfFile> subscriber) {
                 try {
-                    String header = response.headers().get("Content-Disposition");
-                    String filename = header.replace("attachment; filename=", "");
 
 
                     PdfFile pdfFile = new PdfFile();

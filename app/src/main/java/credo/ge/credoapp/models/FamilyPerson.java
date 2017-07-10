@@ -42,7 +42,7 @@ public class FamilyPerson extends SugarRecord {
     public Date birthDate = new Date();
 
 
-    @TextFieldTypeViewAnotation(name = "ფაქტობრივი მისამართი",
+    @TextFieldTypeViewAnotation(name = "ფაქტობრივი მისამართი",hint = "მისამართი",
             requiredForSave = true, defaultValue = "",type = "text", position = 5)
     public String address;
 

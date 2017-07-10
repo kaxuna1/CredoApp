@@ -1,7 +1,12 @@
 package credo.ge.credoapp
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Typeface
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
@@ -9,6 +14,7 @@ import credo.ge.credoapp.anotations.ViewAnnotationParser
 import credo.ge.credoapp.views.CredoExtendActivity
 import kotlinx.android.synthetic.main.activity_data_fill.*
 import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat
 import android.widget.EditText
 import org.jetbrains.anko.*
 
@@ -46,6 +52,16 @@ class DataFillActivity : CredoExtendActivity() {
             }
         }
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            val utilLocation: Location? = null
+            val manager: LocationManager
+            manager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            val location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            StaticData.x = location.longitude;
+            StaticData.y = location.latitude;
+        }
+
+
         val extras = intent.extras
         val classname: Class<*> = extras.getSerializable("class") as Class<*>
 
@@ -82,6 +98,7 @@ class DataFillActivity : CredoExtendActivity() {
         tabs.setTextColor(getResources().getColor(R.color.white));
         tabs.setUnderlineColor(getResources().getColor(R.color.white));
         tabs.setIndicatorColor(getResources().getColor(R.color.white));
+
 
 
         val dialog = indeterminateProgressDialog(message = "გთხოვთ დაიცადოთ", title = "ჩატვირთვა")
