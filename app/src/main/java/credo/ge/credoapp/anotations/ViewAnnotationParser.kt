@@ -346,9 +346,10 @@ class ViewAnnotationParser {
 
                 button.setOnClickListener {
 
-                   /* val dialogBody = inflater.inflate(R.layout.datepickerview, null);
+                    val dialogBody = inflater.inflate(R.layout.datepickerview, null);
 
                     val picker = dialogBody.findViewById(R.id.datePicker) as DatePicker
+
 
                     val builder = AlertDialog.Builder(pager.context).setTitle(annotation.name).setView(dialogBody).create()
 
@@ -380,10 +381,8 @@ class ViewAnnotationParser {
                         builder.hide()
                     }
 
-                    builder.show()*/
+                    builder.show()
 
-                    var k = android.app.DatePickerDialog(activity)
-                    k.show()
 
 
                 }
@@ -988,7 +987,7 @@ class ViewAnnotationParser {
                                             .buildRoundRect("${globalIt.product.product}", color, 20)
                                     productImage.setImageDrawable(drawable)
                                     productImage.setOnClickListener {
-                                       /* val intent = Intent(pager.context, sent_loan_page::class.java)
+                                        val intent = Intent(pager.context, sent_loan_page::class.java)
 
 
                                         //intent.putExtra("updaterUUID", uuid)
@@ -996,10 +995,10 @@ class ViewAnnotationParser {
                                         pager.context.startActivity(intent)
 
 
-                                        */
 
 
-                                        val intent = Intent(pager.context, DataFillActivity::class.java)
+
+                                       /* val intent = Intent(pager.context, DataFillActivity::class.java)
                                         intent.putExtra("class", Loan::class.java)
 
                                         intent.putExtra("updaterUUID", updaterUUID)
@@ -1007,7 +1006,7 @@ class ViewAnnotationParser {
                                         intent.putExtra("autosave", true)
                                         //intent.putExtra("updaterUUID", uuid)
                                         intent.putExtra("id", globalIt.id)
-                                        pager.context.startActivity(intent)
+                                        pager.context.startActivity(intent)*/
                                     }
 
 
