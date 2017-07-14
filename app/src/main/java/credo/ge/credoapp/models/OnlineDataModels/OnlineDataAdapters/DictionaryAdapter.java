@@ -8,4 +8,5 @@ public class DictionaryAdapter {
     public int id;
     public String name;
     public int parentId;
+    public int categoryId;
 }

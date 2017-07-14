@@ -156,6 +156,12 @@ public class Loan extends SugarRecord {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialogAlert, int id) {
 
+                                    final ACProgressFlower dialog = new ACProgressFlower.Builder(v.getContext())
+                                            .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                                            .themeColor(Color.WHITE)
+                                            .text("რეგისტრაცია")
+                                            .fadeColor(Color.DKGRAY).build();
+                                    dialog.show();
 
                                     final BusinessBalance businessBalanceLocal = businessBalance;
                                     final PersonalBalance personalBalanceLocal = personalBalance;
@@ -180,12 +186,7 @@ public class Loan extends SugarRecord {
                                     Log.d("LoanLog", jsonObject.toString());
 
 
-                                    final ACProgressFlower dialog = new ACProgressFlower.Builder(v.getContext())
-                                            .direction(ACProgressConstant.DIRECT_CLOCKWISE)
-                                            .themeColor(Color.WHITE)
-                                            .text("რეგისტრაცია")
-                                            .fadeColor(Color.DKGRAY).build();
-                                    dialog.show();
+
                                     try {
                                         OnlineData.INSTANCE.syncLoan(getThis(), new Action1<SyncLoanResult>() {
                                             @Override
@@ -330,16 +331,16 @@ public class Loan extends SugarRecord {
     public PersonalBalance personalBalance = new PersonalBalance();
 
 
-    public int applicationStatusId;
-    public float amount;
-    public String currencyName;
-    public int period;
-    public float intRate;
-    public float effectivePercent;
-    public float loanCommission;
-    public float smsCommission;
-    public float payment;
-    public Date statusChangeDate;
+    public int applicationStatusId=0;
+    public float amount=0;
+    public String currencyName="";
+    public int period=0;
+    public float intRate=0;
+    public float effectivePercent=0;
+    public float loanCommission=0;
+    public float smsCommission=0;
+    public float payment=0;
+    public String statusChangeDate="";
 
 
     public Loan getThis() {
@@ -599,6 +600,12 @@ public class Loan extends SugarRecord {
 
 
             if (StaticData.INSTANCE.isNetworkAvailable(v.getContext())) {
+                final ACProgressFlower dialog3 = new ACProgressFlower.Builder(v.getContext())
+                        .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                        .themeColor(Color.WHITE)
+                        .text("დაიცადეთ")
+                        .fadeColor(Color.DKGRAY).build();
+                dialog3.show();
                 agroProductTypes = AgroProductType.findbyloan(getId());
                 urbaProductTypes = UrbaProductType.findbyloan(getId());
                 tourismProductTypes = TourismProductType.findbyloan(getId());
@@ -610,6 +617,9 @@ public class Loan extends SugarRecord {
                 person.family = FamilyPerson.findbyperson(person.getId());
                 businessBalance.initData();
                 personalBalance.initData();
+
+                dialog3.hide();
+
                 if (isValid(v.getContext(), v)) {
 
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
@@ -622,11 +632,16 @@ public class Loan extends SugarRecord {
                                 public void onClick(DialogInterface dialogAlert, int id) {
 
 
-                                    if (ContextCompat.checkSelfPermission(v.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                                        LocationManager manager = (LocationManager) v.getContext().getSystemService(Context.LOCATION_SERVICE);
-                                        Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                                        getThis().x2 = location.getLongitude();
-                                        getThis().y2 = location.getLatitude();
+                                    try{
+
+                                        if (ContextCompat.checkSelfPermission(v.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                                            LocationManager manager = (LocationManager) v.getContext().getSystemService(Context.LOCATION_SERVICE);
+                                            Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                                            getThis().x2 = location.getLongitude();
+                                            getThis().y2 = location.getLatitude();
+                                        }
+                                    }catch (Exception e){
+                                        e.printStackTrace();
                                     }
 
 
@@ -689,7 +704,7 @@ public class Loan extends SugarRecord {
                                                                                     intent.putExtra("id", getThis().getId());
                                                                                     v.getContext().startActivity(intent);
                                                                                 } else {
-                                                                                    Snackbar.make(v, "სესხის სტატუსის განახლების დროს მოხდა შეცდომა! \n განაახლეთ სტატუსი გაგზავნი მოთხოვნების გვერდიდან.", Snackbar.LENGTH_LONG)
+                                                                                    Snackbar.make(v, "სესხის სტატუსის განახლების დროს მოხდა შეცდომა! \n განაახლეთ სტატუსი მოთხოვნების გვერდიდან.", Snackbar.LENGTH_LONG)
                                                                                             .setAction("Action", null).show();
                                                                                 }
                                                                             }

@@ -52,13 +52,18 @@ class DataFillActivity : CredoExtendActivity() {
             }
         }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            val utilLocation: Location? = null
-            val manager: LocationManager
-            manager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            val location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            StaticData.x = location.longitude;
-            StaticData.y = location.latitude;
+        try{
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                val utilLocation: Location? = null
+                val manager: LocationManager
+                manager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                val location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                StaticData.x = location.longitude
+                StaticData.y = location.latitude
+            }
+        }catch (e:Exception){
+            e.printStackTrace();
         }
 
 

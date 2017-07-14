@@ -100,7 +100,7 @@ public class Person extends SugarRecord {
     public View.OnClickListener sendClick = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
-            if (isValid()) {
+            if (isValid(v)) {
                 Loan l = new Loan();
                 l.person = Person.getById(getId());
                 final ACProgressFlower dialog = new ACProgressFlower.Builder(v.getContext())
@@ -136,10 +136,15 @@ public class Person extends SugarRecord {
         }
     };
 
-    public boolean isValid() {
+    public boolean isValid(View v) {
         boolean valid = true;
         if (personalNumber == "") {
             valid = false;
+        }
+        if (personalNumber.length()<11){
+            valid = false;
+            Snackbar.make(v, "პირადი ნომერი 11 სიმბოლოზე ნაკლებია!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         }
         if (name == "") {
             valid = false;

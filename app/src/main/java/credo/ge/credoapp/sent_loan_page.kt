@@ -55,9 +55,37 @@ class sent_loan_page : AppCompatActivity() {
         linear.addView(txt5)
 
         val txt6 = TextView(applicationContext)
-        txt6.text = "სესხის ვადა: ${loan.loanDuration}"
+        txt6.text = "სესხის ვადა: ${loan.period}"
         txt6.setTextColor(R.color.blackk)
         linear.addView(txt6)
+
+        val txt7 = TextView(applicationContext)
+        txt7.text = "სესხის პროცენტი: ${loan.intRate}"
+        txt7.setTextColor(R.color.blackk)
+        linear.addView(txt7)
+        val txt11 = TextView(applicationContext)
+        txt11.text = "სესხის ეფექტური პროცენტი: ${loan.effectivePercent}"
+        txt11.setTextColor(R.color.blackk)
+        linear.addView(txt11)
+
+        val txt8 = TextView(applicationContext)
+        txt8.text = "გაცემის საკომისიო: ${loan.loanCommission}"
+        txt8.setTextColor(R.color.blackk)
+        linear.addView(txt8)
+
+        val txt9 = TextView(applicationContext)
+        txt9.text = "სმს მომსახურების საკომისიო: ${loan.smsCommission}"
+        txt9.setTextColor(R.color.blackk)
+        linear.addView(txt9)
+
+        val txt10 = TextView(applicationContext)
+        txt10.text = "ყოველთვიური შენატანი თანხა: ${loan.payment}"
+        txt10.setTextColor(R.color.blackk)
+        linear.addView(txt10)
+        val txt12 = TextView(applicationContext)
+        txt12.text = "სტატუსის თარიღი: ${loan.statusChangeDate}"
+        txt12.setTextColor(R.color.blackk)
+        linear.addView(txt12)
 
     /*    val txt7 = TextView(applicationContext)
         txt7.text = "სესხის თანხა: ${loan.amount}"

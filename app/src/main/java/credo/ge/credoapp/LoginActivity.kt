@@ -34,7 +34,6 @@ import android.widget.*
 import com.andrognito.pinlockview.IndicatorDots
 import com.andrognito.pinlockview.PinLockListener
 import com.andrognito.pinlockview.PinLockView
-import com.mattprecious.swirl.SwirlView
 import com.multidots.fingerprintauth.AuthErrorCodes
 import com.multidots.fingerprintauth.FingerPrintAuthCallback
 import com.multidots.fingerprintauth.FingerPrintAuthHelper

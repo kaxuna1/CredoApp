@@ -16,7 +16,7 @@ public class SyncStatusResult{
     private float loanCommission;
     private float smsCommission;
     private float payment;
-    private Date statusChangeDate;
+    private String statusChangeDate;
 
 
     public int getApplicationStatusId() {
@@ -91,11 +91,11 @@ public class SyncStatusResult{
         this.payment = payment;
     }
 
-    public Date getStatusChangeDate() {
+    public String getStatusChangeDate() {
         return statusChangeDate;
     }
 
-    public void setStatusChangeDate(Date statusChangeDate) {
+    public void setStatusChangeDate(String statusChangeDate) {
         this.statusChangeDate = statusChangeDate;
     }
 

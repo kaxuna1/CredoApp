@@ -34,6 +34,7 @@ public class UrbaProductType extends SugarRecord {
             filterWith ="33")
     public Dictionary service;
     @ObjectFieldTypeViewAnotation(name = "ტიპი",
+            filterWithField = "service:serverId:categoryId",
             displayField = "getName",
             isMethod = true,
             type = "comboBox",requiredForSave = true,

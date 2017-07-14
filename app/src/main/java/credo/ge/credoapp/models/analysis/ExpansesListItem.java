@@ -32,7 +32,7 @@ public class ExpansesListItem extends SugarRecord {
             canAddToDb = false, position = 2)
     public ExpanseType expanseType;
 
-    @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "1",type = "text", position = 3)
+    @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "",type = "text", position = 3)
     public String comment;
 
 

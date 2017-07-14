@@ -21,8 +21,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.Toast
-import com.bezyapps.floatieslibrary.Floaty
-import com.bezyapps.floatieslibrary.FloatyOrientationListener
 import com.github.barteksc.pdfviewer.PDFView
 import com.github.barteksc.pdfviewer.util.Util
 import com.sromku.simple.storage.InternalStorage
@@ -46,9 +44,6 @@ class AutoCheckActivity : AppCompatActivity() {
     private var progressDialog: ProgressDialog? = null
 
 
-    //var floaty: Floaty? = null
-    private val NOTIFICATION_ID = 1500
-    val PERMISSION_REQUEST_CODE = 16
 
 
     private var storage: InternalStorage? = null
@@ -78,7 +73,7 @@ class AutoCheckActivity : AppCompatActivity() {
         StaticData.body = LayoutInflater.from(this).inflate(R.layout.float_body, null)
         btn_search.setOnClickListener {
             val id = idNumber.text.toString()
-            progressDialog!!.setMessage("მიმდინარეობს განახლება!")
+            progressDialog!!.setMessage("მიმდინარეობს გადამოწმება!")
             progressDialog!!.setCancelable(false)
             progressDialog!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
             progressDialog!!.show()
@@ -142,17 +137,6 @@ class AutoCheckActivity : AppCompatActivity() {
 
     }
 
-    private val TAG = "FloatingViewControl"
-
-    /**
-     * シンプルなFloatingViewを表示するフローのパーミッション許可コード
-     */
-    private val CHATHEAD_OVERLAY_PERMISSION_REQUEST_CODE = 100
-
-    /**
-     * カスタマイズFloatingViewを表示するフローのパーミッション許可コード
-     */
-    private val CUSTOM_OVERLAY_PERMISSION_REQUEST_CODE = 101
 
     @TargetApi(Build.VERSION_CODES.M)
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -160,61 +144,6 @@ class AutoCheckActivity : AppCompatActivity() {
         startService(startHoverIntent)
     }
 
-    /**
-     * シンプルなFloatingViewの表示
-
-     * @param context                 Context
-     * *
-     * @param isShowOverlayPermission 表示できなかった場合に表示許可の画面を表示するフラグ
-     */
-    @SuppressLint("NewApi")
-    private fun showChatHead(context: Context, isShowOverlayPermission: Boolean) {
-        // API22以下かチェック
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            context.startService(Intent(context, ChatHeadService::class.java))
-            return
-        }
-
-        // 他のアプリの上に表示できるかチェック
-        if (Settings.canDrawOverlays(context)) {
-            context.startService(Intent(context, ChatHeadService::class.java))
-            return
-        }
-
-        // オーバレイパーミッションの表示
-        if (isShowOverlayPermission) {
-            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.packageName))
-            startActivityForResult(intent, CHATHEAD_OVERLAY_PERMISSION_REQUEST_CODE)
-        }
-    }
-
-    /**
-     * カスタマイズFloatingViewの表示
-
-     * @param context                 Context
-     * *
-     * @param isShowOverlayPermission 表示できなかった場合に表示許可の画面を表示するフラグ
-     */
-    @SuppressLint("NewApi")
-    private fun showCustomFloatingView(context: Context, isShowOverlayPermission: Boolean) {
-        // API22以下かチェック
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            context.startService(Intent(context, CustomFloatingViewService::class.java))
-            return
-        }
-
-        // 他のアプリの上に表示できるかチェック
-        if (Settings.canDrawOverlays(context)) {
-            context.startService(Intent(context, CustomFloatingViewService::class.java))
-            return
-        }
-
-        // オーバレイパーミッションの表示
-        if (isShowOverlayPermission) {
-            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.packageName))
-            startActivityForResult(intent, CUSTOM_OVERLAY_PERMISSION_REQUEST_CODE)
-        }
-    }
 
 
 }

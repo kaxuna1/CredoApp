@@ -38,10 +38,10 @@ import com.amulyakhare.textdrawable.util.ColorGenerator
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.mvc.imagepicker.ImagePicker
-import com.rey.material.app.DatePickerDialog
 import credo.ge.credoapp.*
 import credo.ge.credoapp.models.Dictionary
 import credo.ge.credoapp.models.Loan
+import credo.ge.credoapp.models.OnlineDataModels.SyncLoanResult
 import credo.ge.credoapp.models.UploadFileParameters
 import credo.ge.credoapp.models.ViewModels.FileUploadView
 import credo.ge.credoapp.online.OnlineData
@@ -1051,19 +1051,31 @@ class ViewAnnotationParser {
                                                 .fadeColor(Color.DKGRAY).build()
                                         dialog.show()
                                         try {
-                                            OnlineData.syncLoanStatus(globalIt, Action1 {
-                                                if (it != null) {
-                                                    val loanStatus = it.data.errorMessage
-                                                    globalIt.status = loanStatus
+
+                                            OnlineData.syncLoanStatus(globalIt, Action1<SyncLoanResult> { syncLoanResult2 ->
+                                                if (syncLoanResult2 != null) {
+                                                    globalIt.status = syncLoanResult2.data.result.applicationStatusId.toString() + ""
+                                                    globalIt.applicationStatusId = syncLoanResult2.data.result.applicationStatusId
+                                                    globalIt.amount = syncLoanResult2.data.result.amount
+                                                    globalIt.currencyName = syncLoanResult2.data.result.currencyName
+                                                    globalIt.period = syncLoanResult2.data.result.period
+                                                    globalIt.intRate = syncLoanResult2.data.result.intRate
+                                                    globalIt.effectivePercent = syncLoanResult2.data.result.effectivePercent
+                                                    globalIt.loanCommission = syncLoanResult2.data.result.loanCommission
+                                                    globalIt.smsCommission = syncLoanResult2.data.result.smsCommission
+                                                    globalIt.payment = syncLoanResult2.data.result.payment
+                                                    globalIt.statusChangeDate = syncLoanResult2.data.result.statusChangeDate
+
                                                     globalIt.save()
+
                                                     status.setText(globalIt.getStatus())
                                                     dialog.hide()
+
                                                 } else {
                                                     dialog.hide()
-                                                    Snackbar.make(reloadButton, "სტატუსის განახლების დროს მოხდა შეცდომა! \n ცადეთ მოგვიანებით.", Snackbar.LENGTH_LONG)
+                                                    Snackbar.make(reloadButton, "სესხის სტატუსის განახლების დროს მოხდა შეცდომა!", Snackbar.LENGTH_LONG)
                                                             .setAction("Action", null).show()
                                                 }
-
                                             })
                                         } catch (e: Exception) {
                                             view.context.toast("ვერ მოხდა სერვერთან დაკავშირება!")

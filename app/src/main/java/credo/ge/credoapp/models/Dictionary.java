@@ -18,12 +18,15 @@ public class Dictionary extends SugarRecord {
 
     public int parentId;
 
+    public int categoryId;
+
     public Dictionary(){}
 
     public Dictionary(DictionaryAdapter adapter){
         this.name=adapter.name;
         this.serverId= adapter.id;
         this.parentId = adapter.parentId;
+        this.categoryId = adapter.categoryId==1?134:adapter.categoryId==2?135:136;
     }
 
     public String getName(){

@@ -47,13 +47,7 @@ import com.amulyakhare.textdrawable.util.ColorGenerator
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.getkeepsafe.taptargetview.TapTargetView
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.listener.PermissionGrantedResponse
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.single.PermissionListener
-import com.rey.material.app.BottomSheetDialog
+
 import credo.ge.credoapp.models.ViewModels.FileUploadView
 import credo.ge.credoapp.views.SingleSectionHoverMenuService
 import lecho.lib.hellocharts.model.Line
@@ -91,11 +85,16 @@ class ScrollingMainActivity : CredoExtendActivity() {
         /*   askPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_EXST)
            askPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXST)
    */
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            val utilLocation: Location? = null
-            val manager: LocationManager
-            manager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            val location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        try{
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                val utilLocation: Location? = null
+                val manager: LocationManager
+                manager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                val location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            }
+        }catch (e:Exception){
+            e.printStackTrace();
         }
 
 
@@ -347,7 +346,7 @@ class ScrollingMainActivity : CredoExtendActivity() {
                         LoanOficer.deleteAll(LoanOficer::class.java)
                         Product.deleteAll(Product::class.java)
                         Purpose.deleteAll(Purpose::class.java)
-                        PurposeType.deleteAll(Purpose::class.java)
+                        PurposeType.deleteAll(PurposeType::class.java)
                         Vilage.deleteAll(Vilage::class.java)
                         Dictionary.deleteAll(Dictionary::class.java)
                         Loan.deleteAll(Loan::class.java)
@@ -403,7 +402,7 @@ class ScrollingMainActivity : CredoExtendActivity() {
                         var v = Vilage()
                         v.city = "";
                         v.branchId = 0
-                        v.serverId = 0
+                        v.serverId = 9999
                         v.village = "-------"
                         vilages.add(v)
                         it.data.syncModel.villages.forEach {
