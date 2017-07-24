@@ -51,7 +51,7 @@ public class UrbaProductType extends SugarRecord {
             filterWith ="67")
     public Dictionary product;
 
-    @TextFieldTypeViewAnotation(name = "გამოცდილება",requiredForSave = true, defaultValue = "",hint = "წელი",type = "text", position = 5)
+    @TextFieldTypeViewAnotation(name = "კომენტარი",requiredForSave = true, defaultValue = "",hint = "კომენტარი",type = "text", position = 5)
     public String comment;
 
     public String getName() {

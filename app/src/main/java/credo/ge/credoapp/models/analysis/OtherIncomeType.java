@@ -35,7 +35,7 @@ public class OtherIncomeType extends SugarRecord {
             filterWith ="41")
     public Dictionary incomeType;
 
-    @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "",type = "text", position = 3)
+    @TextFieldTypeViewAnotation(name = "კომენტარი", hint = "კომენტარი",defaultValue = "",type = "text", position = 3)
     public String comment;
 
 

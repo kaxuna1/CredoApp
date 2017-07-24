@@ -47,8 +47,8 @@ public class AgroProductType extends SugarRecord{
             filterWith ="2")
     public Dictionary unit;
 
-    @TextFieldTypeViewAnotation(name = "რაოდენობა", defaultValue = "0",requiredForSave = true,type = "int", position = 5)
-    public int quantity;
+    @TextFieldTypeViewAnotation(name = "რაოდენობა", mask = "#######", defaultValue = "", type = "number",  position = 5)
+    public String quantity = "";
 
     @LabelFieldTypeViewAnotaion(label = "წლიური შემოსავალი",position = 6)
     public String label1;

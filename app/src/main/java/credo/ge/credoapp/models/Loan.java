@@ -138,7 +138,7 @@ public class Loan extends SugarRecord {
     public List<ExpansesListItem> expansesListItems;
 
 
-    @ButtonFieldTypeViewAnnotation(name = "ანალიზის გარეშე გაგზავნა გაგზავნა", position = 28, icon = R.drawable.cloudup)
+    @ButtonFieldTypeViewAnnotation(name = "ანალიზის გარეშე გაგზავნა", position = 28, icon = R.drawable.cloudup)
     public View.OnClickListener sendClick2 = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
@@ -222,8 +222,7 @@ public class Loan extends SugarRecord {
                                     } catch (Exception e) {
                                         dialog.hide();
                                     }
-
-
+                                    dialog.hide();
                                     dialogAlert.cancel();
                                 }
                             });
@@ -416,6 +415,19 @@ public class Loan extends SugarRecord {
 
             return false;
         }
+        InternalStorage storage = SimpleStorage.getInternalStorage(context);
+        storage.createDirectory("pdf");
+        storage.createFile("pdf", "kaxa", "some content of the file");
+        try {
+            byte[] file = storage.readFile("pdf", person.personalNumber);
+            PdfFile pdfFile = new PdfFile();
+
+        } catch (Exception e) {
+            Snackbar.make(view, "შეასრულეთ კლიენტის შემოწმება", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            return false;
+        }
+
         return true;
     }
 
@@ -550,6 +562,22 @@ public class Loan extends SugarRecord {
 
 
         return valid;
+    }
+    public boolean autoChecked(View view){
+
+        InternalStorage storage = SimpleStorage.getInternalStorage(context);
+        storage.createDirectory("pdf");
+        storage.createFile("pdf", "kaxa", "some content of the file");
+        try {
+            byte[] file = storage.readFile("pdf", person.personalNumber);
+            PdfFile pdfFile = new PdfFile();
+
+        } catch (Exception e) {
+            Snackbar.make(view, "შეასრულეთ კლიენტის შემოწმება", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            return false;
+        }
+        return true;
     }
 
     public String getStatus() {

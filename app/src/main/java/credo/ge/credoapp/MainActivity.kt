@@ -36,6 +36,7 @@ class MainActivity : CredoExtendActivity() {
         var activity = this
 
 
+        makeDrawer();
 
 
         addLoanBtn!!.setOnClickListener {

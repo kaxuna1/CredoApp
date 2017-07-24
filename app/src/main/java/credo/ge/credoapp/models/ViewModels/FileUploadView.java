@@ -85,12 +85,20 @@ public class FileUploadView {
                     OnlineData.INSTANCE.syncFiles(images, loan, new Action1<SyncLoanResult>() {
                         @Override
                         public void call(SyncLoanResult syncLoanResult) {
-                            if(syncLoanResult==null){
+                            if(syncLoanResult!=null){
                                 dialog.hide();
                                 Snackbar.make(v, "ფაილები ატვირთულია", Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show();
+                                Intent intent = new Intent(v.getContext(), sent_loan_page.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                intent.putExtra("id", loan.getId());
+                                v.getContext().startActivity(intent);
                             }
                             dialog.hide();
+                            Intent intent = new Intent(v.getContext(), sent_loan_page.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            intent.putExtra("id", loan.getId());
+                            v.getContext().startActivity(intent);
                         }
                     });
                 }catch (Exception e){

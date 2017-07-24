@@ -19,7 +19,11 @@ class data_list_activity : CredoExtendActivity() {
         val context = this;
 
         super.onCreate(savedInstanceState)
+
+
+
         setContentView(R.layout.activity_data_list)
+        makeDrawer();
         val listView = findViewById(R.id.listView) as ListView
 
         val extras = intent.extras

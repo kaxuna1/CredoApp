@@ -65,6 +65,7 @@ class ScrollingMainActivity : CredoExtendActivity() {
     internal var layout: LinearLayout? = null
     private var progressDialog: ProgressDialog? = null
     var drawable: TextDrawable? = null
+    var drawerMade = false;
     internal var activity: CredoExtendActivity? = null
 
     protected var mGoogleApiClient: GoogleApiClient? = null
@@ -76,8 +77,6 @@ class ScrollingMainActivity : CredoExtendActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scrolling_main)
-
-
 
 
 
@@ -467,6 +466,12 @@ class ScrollingMainActivity : CredoExtendActivity() {
         var firstName = "";
         var lastName = "";
         if (StaticData.loginData != null) {
+            if(!drawerMade){
+                makeDrawer();
+                drawerMade=true;
+            }
+
+
             val nameStrings = StaticData.loginData!!.name.split(" ")
             if (nameStrings.size == 2) {
                 firstName = nameStrings[0].substring(0, 1)

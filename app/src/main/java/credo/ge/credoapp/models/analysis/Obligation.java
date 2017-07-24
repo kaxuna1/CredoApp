@@ -23,7 +23,7 @@ public class Obligation extends SugarRecord {
             canAddToDb = false, position = 0,
             filterWith ="10992")
     public Dictionary bank;
-    @TextFieldTypeViewAnotation(name = "კომენტარი",requiredForSave = true, defaultValue = "",type = "text", position = 1)
+    @TextFieldTypeViewAnotation(name = "კომენტარი",hint = "კომენტარი",requiredForSave = true, defaultValue = "",type = "text", position = 1)
     public String comment="";
     @TextFieldTypeViewAnotation(name = "შენატანი",requiredForSave = true, defaultValue = "1",type = "int", position = 2)
     public int sum=0;

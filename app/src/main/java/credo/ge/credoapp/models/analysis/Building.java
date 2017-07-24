@@ -13,13 +13,14 @@ import credo.ge.credoapp.models.Dictionary;
  */
 
 public class Building extends SugarRecord {
-    @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "",type = "text", position = 1)
+    @TextFieldTypeViewAnotation(name = "კომენტარი",hint = "კომენტარი", defaultValue = "",type = "text", position = 1)
     public String comment="";
     @TextFieldTypeViewAnotation(name = "თანხა", defaultValue = "1",type = "int", position = 2)
     public int sum=0;
     @ObjectFieldTypeViewAnotation(name = "ტიპი",
             displayField = "getName",
             isMethod = true,
+            requiredForSave = true,
             type = "comboBox",
             sqlData = true,
             canAddToDb = false, position = 3,

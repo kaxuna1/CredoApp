@@ -80,6 +80,16 @@ object StaticData {
                 valid = false
             }
         }
+        Building.findbybusinessbalance(b.getId()!!).forEach {
+            if (it.buildingType == null) {
+                valid = false
+            }
+        }
+        Land.findbybusinessbalance(b.getId()!!).forEach {
+            if (it.landType == null ) {
+                valid = false
+            }
+        }
         return valid
     }
 

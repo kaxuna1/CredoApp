@@ -46,6 +46,7 @@ class DataFillActivity : CredoExtendActivity() {
         //layout = findViewById(R.id.linearFormPlace) as LinearLayout
         val font1 = Typeface.createFromAsset(pager.context.getAssets(), "fonts/font1.ttf");
 
+        makeDrawer()
         mainView2.applyRecursively { view ->
             when (view) {
                 is EditText -> view.typeface = font1
@@ -135,7 +136,11 @@ class DataFillActivity : CredoExtendActivity() {
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         parser!!.listForActivityResult.forEach {
-            it(requestCode,resultCode,data!!)
+            try{
+                it(requestCode,resultCode,data!!)
+            }catch (e:Exception){
+                e.printStackTrace()
+            }
         }
     }
 

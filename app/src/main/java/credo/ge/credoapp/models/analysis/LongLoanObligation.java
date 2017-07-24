@@ -17,11 +17,12 @@ public class LongLoanObligation extends SugarRecord {
             displayField = "getName",
             isMethod = true,
             type = "comboBox",
+            requiredForSave = true,
             sqlData = true,
             canAddToDb = false, position = 0,
             filterWith ="10992")
     public Dictionary bank;
-    @TextFieldTypeViewAnotation(name = "კომენტარი", defaultValue = "",type = "text", position = 1)
+    @TextFieldTypeViewAnotation(name = "კომენტარი", hint = "კომენტარი",defaultValue = "",type = "text", position = 1)
     public String comment="";
     @TextFieldTypeViewAnotation(name = "შენატანი", defaultValue = "1",type = "int", position = 2)
     public int sum=0;
@@ -30,6 +31,7 @@ public class LongLoanObligation extends SugarRecord {
     @ObjectFieldTypeViewAnotation(name = "ტიპი",
             displayField = "getName",
             isMethod = true,
+            requiredForSave = true,
             type = "comboBox",
             sqlData = true,
             canAddToDb = false, position = 4,

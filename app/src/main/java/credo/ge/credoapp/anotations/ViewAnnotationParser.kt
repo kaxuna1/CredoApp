@@ -1,6 +1,7 @@
 package credo.ge.credoapp.anotations
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.app.ProgressDialog
 import android.view.View
 
@@ -346,6 +347,9 @@ class ViewAnnotationParser {
 
                 button.setOnClickListener {
 
+
+
+
                     val dialogBody = inflater.inflate(R.layout.datepickerview, null);
 
                     val picker = dialogBody.findViewById(R.id.datePicker) as DatePicker
@@ -368,6 +372,8 @@ class ViewAnnotationParser {
                         builder.hide();
                     }
                     save.setOnClickListener {
+
+                        picker.clearFocus();
 
                         val date = Date()
 
