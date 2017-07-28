@@ -84,7 +84,7 @@ class ScrollingMainActivity : CredoExtendActivity() {
         /*   askPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_EXST)
            askPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXST)
    */
-        try{
+        try {
 
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 val utilLocation: Location? = null
@@ -92,7 +92,7 @@ class ScrollingMainActivity : CredoExtendActivity() {
                 manager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
                 val location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace();
         }
 
@@ -264,7 +264,6 @@ class ScrollingMainActivity : CredoExtendActivity() {
     }
 
 
-
     fun tapTarget() {
         if (StaticData.loginData!!.isTutorial) {
 
@@ -368,7 +367,7 @@ class ScrollingMainActivity : CredoExtendActivity() {
 
 
 
-                        it.data.syncModel.expanseTypeses.forEach{
+                        it.data.syncModel.expanseTypeses.forEach {
                             expanses.add(ExpanseType(it))
                         }
 
@@ -466,9 +465,9 @@ class ScrollingMainActivity : CredoExtendActivity() {
         var firstName = "";
         var lastName = "";
         if (StaticData.loginData != null) {
-            if(!drawerMade){
+            if (!drawerMade) {
                 makeDrawer();
-                drawerMade=true;
+                drawerMade = true;
             }
 
 

@@ -88,7 +88,7 @@ dependencies {
     compile 'com.github.Mariovc:ImagePicker:1.1.1'
 // https://mvnrepository.com/artifact/com.mikepenz/materialdrawer
     compile group: 'com.mikepenz', name: 'materialdrawer', version: '5.8.3'
-
+    compile 'com.mikepenz:fontawesome-typeface:4.6.0.3@aar'
 }
 repositories {
     mavenCentral()

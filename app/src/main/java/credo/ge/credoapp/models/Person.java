@@ -103,6 +103,7 @@ public class Person extends SugarRecord {
             if (isValid(v)) {
                 Loan l = new Loan();
                 l.person = Person.getById(getId());
+                l.person.family = FamilyPerson.findbyperson(l.person.getId());
                 final ACProgressFlower dialog = new ACProgressFlower.Builder(v.getContext())
                         .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                         .themeColor(Color.WHITE)
