@@ -30,12 +30,22 @@ public class AgroProductType extends SugarRecord{
             filterWith ="31")
     public Dictionary product;
 
+    @ObjectFieldTypeViewAnotation(name = "ფერმერობის ტიპი",
+            displayField = "getName",
+            isMethod = true,
+            type = "comboBox",
+            sqlData = true,requiredForSave = true,
+            canAddToDb = false, position = 3,
+            filterWith ="2109")
+    public Dictionary farming;
+
     public String getName() {
         return product.name ;
     }
 
-    @TextFieldTypeViewAnotation(name = "გამოცდილება", defaultValue = "1",type = "int", position = 3)
+    @TextFieldTypeViewAnotation(name = "გამოცდილება", defaultValue = "1",type = "int", position = 4)
     public int experience;
+
 
 
     @ObjectFieldTypeViewAnotation(name = "ერთეული",
@@ -43,20 +53,20 @@ public class AgroProductType extends SugarRecord{
             isMethod = true,
             type = "comboBox",
             sqlData = true,requiredForSave = true,
-            canAddToDb = false, position = 4,
+            canAddToDb = false, position = 5,
             filterWith ="2")
     public Dictionary unit;
 
-    @TextFieldTypeViewAnotation(name = "რაოდენობა", mask = "#######", defaultValue = "", type = "number",  position = 5)
+    @TextFieldTypeViewAnotation(name = "რაოდენობა", mask = "#######", defaultValue = "", type = "number",  position = 6)
     public String quantity = "";
 
-    @LabelFieldTypeViewAnotaion(label = "წლიური შემოსავალი",position = 6)
+    @LabelFieldTypeViewAnotaion(label = "წლიური შემოსავალი",position = 7)
     public String label1;
 
-    @TextFieldTypeViewAnotation(name = "რაოდენობა",requiredForSave = true, defaultValue = "1",type = "int", position = 7)
+    @TextFieldTypeViewAnotation(name = "რაოდენობა",requiredForSave = true, defaultValue = "1",type = "int", position = 8)
     public int quantityAnual;
 
-    @TextFieldTypeViewAnotation(name = "თანხა",requiredForSave = true, defaultValue = "1",type = "int", position = 8)
+    @TextFieldTypeViewAnotation(name = "თანხა",requiredForSave = true, defaultValue = "1",type = "int", position = 9)
     public int sum;
 
 

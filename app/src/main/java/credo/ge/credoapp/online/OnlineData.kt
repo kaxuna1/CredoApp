@@ -79,7 +79,7 @@ object OnlineData {
         val headers = mapOf<String, String>("Authorization" to "Bearer ${token}")
 
         val syncObservable = retrofit1Url.create<SyncDataServices>(SyncDataServices::class.java!!)
-                .syncData(headers, Gson().toJsonTree(MethodName("GetAllSynchronizeList")).asJsonObject)
+                .syncData(headers, Gson().toJsonTree(MethodName("GetAllSynchronizeListDev")).asJsonObject)
         try {
             syncObservable
                     .subscribeOn(Schedulers.newThread())
@@ -109,8 +109,10 @@ object OnlineData {
 
         val headers = mapOf<String, String>("Authorization" to "Bearer ${StaticData.loginData!!.access_token}")
 
+        var kk = Gson().toJsonTree(MethodName("GetProductFullListDev",loan)).asJsonObject
+
         val syncLoanObservable = retrofit1Url.create<SyncDataServices>(SyncDataServices::class.java!!)
-                .syncLoan(headers, Gson().toJsonTree(MethodName("GetProductFullList",loan)).asJsonObject)
+                .syncLoan(headers, Gson().toJsonTree(MethodName("GetProductFullListDev",loan)).asJsonObject)
 
         try {
             syncLoanObservable

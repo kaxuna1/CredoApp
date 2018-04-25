@@ -2,8 +2,6 @@ package credo.ge.credoapp.models.OnlineDataModels;
 
 import java.util.ArrayList;
 
-import credo.ge.credoapp.models.Industry;
-import credo.ge.credoapp.models.LoanOficer;
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.BranchAdapterClass;
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.DictionaryAdapter;
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.IndustryAdapter;
@@ -13,10 +11,6 @@ import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.ProductAdapt
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.PurposeAdapter;
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.VilageAdapter;
 import credo.ge.credoapp.models.OnlineDataModels.OnlineDataAdapters.VilageCounselAdapter;
-import credo.ge.credoapp.models.Product;
-import credo.ge.credoapp.models.Purpose;
-import credo.ge.credoapp.models.Vilage;
-import credo.ge.credoapp.models.VilageCounsel;
 
 /**
  * Created by kaxge on 5/10/2017.

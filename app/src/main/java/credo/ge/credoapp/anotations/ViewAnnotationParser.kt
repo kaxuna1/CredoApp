@@ -122,6 +122,8 @@ class ViewAnnotationParser {
         val myLocalObject = bindObject;
 
 
+        bindObject::class.java.fields
+
         val font1 = Typeface.createFromAsset(pager.context.getAssets(), "fonts/font1.ttf");
 
 
